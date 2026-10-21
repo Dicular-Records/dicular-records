@@ -11,3 +11,4 @@ compare/
 # Audio liegt extern (642 MB) — siehe docs/DECISIONS
 public/**/*.mp3
 public/_thumbs/
+compare-run.log
