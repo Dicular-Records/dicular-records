@@ -11,6 +11,17 @@ const md = (dir: string) => glob({ pattern: '**/*.md', base: `./src/content/${di
 const format = z.enum(['html', 'markdown']).default('markdown');
 const listOrder = z.number().optional();
 
+/**
+ * Neue Einträge haben keine WordPress-ID; die Vorlagen brauchen sie für Klassen/IDs wie "post-4605".
+ * Ersatz: stabile Zahl aus dem Titel (ab 100000, kollidiert nicht mit WordPress-IDs).
+ */
+const fallbackId = (s: string) => {
+  let h = 0;
+  for (const c of s) h = (h * 31 + c.codePointAt(0)!) >>> 0;
+  return 100000 + (h % 900000);
+};
+const withId = <T extends { wpId?: number }>(key: (d: T) => string) => (d: T) => ({ ...d, wpId: d.wpId ?? fallbackId(key(d)) });
+
 const releases = defineCollection({
   loader: md('releases'),
   schema: z.object({
@@ -40,7 +51,7 @@ const releases = defineCollection({
     genres: z.array(z.string()).default([]),
     listOrder,
     format,
-  }),
+  }).transform(withId((d) => d.title)),
 });
 
 const artists = defineCollection({
@@ -61,7 +72,7 @@ const artists = defineCollection({
     soundcloud: z.array(z.string().url()).default([]),
     listOrder,
     format,
-  }),
+  }).transform(withId((d) => d.name)),
 });
 
 const news = defineCollection({
@@ -77,7 +88,7 @@ const news = defineCollection({
     excerpt: z.string().optional(),
     listOrder,
     format,
-  }),
+  }).transform(withId((d) => d.title)),
 });
 
 const events = defineCollection({
@@ -99,7 +110,7 @@ const events = defineCollection({
     excerpt: z.string().optional(),
     listOrder,
     format,
-  }),
+  }).transform(withId((d) => d.title)),
 });
 
 const friends = defineCollection({
@@ -115,7 +126,7 @@ const friends = defineCollection({
     excerpt: z.string().optional(),
     listOrder,
     format,
-  }),
+  }).transform(withId((d) => d.name)),
 });
 
 const pages = defineCollection({
