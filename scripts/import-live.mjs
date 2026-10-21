@@ -123,13 +123,19 @@ for (const k of keys.filter((k) => k.startsWith('release__'))) {
   const tracks = art.find('.qt-tracklist > li').map((_, li) => {
     const $li = $(li);
     const play = $li.find('a.playable-mp3-link');
+    // Video-Link (YouTube o. ä.) steht im Original direkt vor dem <li>; das Theme bettet ihn per JS ein
+    const prev = $li.prev();
     return {
       title: text($li.find('h4').html()),
       artist: text($li.find('div > p').html()),
       mp3: localImage(play.attr('data-playtrack') || play.attr('data-mp3url')),
       buyUrl: $li.find('a.qw-track-buylink').attr('href'),
+      video: prev.is('a') ? prev.attr('href') : undefined,
+      videoLabel: prev.is('a') ? prev.html() : undefined,
     };
   }).get();
+  // Kauf-Links des ganzen Releases (oberhalb der Trackliste)
+  const buyLinks = art.find('p.qt-buylinks a').map((_, a) => ({ label: text($(a).html()), url: $(a).attr('href') })).get();
   await write('releases', slug, {
     title: text(art.find('h1').html()),
     wpId: wpId(art),
@@ -141,6 +147,7 @@ for (const k of keys.filter((k) => k.startsWith('release__'))) {
     // 360°-Player im Kopf (Theme-Option je Release); ohne ihn spielen Tracks über den Player in der Kopfleiste
     headerPlayer: art.find('.ui360').length > 0,
     playerTitle: text(art.find('#qtTracktitle').html()),
+    buyLinks,
     tracks,
     artists: releaseArtists[slug],
     genres: releaseGenres[slug],
@@ -200,7 +207,8 @@ for (const k of keys) {
     wpId: id,
     date: isoDate(text(art.find('.qt-metas').html()).replace(/^admin\s*/, '')),
     author: text(art.find('.qt-metas a[rel=author]').html()),
-    image: img($('.qt-featuredimage').attr('data-bgimageurl')),
+    // nur echtes Beitragsbild; ohne zeigt das Theme das Standard-Kopfbild (wird in der Vorlage ergänzt)
+    image: (art.attr('class') ?? '').includes('has-post-thumbnail') ? img($('.qt-featuredimage').attr('data-bgimageurl')) : undefined,
     categories: terms(art, 'category'),
     tags: terms(art, 'tag'),
     excerpt: excerpts.news[id],

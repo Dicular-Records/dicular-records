@@ -63,5 +63,10 @@
       "music-producer": 127,
       "seo": 130
     }
+  },
+  "artistgenreParents": {
+    "_info": "Hierarchie der Artist-Genres (aus dem Live-Verhalten der Related-Artists abgeleitet)",
+    "progressive-house": "progressive",
+    "melodic-techno": "techno"
   }
 }

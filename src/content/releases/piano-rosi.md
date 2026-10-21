@@ -6,6 +6,15 @@ cover: /wp-content/uploads/2022/01/IMG_0578.jpg
 background: /wp-content/uploads/2022/01/IMG_0578.jpg
 headerPlayer: true
 playerTitle: Piano Rosi rmx
+buyLinks:
+  - label: Itunes
+    url: https://apple.co/3sGO7DX%20
+  - label: Spotify
+    url: https://spoti.fi/3swD3J8%20
+  - label: Apple Music
+    url: https://apple.co/3pv181b
+  - label: Beatport
+    url: https://bit.ly/3CbGXKP
 tracks:
   - title: Piano Rosi rmx
     artist: Tomtron

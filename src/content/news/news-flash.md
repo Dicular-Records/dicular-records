@@ -4,7 +4,6 @@ title: "### News Flash ###"
 wpId: 4360
 date: 2024-10-24
 author: admin
-image: /wp-content/uploads/2023/07/Screenshot-2023-07-27-at-23.24.19.png
 categories:
   - uncategorized
 excerpt: "        <p>#### Dicular News Flash #### Hi@alle after we had a longer release break in the summer and a very important change to the new Ditributor for Dicular Records, we are looking forward to everything that will come in the new distribution. We will give you more information about the new release shortly. Stay Dicular.!</p>"

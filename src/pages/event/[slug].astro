@@ -21,7 +21,7 @@ const [w, h] = await fitSize(e.image, 900, 900);
 		<article class={`qt-content qt-event-content containerqt-fade-to-paper post-${e.wpId} event type-event status-publish${e.image ? ' has-post-thumbnail' : ''} hentry`} id={`post${e.wpId}`}>
 			<header class="qt-header">
 				<h4 class="container">
-					{fmtLong(e.date)}
+					{fmtLong(e.date)}{e.location && ` [${e.location}]`}
 				</h4>
 				<div class="container">
 					<h1 class="qt-titdeco-eq text-center center">{e.title}</h1>

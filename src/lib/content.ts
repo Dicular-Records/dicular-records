@@ -1,5 +1,6 @@
 // Sortierung und Verknüpfungen wie im Sonik-Theme (aus dem Live-Verhalten abgeleitet, siehe docs/DECISIONS).
 import { getCollection, type CollectionEntry } from 'astro:content';
+import taxonomies from '../data/taxonomies.json';
 
 type WithOrder = { data: { listOrder?: number; date?: Date } };
 /** Live-Reihenfolge (listOrder); neue Einträge ohne listOrder davor, neueste zuerst */
@@ -26,16 +27,22 @@ export async function relatedReleases(r: CollectionEntry<'releases'>) {
   return all.slice(0, 16);
 }
 
-/** Related Artists: gleiche Artist-Genres (ohne sich selbst), max. 4 */
+/**
+ * Related Artists wie WordPress (tax_query mit include_children): Artists mit einem der eigenen Genres
+ * oder einem Unter-Genre davon (ohne sich selbst). Ohne Genre: alle Artists (inkl. sich selbst).
+ */
 export async function relatedArtists(a: CollectionEntry<'artists'>) {
   const all = await artistsSorted();
-  return all.filter((x) => x.id !== a.id && x.data.genres.some((g) => a.data.genres.includes(g))).slice(0, 4);
+  if (!a.data.genres.length) return all;
+  const parents = taxonomies.artistgenreParents as Record<string, string>;
+  const matches = (g: string) => a.data.genres.includes(g) || a.data.genres.includes(parents[g]);
+  return all.filter((x) => x.id !== a.id && x.data.genres.some(matches));
 }
 
-/** Related News: gleiche Kategorie (ohne sich selbst), neueste zuerst, max. 5 */
+/** Related News: gleiche Kategorie (ohne sich selbst), Reihenfolge wie News-Liste, max. 9 */
 export async function relatedNews(n: CollectionEntry<'news'>) {
   const all = await newsSorted();
-  return all.filter((x) => x.id !== n.id && x.data.categories.some((c) => n.data.categories.includes(c))).slice(0, 5);
+  return all.filter((x) => x.id !== n.id && x.data.categories.some((c) => n.data.categories.includes(c))).slice(0, 9);
 }
 
 /** Datumsformate des Themes */

@@ -8,6 +8,7 @@ import RelatedCarousel from './RelatedCarousel.astro';
 import CommentForm from './CommentForm.astro';
 import { relatedNews, fmtDayMonth } from '../lib/content';
 import taxonomies from '../data/taxonomies.json';
+import site from '../data/site.json';
 
 interface Props { entry: CollectionEntry<'news'> }
 const { entry } = Astro.props;
@@ -24,7 +25,7 @@ const related = await relatedNews(entry);
 <Legacy critical="post" title={n.title} bodyClass={`wp-singular post-template-default single single-post postid-${n.wpId} single-format-standard`}>
 	<div id="qwjquerycontent qt-single">
 		<article class={classes} id={`post${n.wpId}`}>
-			<FeaturedImage src={n.image} />
+			<FeaturedImage src={n.image ?? site.defaultHeader} />
 			<header class="qt-header qt-fade-to-paper qt-single-part-post">
 				<div class="container qt-tags">
 					<div class="qt-reading-opt" set:html={catLinks}></div>

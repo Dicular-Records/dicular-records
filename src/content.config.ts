@@ -30,7 +30,12 @@ const releases = defineCollection({
       artist: z.string().default(''),
       mp3: z.string().optional(),
       buyUrl: z.string().optional(),
+      /** Video zum Track (YouTube-Link, wird vom Theme eingebettet) */
+      video: z.string().optional(),
+      videoLabel: z.string().optional(),
     })).default([]),
+    /** Kauf-Links des ganzen Releases (z. B. Beatport), über der Trackliste */
+    buyLinks: z.array(z.object({ label: z.string().default(''), url: z.string() })).default([]),
     artists: z.array(reference('artists')).default([]),
     genres: z.array(z.string()).default([]),
     listOrder,

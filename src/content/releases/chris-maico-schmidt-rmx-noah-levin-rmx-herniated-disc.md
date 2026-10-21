@@ -8,6 +8,9 @@ cover: /wp-content/uploads/2024/10/Chris-Maico-Schmidt-Noah-levin-herniated-disc
 background: /wp-content/uploads/2024/10/Chris-Maico-Schmidt-Noah-levin-herniated-disc-COVER-scaled.jpg
 headerPlayer: true
 playerTitle: Chris Maico Schmidt_RMX_Herniated_Disc_Clip
+buyLinks:
+  - label: Presale Beatport NOW
+    url: https://www.beatport.com/release/herniated-disc/4808786
 tracks:
   - title: Chris Maico Schmidt_RMX_Herniated_Disc_Clip
     artist: Chris Maico Schmidt

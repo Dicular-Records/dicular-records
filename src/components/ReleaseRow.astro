@@ -4,6 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import Body from './Body.astro';
 import { audio, fitSize } from '../lib/media';
 import { fmtLong } from '../lib/content';
+import taxonomies from '../data/taxonomies.json';
 
 // playerId gesetzt → Track spielt im 360°-Player (data-playtrack); sonst im Player der Kopfleiste (data-mp3url)
 interface Props { release: CollectionEntry<'releases'>; playerId?: string }
@@ -20,14 +21,20 @@ const [cw, ch] = await fitSize(r.cover, 900, 900);
 			<a class="qw-imgfx" href={r.cover}>
 				<img decoding="async" width={cw} height={ch} src={r.cover} class="img-responsive wp-post-image" alt="" />
 			</a>
-			<div class="qt-tags">
-			</div>
+			<div class="qt-tags" set:html={r.genres.map((g) => `<a href="/genre/${g}/" rel="tag">${(taxonomies.genre as Record<string, string>)[g] ?? g}</a>`).join(' ')}></div>
 		</div>
 
 		<div class="col m12 s12 l8">
+			{r.buyLinks.length > 0 && (
+				<p class="qt-buylinks qt-nomargin text-right">
+					{r.buyLinks.map((b) => <Fragment><a href={b.url} class="btn qt-btn-ghost" target="_blank"><i class="fa fa-shopping-cart"></i> {b.label}</a> </Fragment>)}
+				</p>
+			)}
 			{r.tracks.length > 0 && (
 				<ul class="qt-tracklist qt-border top bottom thick qt-border-color-ink">
 					{r.tracks.map((t, i) => (
+						<Fragment>
+						{t.video && <a href={t.video} set:html={t.videoLabel ?? t.title}></a>}
 						<li>
 							<div>
 								<h4 class="qt-ellipsis">{t.title}</h4>
@@ -49,6 +56,7 @@ const [cw, ch] = await fitSize(r.cover, 900, 900);
 							</p>
 							<hr class="canc">
 						</li>
+						</Fragment>
 					))}
 				</ul>
 			)}
