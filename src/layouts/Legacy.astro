@@ -1,8 +1,10 @@
 ---
 // Seitengerüst 1:1 wie das WordPress-Theme "sonik" (QantumThemes) inkl. WPBakery-Styles.
 // Theme-Styles/Scripts/Cookie-Bar kommen wörtlich aus src/legacy/ (siehe scripts/extract-legacy-shell.mjs).
-import headHtml from '../legacy/head.html?raw';
-import scriptsHtml from '../legacy/scripts.html?raw';
+import boostHead from '../legacy/boost/head.html?raw';
+import boostScripts from '../legacy/boost/scripts.html?raw';
+import plainHead from '../legacy/plain/head.html?raw';
+import plainScripts from '../legacy/plain/scripts.html?raw';
 import cookieBarHtml from '../legacy/cookiebar.html?raw';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -11,20 +13,33 @@ import site from '../data/site.json';
 interface Props {
   /** Dokumenttitel ohne " | Dicular Records" */
   title: string;
-  /** body-class des Originals (Template/Seitentyp), z. B. "home page-template-page-composer page-id-3209" */
+  /** body-class des Originals vor "wp-theme-sonik", z. B. "wp-singular page-template-default page page-id-4177" */
   bodyClass: string;
-  /** <html>-Klasse des Originals, z. B. "qt-template-page-composer" */
-  htmlClass?: string;
+  /** Theme-Template (Teil von <html class="qt-template-…"> und body "template-…"), z. B. "page-composer.php", "archive", "" */
+  template?: string;
   /** seitenspezifisches WPBakery-CSS (vc_shortcodes-custom-css) */
   customCss?: string;
+  /** WordPress-ID der Seite, deren Menüeintrag als aktuell markiert wird */
+  pageId?: number;
+  /**
+   * Seitentyp für das Jetpack-Boost-Critical-CSS (src/legacy/critical/<typ>.css) — wie im Original
+   * asynchrones Laden der Stylesheets. Ohne Angabe: normale Stylesheets (wie Tag-/Autoren-Archive live).
+   */
+  critical?: 'home' | 'page' | 'post' | 'release' | 'artist' | 'event' | 'members' | 'category' | 'genre' | 'membertype';
 }
-const { title, bodyClass, htmlClass = '', customCss } = Astro.props;
+const criticalCss = import.meta.glob('../legacy/critical/*.css', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const { title, bodyClass, template = '', customCss, pageId, critical } = Astro.props;
+const headHtml = critical ? boostHead : plainHead;
+const scriptsHtml = critical ? boostScripts : plainScripts;
+const criticalStyle = critical ? criticalCss[`../legacy/critical/${critical}.css`] : undefined;
+// Original: <html> trägt nur Datei-Templates ("archive-release.php" → "archive-release"), sonst leer
+const htmlTemplate = template.endsWith('.php') ? template.slice(0, -4) : '';
 const fullTitle = `${title} | ${site.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const fav = site.favicon;
 ---
 <!doctype html>
-<html class={`no-js ${htmlClass}`.trim()} lang="en-US">
+<html class={`no-js qt-template-${htmlTemplate}`} lang="en-US">
 	<head>
 		<link rel="icon" href={fav} sizes="32x32" />
 		<link rel="icon" href={fav} sizes="192x192" />
@@ -41,15 +56,17 @@ const fav = site.favicon;
 		<link rel="canonical" href={canonical} />
 		<title>{fullTitle}</title>
 		<meta name="robots" content="max-image-preview:large" />
+		{criticalStyle && <style id="jetpack-boost-critical-css" set:html={criticalStyle}></style>}
 		<Fragment set:html={headHtml} />
+		<script is:inline src="/js/theme-compat.js"></script>
 		{customCss && <style type="text/css" data-type="vc_shortcodes-custom-css" set:html={customCss}></style>}
 	</head>
-	<body id="qtBody" class={`${bodyClass} wp-theme-sonik wp-child-theme-sonik-child is_unknown qt-body qt-sticky qt-menufullscreen qt-debug  woocommerce woomanual  wpb-js-composer js-comp-ver-6.8.0 vc_responsive`} data-soundmanagerurl="/wp-content/themes/sonik/assets/soundmanager/swf/" data-accentcolor="#2a5982" data-accentcolordark="#2cc894" data-textcolor="#adadad">
+	<body id="qtBody" class={`${bodyClass} wp-theme-sonik wp-child-theme-sonik-child is_unknown qt-body template-${template} qt-sticky qt-menufullscreen qt-debug  woocommerce woomanual  wpb-js-composer js-comp-ver-6.8.0 vc_responsive`} data-soundmanagerurl="/wp-content/themes/sonik/assets/soundmanager/swf/" data-accentcolor="#2a5982" data-accentcolordark="#2cc894" data-textcolor="#adadad">
 		<div id="qtMainContainer" class="qt-main-container stage ">
 			<div id="skrollr-body" class="" data-10="@class:qt-scrolled;" data-0="@class:qt-scrolledoff;">
-				<Header />
+				<Header currentPageId={pageId} />
 				<slot />
-				<Footer />
+				<Footer currentPageId={pageId} />
 			</div>
 		</div>
 		<Fragment set:html={cookieBarHtml} />

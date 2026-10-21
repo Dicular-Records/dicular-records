@@ -8,10 +8,10 @@ const page = (await getEntry('pages', 'home'))!;
 const p = page.data;
 const release = p.featuredRelease ? await getEntry(p.featuredRelease) : undefined;
 ---
-<Legacy
+<Legacy critical="home"
 	title={p.title}
-	htmlClass="qt-template-page-composer"
-	bodyClass={`home wp-singular page-template page-template-page-composer page-template-page-composer-php page page-id-${p.wpId} template-page-composer.php`}
+	template="page-composer.php"
+	bodyClass={`home wp-singular page-template page-template-page-composer page-template-page-composer-php page page-id-${p.wpId}`}
 	customCss={p.customCss}
 >
 	<!-- ================================================================================ end header.php ============================================================== -->
@@ -28,7 +28,7 @@ const release = p.featuredRelease ? await getEntry(p.featuredRelease) : undefine
 		<div class="vc_row wpb_row vc_row-fluid vc_custom_1690497947705 vc_row-has-fill">
 			<div class="container">
 				<div class="wpb_column vc_column_container vc_col-sm-12"><div class="vc_column-inner"><div class="wpb_wrapper">
-					{release && <ReleaseBlock release={release} />}
+					{release && <ReleaseBlock release={release} variant="home" />}
 				</div></div></div>
 			</div>
 		</div>

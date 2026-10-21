@@ -1,0 +1,41 @@
+---
+// Friend/Member-Detailseite (single-members.php)
+import { getCollection } from 'astro:content';
+import Legacy from '../../layouts/Legacy.astro';
+import Body from '../../components/Body.astro';
+import { thumb } from '../../lib/media';
+import taxonomies from '../../data/taxonomies.json';
+
+export async function getStaticPaths() {
+  return (await getCollection('friends')).map((friend) => ({ params: { slug: friend.id }, props: { friend } }));
+}
+const { friend } = Astro.props;
+const f = friend.data;
+const typeName = (t: string) => (taxonomies.membertype as Record<string, string>)[t] ?? t;
+const types = f.memberTypes.map((t) => `<a href="/membertype/${t}/" rel="tag">${typeName(t)}</a>`).join(' / ');
+const classes = `qt-content qt-member post-${f.wpId} members type-members status-publish${f.headerImage ? ' has-post-thumbnail' : ''} hentry${f.memberTypes.map((t) => ` membertype-${t}`).join('')}`;
+---
+<Legacy critical="members" title={f.name} bodyClass={`wp-singular members-template-default single single-members postid-${f.wpId}`}>
+	<div id="qwjquerycontent">
+		<article class={classes} id={`page${f.wpId}`}>
+			<header class="qt-header qt-vp " data-bgimage={f.headerImage}>
+				<div class="qt-vc  qt-fade-to-paper qt-member-header-inner">
+					{f.profilePic && (
+						<div class="qt-profilepic qt-border thick top bottom qt-border-color-accent">
+							<img src={thumb(f.profilePic, 'thumbnail')} width="150" height="150" />
+						</div>
+					)}
+					<h1 class="qt-title qt-titdeco center-align center">{f.name}</h1>
+					<h3 set:html={types}></h3>
+				</div>
+			</header>
+			<div class="negative clearfix">
+				<div class="container ">
+					<div class="qt-reading-opt">
+						<Body entry={friend} />
+					</div>
+				</div>
+			</div>
+		</article>
+	</div>
+</Legacy>

@@ -1,0 +1,33 @@
+---
+// News-Übersicht (blog-masonry.php), 6 pro Seite, nummerierte Paginierung
+import { getEntry } from 'astro:content';
+import Legacy from '../../layouts/Legacy.astro';
+import FeaturedImage from '../../components/FeaturedImage.astro';
+import NewsMasonryItem from '../../components/NewsMasonryItem.astro';
+import { newsSorted } from '../../lib/content';
+import { wpPaginate, pagedClass, paginationHtml, type PageInfo } from '../../lib/paginate';
+import site from '../../data/site.json';
+
+export async function getStaticPaths() {
+  return wpPaginate(await newsSorted(), 6, '/dicular-rec-news/');
+}
+const { pageInfo } = Astro.props as { pageInfo: PageInfo<Awaited<ReturnType<typeof newsSorted>>[number]> };
+const page = (await getEntry('pages', 'dicular-rec-news'))!;
+const p = page.data;
+const paged = pagedClass(pageInfo.current);
+---
+<Legacy critical="page" title={p.title} pageId={p.wpId} template="blog-masonry.php" customCss={p.customCss}
+	bodyClass={`${paged.prefix}wp-singular page-template page-template-blog-masonry page-template-blog-masonry-php page page-id-${p.wpId}${paged.suffix}`}>
+	<FeaturedImage src={p.image ?? p.headerImage ?? site.defaultHeader} />
+	<div class="qt-content">
+		<header class="qt-header">
+			<h1 class="qt-titdeco-eq text-center center">{p.title}</h1>
+		</header>
+		<div id="qtArchive" class={`container qt-archive qt-template-masonry post-${p.wpId} page type-page status-publish hentry`}>
+			<div id="masonrycontainer" class="row qt-masonry masonrycontainer">
+				{pageInfo.items.map((n, i) => <NewsMasonryItem post={n} first={i === 0} />)}
+			</div>
+		</div>
+		<div class="text-center" set:html={paginationHtml(pageInfo.base, pageInfo.current, pageInfo.last)}></div>
+	</div>
+</Legacy>

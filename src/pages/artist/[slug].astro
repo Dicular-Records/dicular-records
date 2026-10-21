@@ -1,0 +1,108 @@
+---
+// Artist-Detailseite (single-artist.php): Bio, Music (Releases des Artists), Booking, freie Sektion, SoundCloud
+import { getCollection } from 'astro:content';
+import Legacy from '../../layouts/Legacy.astro';
+import Body from '../../components/Body.astro';
+import FeaturedImage from '../../components/FeaturedImage.astro';
+import RelatedCarousel from '../../components/RelatedCarousel.astro';
+import SoundCloud from '../../components/SoundCloud.astro';
+import { releasesSorted, relatedArtists } from '../../lib/content';
+import { thumb, fitSize } from '../../lib/media';
+
+export async function getStaticPaths() {
+  return (await getCollection('artists')).map((artist) => ({ params: { slug: artist.id }, props: { artist } }));
+}
+const { artist } = Astro.props;
+const a = artist.data;
+const music = a.music ? (await releasesSorted()).filter((r) => r.data.artists.some((ref) => ref.id === artist.id)) : [];
+const related = await relatedArtists(artist);
+const [pw, ph] = await fitSize(a.photo, 1024, 1024);
+const genreClasses = a.genres.map((g) => ` artistgenre-${g}`).join('');
+const menu = [
+  { id: 'bio', label: 'Biography' },
+  ...(music.length ? [{ id: 'music', label: a.music!.title }] : []),
+  ...(a.soundcloud.length ? [{ id: 'soundcloud', label: 'SoundCloud' }] : []),
+  ...(a.booking.length ? [{ id: 'booking', label: 'Booking' }] : []),
+  ...(a.custom ? [{ id: 'custom', label: a.custom.title }] : []),
+];
+---
+<Legacy critical="artist" title={a.name} bodyClass={`wp-singular artist-template-default single single-artist postid-${a.wpId}`}>
+	<article class={`qt-content qt-header-animation-container post-${a.wpId} artist type-artist status-publish${a.photo ? ' has-post-thumbnail' : ''} hentry${genreClasses}`} id={`page${a.wpId}`}>
+		<FeaturedImage src={a.background ?? a.photo} variant="artist" />
+		<h1 class="qt-header-animation-title qt-titdeco-eq center text-center">{a.name}</h1>
+		<div id="qwjquerycontent">
+			<a id="bio" class="qt-section-index"></a>
+			<div class="container qt-header-animation-content">
+				<div class="row">
+					<div class="col s12 m12 l8 offset-l4 qt-artist">
+						<h2 class="qt-title qt-titdeco">{a.name}</h2>
+						{a.subtitle && <h4 set:html={` ${a.subtitle}  `} />}
+						{a.photo && (
+							<a href={a.photo}>
+								<img width={pw} height={ph} src={a.photo} class="img-responsive wp-post-image" alt="" decoding="async" fetchpriority="high" />
+							</a>
+						)}
+						<h3 class="qt-titdeco qt-section">Biography</h3>
+						<div class="qt-bio">
+							<Body entry={artist} />
+						</div>
+						{music.length > 0 && (
+							<Fragment>
+								<a id="music" class="qt-section-index"></a>
+								<h3 class="qt-titdeco qt-section">{a.music!.title}</h3>
+								<div class="qt-releases">
+									<div id="artistReleases" class="owl-carousel qt-owlcarousel" data-items="3" data-margin="30" data-loop="false" data-center="false" data-mouseDrag="false" data-touchDrag="true" data-pullDrag="false" data-freeDrag="false" data-stagePadding="0" data-nav="true" data-navRewind="false" data-autoplayHoverPause="true" data-dots="false" data-autoplay="false">
+										{music.map((r) => (
+											<div class="qt-owl-card">
+												<a href={`/release/${r.id}/`} class="qw-imgfx">
+													<img width="500" height="500" src={thumb(r.data.cover, 'gridthumb')} class="attachment-qantumthemes_gridthumb size-qantumthemes_gridthumb wp-post-image" alt="" decoding="async" loading="lazy" />
+												</a>
+												<a href={`/release/${r.id}/`}>
+													<h4>{r.data.title}</h4>
+												</a>
+											</div>
+										))}
+									</div>
+								</div>
+								<i class="qt-swipe hide-on-large-only"></i>
+							</Fragment>
+						)}
+						{a.soundcloud.length > 0 && (
+							<Fragment>
+								<a id="soundcloud" class="qt-section-index"></a>
+								<h3 class="qt-titdeco qt-section">SoundCloud</h3>
+								{a.soundcloud.map((url) => <SoundCloud url={url} />)}
+							</Fragment>
+						)}
+						{a.booking.length > 0 && (
+							<div class="qt-booking-details">
+								<a id="booking" class="qt-section-index"></a>
+								<h3 class="qt-titdeco qt-section">Booking</h3>
+								<div class="qt-booking">
+									{a.booking.map((b, i) => (
+										<p class={i === 0 ? 'qw-top30' : undefined}>
+											<span class={`qw-detTit qw-negative ghost ghost-accentcolor${i === 0 ? ' ' : ''}`}>{b.label}</span>
+											<span class="qw-detail-value negative" set:html={b.value}></span>
+										</p>
+									))}
+								</div>
+							</div>
+						)}
+						{a.custom && (
+							<Fragment>
+								<a id="custom" class="qt-section-index"></a>
+								<h3 class="qt-titdeco qt-section">{a.custom.title}</h3>
+								{a.custom.content && <Fragment set:html={a.custom.content} />}
+							</Fragment>
+						)}
+					</div>
+				</div>
+			</div>
+			<ul class="qt-artist-internalmenu">
+				{menu.map((m) => <li><a href={`#${m.id}`} class="accentcolor btn waves-effect waves-light qwsmoothscroll">{m.label}</a></li>)}
+			</ul>
+		</div>
+	</article>
+	<RelatedCarousel heading="Artists" dataItems={4} size="medium-thumb" linkClass="cmblink qwjquerycontent"
+		items={related.map((r) => ({ href: `/artist/${r.id}/`, image: r.data.photo, title: r.data.name }))} />
+</Legacy>

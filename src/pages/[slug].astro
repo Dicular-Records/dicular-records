@@ -1,0 +1,18 @@
+---
+// Seiten auf oberster Ebene wie in WordPress: News-Beiträge (single.php) und statische Seiten
+// (page.php / page-composer.php). Übersichtsseiten (Releases, News, Artists, Events, Friends) haben eigene Routen.
+import { getCollection } from 'astro:content';
+import NewsSingle from '../components/NewsSingle.astro';
+import PageSingle from '../components/PageSingle.astro';
+
+export async function getStaticPaths() {
+  const LIST_PAGES = ['home', 'releases', 'dicular-rec-news', 'artists', 'gigs', 'friends'];
+  const news = (await getCollection('news')).map((entry) => ({ params: { slug: entry.id }, props: { news: entry } }));
+  const pages = (await getCollection('pages')).filter((p) => !LIST_PAGES.includes(p.id))
+    .map((entry) => ({ params: { slug: entry.id }, props: { page: entry } }));
+  return [...news, ...pages];
+}
+const { news, page } = Astro.props;
+---
+{news && <NewsSingle entry={news} />}
+{page && <PageSingle entry={page} />}

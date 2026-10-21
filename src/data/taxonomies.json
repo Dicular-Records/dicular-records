@@ -1,0 +1,67 @@
+{
+  "_info": "Taxonomie-Begriffe aus WordPress: Anzeigename + Term-ID (für body-Klassen wie \"category-20\")",
+  "category": {
+    "electronic-music": "Electronic music",
+    "music": "Music",
+    "news": "News",
+    "organic-trance": "organic trance",
+    "uncategorized": "Uncategorized"
+  },
+  "tag": {
+    "cool-music": "Cool music",
+    "dj": "Dj",
+    "edm": "EDM",
+    "music-themes": "Music themes",
+    "music-wordpress-themes": "Music wordpress themes",
+    "party": "Party",
+    "singer": "Singer",
+    "synthesizer": "Synthesizer",
+    "techno": "Techno"
+  },
+  "genre": {
+    "progressive-house": "Progressive-House",
+    "progressive-trance": "Progressive-Trance"
+  },
+  "membertype": {
+    "blockchain": "Blockchain",
+    "event-management": "event-management",
+    "graphic-designer": "graphic-designer",
+    "internet-marketing": "Internet Marketing",
+    "iot": "IOT",
+    "music-producer": "music-producer",
+    "seo": "SEO"
+  },
+  "ids": {
+    "category": {
+      "electronic-music": 17,
+      "music": 19,
+      "news": 20,
+      "organic-trance": 139,
+      "uncategorized": 1
+    },
+    "tag": {
+      "cool-music": 23,
+      "dj": 24,
+      "edm": 26,
+      "music-themes": 30,
+      "music-wordpress-themes": 31,
+      "party": 32,
+      "singer": 34,
+      "synthesizer": 35,
+      "techno": 36
+    },
+    "genre": {
+      "progressive-house": 88,
+      "progressive-trance": 57
+    },
+    "membertype": {
+      "blockchain": 132,
+      "event-management": 128,
+      "graphic-designer": 126,
+      "internet-marketing": 129,
+      "iot": 131,
+      "music-producer": 127,
+      "seo": 130
+    }
+  }
+}

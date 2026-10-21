@@ -1,0 +1,9 @@
+---
+// Fließtext eines Eintrags: importierter WordPress-Text (format: html) wörtlich, neue Inhalte als Markdown.
+import { render, type CollectionEntry } from 'astro:content';
+interface Props { entry: CollectionEntry<'releases' | 'artists' | 'news' | 'events' | 'friends' | 'pages'> }
+const { entry } = Astro.props;
+const isHtml = entry.data.format === 'html';
+const { Content } = isHtml ? { Content: null } : await render(entry);
+---
+{isHtml ? <Fragment set:html={entry.body ?? ''} /> : Content && <Content />}

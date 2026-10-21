@@ -4,17 +4,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/thumbs.mjs",
     "dev": "astro dev",
+    "prebuild": "node scripts/thumbs.mjs",
     "build": "astro build",
     "preview": "astro preview",
-    "mirror:assets": "bash scripts/mirror-theme-assets.sh"
+    "mirror:assets": "bash scripts/mirror-theme-assets.sh",
+    "import": "node scripts/cache-live.mjs && node scripts/import-live.mjs"
   },
   "dependencies": {
     "astro": "^5.18.2"
   },
   "devDependencies": {
+    "cheerio": "^1.2.0",
     "pixelmatch": "^8.0.0",
     "playwright": "^1.64.1",
-    "pngjs": "^7.0.0"
+    "pngjs": "^7.0.0",
+    "yaml": "^2.9.1"
   }
 }

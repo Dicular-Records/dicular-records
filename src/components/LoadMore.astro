@@ -1,0 +1,16 @@
+---
+// "Load more"-Knopf der Theme-Archive (lädt per AJAX die nächste /page/N/ nach) bzw. Endmarke
+interface Props { id: string; next?: string; callback?: string; container?: string; tag?: 'p' | 'h2' }
+const { id, next, callback = '', container = '#itemslist' } = Astro.props;
+---
+{next ? (
+	<p class="qt-loadmore-container text-center clearfix" id={id}>
+		<a data-loadmore data-buttonid={id} href={next} data-container={container} data-callback={callback} data-next-url="" class="btn btn-large qt-loadmore">
+			<span>Load more</span><i class="fa fa-spinner fa-pulse fa-3x fa-fw hidden"></i>
+		</a>
+	</p>
+) : (
+	<h2 class="qt-loadmore-container text-center clearfix" id={id}>
+		<i class="fa fa-stop-circle-o "></i>
+	</h2>
+)}

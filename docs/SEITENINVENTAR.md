@@ -191,5 +191,5 @@ Alte URLs aus `/sitemap.xml` (z. B. `/welcome-kachina/`, `/welcome-dj-care/`) li
 
 ## C. Offene Fragen an Yoka
 
-1. **Archivseiten (24):** vom Theme automatisch erzeugte Listen je Kategorie/Tag/Genre/Member-Typ/Autor. Einige Begriffe stammen aus dem Theme-Demo-Import (Tags „Music wordpress themes", „Music themes"; Member-Typen „Blockchain", „IOT", „SEO", „Internet Marketing").
+1. **Archivseiten (24):** vom Theme automatisch erzeugte Listen je Kategorie/Tag/Genre/Member-Typ/Autor — **vorerst alle 1:1 übernommen**. Die Member-Typen („Blockchain", „IOT", „SEO", „Internet Marketing") gehören zum echten Friend „Szenekonzept". Aus dem Theme-Demo-Import stammen vermutlich nur die Tags „Music wordpress themes" und „Music themes" (an den zwei ältesten Beiträgen).
 2. **Teil B** (134 unverlinkte Demo-URLs) weglassen?

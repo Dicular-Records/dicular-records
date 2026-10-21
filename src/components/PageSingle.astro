@@ -1,0 +1,43 @@
+---
+// Statische Seite: page.php (Standard) oder page-composer.php (WPBakery ohne Container)
+import type { CollectionEntry } from 'astro:content';
+import Legacy from '../layouts/Legacy.astro';
+import Body from './Body.astro';
+import FeaturedImage from './FeaturedImage.astro';
+import site from '../data/site.json';
+
+interface Props { entry: CollectionEntry<'pages'> }
+const { entry } = Astro.props;
+const p = entry.data;
+const composer = p.template === 'page-composer';
+const articleClass = p.image
+  ? `qt-content qt-fade-to-paper post-${p.wpId} page type-page status-publish has-post-thumbnail hentry`
+  : `qt-content  post-${p.wpId} page type-page status-publish hentry`;
+---
+<Legacy critical="page" title={p.title} pageId={p.wpId} template={composer ? 'page-composer.php' : ''} customCss={p.customCss}
+	bodyClass={composer ? `wp-singular page-template page-template-page-composer page-template-page-composer-php page page-id-${p.wpId}` : `wp-singular page-template-default page page-id-${p.wpId}`}>
+	<FeaturedImage src={p.image ?? p.headerImage ?? site.defaultHeader} />
+	<article class={articleClass} id={`page${p.wpId}`}>
+		{composer ? (
+			<Fragment>
+				<header class="qt-header">
+					<h1 class="qt-titdeco-eq text-center center">{p.title}</h1>
+				</header>
+				<Body entry={entry} />
+			</Fragment>
+		) : (
+			<Fragment>
+				<header class="qt-header">
+					<div class="container">
+						<h1 class="qt-titdeco-eq text-center">{p.title}</h1>
+					</div>
+				</header>
+				<main class="container" role="main">
+					<div class="qt-post-content">
+						<Body entry={entry} />
+					</div>
+				</main>
+			</Fragment>
+		)}
+	</article>
+</Legacy>

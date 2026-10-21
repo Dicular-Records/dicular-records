@@ -1,0 +1,18 @@
+---
+// Kategorie-Archiv (/category/<term>/, 10 pro Seite)
+import PostArchive from '../../../components/PostArchive.astro';
+import { newsSorted } from '../../../lib/content';
+import { wpPaginate } from '../../../lib/paginate';
+import taxonomies from '../../../data/taxonomies.json';
+
+export async function getStaticPaths() {
+  const news = await newsSorted();
+  return Object.keys(taxonomies.category).flatMap((term) =>
+    wpPaginate(news.filter((n) => n.data.categories.includes(term)), 10, `/category/${term}/`, {})
+      .map((p) => ({ params: { term, page: p.params.page }, props: p.props })));
+}
+const { term } = Astro.params;
+const { pageInfo } = Astro.props;
+---
+<PostArchive kind="category" slug={term!} termId={(taxonomies.ids.category as Record<string, number>)[term!]}
+	heading={(taxonomies.category as Record<string, string>)[term!]} pageInfo={pageInfo} />

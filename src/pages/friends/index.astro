@@ -1,0 +1,33 @@
+---
+// Friends-Übersicht (archive-members.php), Masonry-Raster
+import { getEntry } from 'astro:content';
+import Legacy from '../../layouts/Legacy.astro';
+import Body from '../../components/Body.astro';
+import FeaturedImage from '../../components/FeaturedImage.astro';
+import FriendItem from '../../components/FriendItem.astro';
+import LoadMore from '../../components/LoadMore.astro';
+import { friendsSorted } from '../../lib/content';
+import site from '../../data/site.json';
+
+const page = (await getEntry('pages', 'friends'))!;
+const p = page.data;
+const friends = await friendsSorted();
+---
+<Legacy critical="page" title={p.title} pageId={p.wpId} template="archive-members.php" customCss={p.customCss}
+	bodyClass={`wp-singular page-template page-template-archive-members page-template-archive-members-php page page-id-${p.wpId}`}>
+	<div class="qt-content qt-animatedheader">
+		<FeaturedImage src={p.image ?? p.headerImage ?? site.defaultHeader} />
+		<header class="qt-header">
+			<div class="container">
+				<h1 class="qt-titdeco-eq text-center center">{p.title}</h1>
+			</div>
+		</header>
+		<div class="container qt-archive " id="qtArchive">
+			<Body entry={page} />
+			<div id="masonrycontainer" class="row qt-masonry masonrycontainer">
+				{friends.map((f, i) => <FriendItem friend={f} first={i === 0} />)}
+			</div>
+			<LoadMore id="qtChartLoadmore" />
+		</div>
+	</div>
+</Legacy>

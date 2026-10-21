@@ -1,0 +1,55 @@
+---
+// Archiv für Beiträge: Kategorie, Tag (archive.php, Vorlage "full") und Autor (author.php, Vorlage "list"), 10 pro Seite
+import Legacy from '../layouts/Legacy.astro';
+import FeaturedImage from './FeaturedImage.astro';
+import ArchivePostItem from './ArchivePostItem.astro';
+import { paginationHtml, pagedClass, type PageInfo } from '../lib/paginate';
+import type { CollectionEntry } from 'astro:content';
+import site from '../data/site.json';
+
+interface Props {
+  kind: 'category' | 'tag' | 'author';
+  /** Archivtitel ("Uncategorized"; beim Autor HTML mit vcard) */
+  heading: string;
+  /** Term-Slug und WordPress-Term-ID für die body-Klassen */
+  slug: string;
+  termId: number;
+  pageInfo: PageInfo<CollectionEntry<'news'>>;
+}
+const { kind, heading, slug, termId, pageInfo } = Astro.props;
+const n = pageInfo.current;
+const paged = n > 1;
+const bodyClass = `archive${paged ? ' paged' : ''} ${kind} ${kind}-${slug} ${kind}-${termId}${paged ? ` paged-${n} ${kind}-paged-${n}` : ''}`;
+const pagination = paginationHtml(pageInfo.base, n, pageInfo.last, true);
+const plainTitle = heading.replace(/<[^>]+>/g, '');
+const author = kind === 'author';
+---
+<Legacy critical={kind === 'category' ? 'category' : undefined} title={author ? plainTitle.replace(/^Author: /, '') : plainTitle} template="archive" bodyClass={bodyClass}>
+	{author && <FeaturedImage src={site.defaultHeader} />}
+	<div class={author ? 'qt-content qt-fade-to-paper' : 'qt-content'}>
+		{!author && <FeaturedImage src={site.defaultHeader} variant="archive" />}
+		{paged ? (
+			<header class="qt-header paged">
+				<h3 class="container qt-title" set:html={`${heading} / Page ${n}`}></h3>
+				<div class="text-center" set:html={pagination}></div>
+			</header>
+		) : author ? (
+			<header class="qt-header">
+				<h3></h3>
+				<h1 class="qt-titdeco-eq text-center center" set:html={heading}></h1>
+			</header>
+		) : (
+			<header class="qt-header">
+				<div class="container">
+					<h1 class="qt-titdeco-eq text-center center" set:html={heading}></h1>
+				</div>
+			</header>
+		)}
+		<div class={`container qt-archive qt-template-${author ? 'list' : 'full'}`} id="qtArchive">
+			<div data-archivelist id="qtListContainer" class="qt-reading-opt">
+				{pageInfo.items.map((p, i) => <ArchivePostItem post={p} variant={author ? 'list' : 'full'} first={i === 0} />)}
+			</div>
+			<div class="text-center" set:html={pagination}></div>
+		</div>
+	</div>
+</Legacy>

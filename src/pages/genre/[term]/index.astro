@@ -1,0 +1,35 @@
+---
+// Genre-Archiv für Releases (taxonomy-genre.php). Wie im Original trägt der Rahmen die Klassen des ersten Releases.
+import Legacy from '../../../layouts/Legacy.astro';
+import FeaturedImage from '../../../components/FeaturedImage.astro';
+import ReleaseListItem from '../../../components/ReleaseListItem.astro';
+import LoadMore from '../../../components/LoadMore.astro';
+import { releasesSorted } from '../../../lib/content';
+import taxonomies from '../../../data/taxonomies.json';
+import site from '../../../data/site.json';
+
+export async function getStaticPaths() {
+  return Object.keys(taxonomies.genre).map((term) => ({ params: { term } }));
+}
+const { term } = Astro.params as { term: string };
+const name = (taxonomies.genre as Record<string, string>)[term];
+const releases = (await releasesSorted()).filter((r) => r.data.genres.includes(term));
+const first = releases[0]?.data;
+const firstClasses = first ? ` post-${first.wpId} release type-release status-publish has-post-thumbnail hentry${first.genres.map((g) => ` genre-${g}`).join('')}` : '';
+---
+<Legacy critical="genre" title={name} template="archive" bodyClass={`archive tax-genre term-${term} term-${(taxonomies.ids.genre as Record<string, number>)[term]}`}>
+	<article class={`qt-content qt-fade-to-paper qt-animatedheader${firstClasses}`} id={first ? `page${first.wpId}` : undefined}>
+		<FeaturedImage src={site.defaultHeader} variant="archive" />
+		<header class="qt-header">
+			<div class="container">
+				<h1 class="qt-titdeco-eq text-center center">{name} Releases</h1>
+			</div>
+		</header>
+		<main class="container" role="main">
+			<div class="row" id="itemslist">
+				{releases.map((r, i) => <ReleaseListItem release={r} first={i === 0} />)}
+			</div>
+			<LoadMore id="qtArtistsLoadmore" />
+		</main>
+	</article>
+</Legacy>

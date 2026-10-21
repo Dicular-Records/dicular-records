@@ -1,0 +1,21 @@
+---
+// Release-Detailseite (single-release.php)
+import { getCollection } from 'astro:content';
+import Legacy from '../../layouts/Legacy.astro';
+import ReleaseBlock from '../../components/ReleaseBlock.astro';
+import RelatedCarousel from '../../components/RelatedCarousel.astro';
+import { relatedReleases } from '../../lib/content';
+
+export async function getStaticPaths() {
+  return (await getCollection('releases')).map((release) => ({ params: { slug: release.id }, props: { release } }));
+}
+const { release } = Astro.props;
+const related = await relatedReleases(release);
+---
+<Legacy critical="release" title={release.data.title} bodyClass={`wp-singular release-template-default single single-release postid-${release.data.wpId}`}>
+	<div id="qwjquerycontent">
+		<ReleaseBlock release={release} />
+	</div>
+	<RelatedCarousel heading="Releases" dataItems={4} nav="1" size="gridthumb" linkClass="cmblink "
+		items={related.map((r) => ({ href: `/release/${r.id}/`, image: r.data.cover, title: r.data.title }))} />
+</Legacy>

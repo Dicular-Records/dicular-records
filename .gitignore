@@ -6,3 +6,8 @@ dist/
 !.env.example
 .DS_Store
 compare/
+.cache/
+
+# Audio liegt extern (642 MB) — siehe docs/DECISIONS
+public/**/*.mp3
+public/_thumbs/

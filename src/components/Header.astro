@@ -10,7 +10,7 @@ import { menuHtml } from '../lib/menu';
 			<div class=" qw-block-100p ">
 				<div class="nav-wrapper maincolor">
 					<a href="/" class="brand-logo" id="logo-container"><img src={site.logo} class="img-responsive qw-animated fast" alt="Home"></a>
-					<ul id="qwtoggle" class="dropDownMenu" set:html={menuHtml(menu.main, true)}></ul>
+					<ul id="qwtoggle" class="dropDownMenu" set:html={menuHtml(menu.main, true, Astro.props.currentPageId)}></ul>
 					<ul id="headerbuttons" class="right qt-icon-nav qt-tabs-controller">
 					</ul>
 					<div class="qw-musicplayer" id="qwMusicPlayerContainer" data-autoplay="0" data-soundmanagerswf="/wp-content/themes/sonik/assets/js/soundmanager2.swf">
@@ -32,7 +32,7 @@ import { menuHtml } from '../lib/menu';
 				</div>
 			</div>
 		</div>
-		<ul id="nav-mobile" class="side-nav " set:html={menuHtml(menu.main, false)}></ul>
+		<ul id="nav-mobile" class="side-nav " set:html={menuHtml(menu.main, false, Astro.props.currentPageId)}></ul>
 	</nav>
 	<div class=" qt-stroke-container">
 		<hr class="qt-stroke">

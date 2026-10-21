@@ -13,6 +13,6 @@ import { menuHtml } from '../lib/menu';
 	<h4>
 		<p><small set:html={site.copyright}></small></p>
 	</h4>
-	<ul id="qtMenuFooter" class="qt-menu-footer qt-small" set:html={menuHtml(menu.footer, true)}></ul>
+	<ul id="qtMenuFooter" class="qt-menu-footer qt-small" set:html={menuHtml(menu.footer, true, Astro.props.currentPageId)}></ul>
 	<hr class="qt-spacer">
 </footer>

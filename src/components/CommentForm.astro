@@ -1,0 +1,23 @@
+---
+// Kommentarbereich wie im Original (comments.php). WordPress-Kommentare gibt es nicht mehr:
+// Einsendungen gehen über Netlify Forms an die Admins (Formular "kommentare"), angezeigt werden keine Kommentare.
+interface Props { postPath: string; postId?: number }
+const { postPath, postId } = Astro.props;
+---
+<div class=" qt-comments-section">
+	<div class="container">
+		<div class="qt-reading-opt">
+			<h2 class="qt-comment-title">Comments</h2>
+			<div id="comments" class="comments-area">
+				<div id="respond" class="comment-respond">
+					<h3 id="reply-title" class="comment-reply-title"><span class="qw-page-subtitle grey-text">Leave a Reply</span> <small><a rel="nofollow" id="cancel-comment-reply-link" href={`${postPath}#respond`} style="display:none;"><i class="mdi-navigation-cancel icon-l"></i></a></small></h3><form action={postPath} method="post" id="qw-commentform" class="comment-form" name="kommentare" data-netlify="true" netlify-honeypot="ak_hp_textarea"><input type="hidden" name="form-name" value="kommentare" /><input type="hidden" name="beitrag" value={postPath} /><p class="comment-form-comment"><textarea id="comment" placeholder="Comment *" name="comment" cols="45" rows="8" aria-required="true"></textarea></p><p class="comment-notes">Your email address will not be published. </p><p class="comment-form-author"><input id="author" placeholder="Name" name="author" type="text" value="" size="30" /></p>
+<p class="comment-form-email"><input id="email" placeholder="Email" name="email" type="text" value="" size="30" /></p>
+<p class="comment-form-url"><input id="url" placeholder="Website" name="url" type="text" value="" size="30" /></p>
+<p class="comment-form-cookies-consent clearfix"><label for="wp-comment-cookies-consent"><input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes" /> Save my name, email, and website in this browser for the next time I comment.</label></p>
+<p class="comment-subscription-form"><input type="checkbox" name="subscribe_comments" id="subscribe_comments" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;" /> <label class="subscribe-label" id="subscribe-label" for="subscribe_comments">Notify me of follow-up comments by email.</label></p><p class="comment-subscription-form"><input type="checkbox" name="subscribe_blog" id="subscribe_blog" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;" /> <label class="subscribe-label" id="subscribe-blog-label" for="subscribe_blog">Notify me of new posts by email.</label></p><p class="form-submit"><input name="submit" type="submit" id="qw-submit" class="accentcolor" value="Post Comment" /> <input type="hidden" name="comment_post_ID" value={postId} id="comment_post_ID" />
+<input type="hidden" name="comment_parent" id="comment_parent" value="0" />
+</p><p style="display: none !important;" class="akismet-fields-container" data-prefix="ak_"><label>&#916;<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label></p></form>	</div><!-- #respond -->
+			</div><!-- #comments -->
+		</div>
+	</div>
+</div>

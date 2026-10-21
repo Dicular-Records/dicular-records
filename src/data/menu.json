@@ -1,17 +1,72 @@
 {
   "main": [
-    { "id": 3199, "label": "Releases", "href": "/releases/" },
-    { "id": 3308, "label": "News", "href": "/dicular-rec-news/" },
-    { "id": 4480, "label": "Artists", "href": "/artists/" },
-    { "id": 4342, "label": "Events", "href": "/gigs/" },
-    { "id": 3531, "label": "Friends", "href": "/friends/" },
-    { "id": 3589, "label": "Team", "href": "/team/" },
-    { "id": 4184, "label": "About Us", "href": "/about/" },
-    { "id": 3309, "label": "Contact", "href": "/sample-page/" },
-    { "id": 4619, "label": "DICULAR DIGITAL", "href": "/my-charts-2/" }
+    {
+      "id": 3199,
+      "label": "Releases",
+      "href": "/releases/",
+      "pageId": 3235
+    },
+    {
+      "id": 3308,
+      "label": "News",
+      "href": "/dicular-rec-news/",
+      "pageId": 2158
+    },
+    {
+      "id": 4480,
+      "label": "Artists",
+      "href": "/artists/",
+      "pageId": 3579
+    },
+    {
+      "id": 4342,
+      "label": "Events",
+      "href": "/gigs/",
+      "pageId": 2176
+    },
+    {
+      "id": 3531,
+      "label": "Friends",
+      "href": "/friends/",
+      "pageId": 2859
+    },
+    {
+      "id": 3589,
+      "label": "Team",
+      "href": "/team/",
+      "pageId": 3582
+    },
+    {
+      "id": 4184,
+      "label": "About Us",
+      "href": "/about/",
+      "pageId": 4177
+    },
+    {
+      "id": 3309,
+      "label": "Contact",
+      "href": "/sample-page/",
+      "pageId": 2
+    },
+    {
+      "id": 4619,
+      "label": "DICULAR DIGITAL",
+      "href": "/my-charts-2/",
+      "pageId": 3236
+    }
   ],
   "footer": [
-    { "id": 3515, "label": "Impressum", "href": "/impressum/" },
-    { "id": 3518, "label": "Privacy Policy", "href": "/privacy-policy/" }
+    {
+      "id": 3515,
+      "label": "Impressum",
+      "href": "/impressum/",
+      "pageId": 3513
+    },
+    {
+      "id": 3518,
+      "label": "Privacy Policy",
+      "href": "/privacy-policy/",
+      "pageId": 3
+    }
   ]
 }

@@ -30,3 +30,20 @@ Rest: Cover/Logo-Resampling (Entscheidung 5) und laufende Equalizer-Animation im
 
 - **2026-10-21: Startseite von Yoka abgenommen.** Entscheidungen 1–10 damit bestätigt (keine Einwände). Nächster Schritt: Unterseiten 1:1.
 - Offen: Archivseiten (A/B/C) und Weglassen der 134 unverlinkten Demo-URLs — siehe `docs/SEITENINVENTAR.md`, Abschnitt C.
+
+## Phase 2 — alle Unterseiten (2026-10-21)
+
+| # | Entscheidung | Begründung |
+|---|---|---|
+| 11 | **Audio nicht im Repo:** die 33 Release-MP3s (642 MB) werden vorerst weiter von `dicular-records.com` abgespielt (`audioBase` in `src/data/site.json`). Vollständige Sicherung: `C:\Users\yoka\Claude-Arbeit\Dicular-Records-Medien` | Git/GitHub ist für so große Binärdateien ungeeignet. **Offen (Yoka):** Ziel-Hosting vor Abschaltung von WordPress. |
+| 12 | Importierte Texte bleiben **wörtliches HTML** (`format: html`), neue Inhalte sind Markdown | Markdown würde Teile des WP-HTML verändern (z. B. `*Milia*` → kursiv). |
+| 13 | **Reihenfolgen** der Übersichten aus der Live-Seite übernommen (`listOrder`); neue Einträge erscheinen vorne | WordPress sortiert teils nach unsichtbaren Feldern (Releases ohne Datum). |
+| 14 | **„Related“-Regeln** aus dem Live-Verhalten: Releases = gleiches Genre, sonst die ersten 16 der Release-Liste; Artists = gleiches Artist-Genre (max. 4); News = gleiche Kategorie | Nachgebaut, nicht zufällig — damit neue Inhalte automatisch richtig erscheinen. |
+| 15 | **Bild-Zuschnitte** (500×500, 600×350, 150×150) werden beim Build aus den Originalen erzeugt (`scripts/thumbs.mjs`) | Entspricht den WordPress-Bildgrößen des Themes; funktioniert auch für neue Uploads. |
+| 16 | **Kommentarformular** unter News optisch 1:1, Einsendungen gehen per **Netlify Forms** an die Admins; es werden keine Kommentare angezeigt | Ohne WordPress gibt es keinen Kommentar-Server. Live existiert kein einziger Kommentar. |
+| 17 | **Archivseiten** (Kategorie, Tag, Genre, Member-Typ, Autor) zunächst **alle übernommen** | 1:1-Grundsatz; sie sind von Beiträgen aus verlinkt. Entfernen bleibt möglich (offene Frage A/B/C). |
+| 18 | „Weitere“ Felder für Self-Service: Artist `soundcloud` (Liste von URLs → eingebetteter Player + Menüpunkt) | Übergabe: SoundCloud-Feld auf der Artist-Seite. Bisher bei keinem Artist befüllt → keine sichtbare Änderung. |
+| 19 | **`public/js/theme-compat.js`** (einzige Ergänzung am Theme-Verhalten): führt einen zu spät registrierten `window.load`-Handler sofort aus | Auf schnellem Hosting ist `load` schon vorbei, bevor das Theme sich anmeldet → Masonry, Quadrat-Kacheln und skrollr starteten nie. Stellt das Live-Verhalten her; Theme-Dateien bleiben unverändert. |
+| 20 | **Critical-CSS je Seitentyp** (`src/legacy/critical/*.css`) und zwei Kopf-Varianten (Boost / normal) wie im Original | Jetpack Boost erzeugt es pro Vorlage; Tag- und Autoren-Archive laden live ohne Boost. |
+| 21 | Release-Feld **`headerPlayer`**: bei 17 Releases ist der 360°-Player im Kopf aus; deren Tracks spielen über den Player der Kopfleiste | Theme-Option je Release im Original. |
+| 22 | **„Sonik Radio“** bleibt ohne Stream (Entscheidung 8), Klick tut nichts | Kein Einfluss auf die Initialisierung (geprüft). |

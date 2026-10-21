@@ -1,0 +1,76 @@
+---
+// Event-Übersicht (archive-event.php): aufklappbare Liste, aufsteigend nach Datum
+import { getEntry } from 'astro:content';
+import Legacy from '../../layouts/Legacy.astro';
+import Body from '../../components/Body.astro';
+import FeaturedImage from '../../components/FeaturedImage.astro';
+import EventInfo from '../../components/EventInfo.astro';
+import LoadMore from '../../components/LoadMore.astro';
+import { eventsSorted, fmtShort, autoExcerpt } from '../../lib/content';
+import { thumb, fitSize } from '../../lib/media';
+import site from '../../data/site.json';
+
+const page = (await getEntry('pages', 'gigs'))!;
+const p = page.data;
+const events = await Promise.all((await eventsSorted()).map(async (ev) => ({ ev, size: await fitSize(ev.data.image, 900, 900) })));
+const day = (d: Date) => String(d.getUTCDate());
+const monthYear = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+---
+<Legacy critical="page" title={p.title} pageId={p.wpId} template="archive-event.php" customCss={p.customCss}
+	bodyClass={`wp-singular page-template page-template-archive-event page-template-archive-event-php page page-id-${p.wpId}`}>
+	<article class={`qt-content qt-fade-to-paper qt-animatedheader post-${p.wpId} page type-page status-publish${p.image ? ' has-post-thumbnail' : ''} hentry`} id={`page${p.wpId}`}>
+		<FeaturedImage src={p.image ?? p.headerImage ?? site.defaultHeader} />
+		<header class="qt-header">
+			<div class="container">
+				<h1 class="qt-titdeco-eq text-center center">{p.title}</h1>
+			</div>
+		</header>
+		<main class="container" role="main">
+			<Body entry={page} />
+			<ul class="collapsible popout qt-archiveevent-list" data-collapsible="accordion" id="itemslist">
+				{events.map(({ ev, size: [w, h] }) => {
+					const e = ev.data;
+					return (
+						<li class="qt-archiveevent-item qt-border top thick">
+							<div class="collapsible-header clearfix">
+								<h4 class="qt-dateblock">
+									<span class="qt-dateday">{day(e.date)}</span>
+									<span class="qt-dateyear color-main-light">{monthYear(e.date)}</span>
+								</h4>
+								<div class="text left">
+									<h2 class="qt-ellipsis">{e.title}</h2>
+									<h4 class="hide-on-med-and-up text-left">{fmtShort(e.date)}</h4>
+									<p class="color-main-light">
+										{e.location ?? ''} // {e.city ?? ''} <br>
+										{e.street ?? ''} // {e.country ?? ''}
+									</p>
+								</div>
+								{e.image && <img width="150" height="150" src={thumb(e.image, 'thumbnail')} class="img-responsive right hide-on-med-and-down wp-post-image" alt="" decoding="async" loading="lazy" />}
+							</div>
+							<div class="collapsible-body negative">
+								<div class="row qt-event-details">
+									<div class="col s12 m4">
+										{e.image && (
+											<a href={e.image} class="qw-imgfx">
+												<img width={w} height={h} src={e.image} class="img-responsive wp-post-image" alt="" decoding="async" loading="lazy" />
+											</a>
+										)}
+									</div>
+									<div class="col s12 m8 qt-event-details">
+										<h3 class="qt-titdeco qt-border top">
+											Event info
+										</h3>
+										<EventInfo event={ev} list />
+										{(e.excerpt ?? (ev.body ? autoExcerpt(ev.body).replace(/^<p>|<\/p>$/g, '') : '')) && <p set:html={e.excerpt ?? autoExcerpt(ev.body ?? '').replace(/^<p>|<\/p>$/g, '')} />}
+										<p><a href={`/event/${ev.id}/`} class="btn btn-primary">Read more</a></p>
+									</div>
+								</div>
+							</div>
+						</li>
+					);
+				})}
+			</ul>
+			<LoadMore id="qtEventsLoadmore" />
+		</main>
+	</article>
+</Legacy>

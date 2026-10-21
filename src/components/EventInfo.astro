@@ -1,0 +1,25 @@
+---
+// "Event info"-Tabelle + Ticket-Links (part-event-table.php)
+import type { CollectionEntry } from 'astro:content';
+import { fmtLong } from '../lib/content';
+interface Props { event: CollectionEntry<'events'>; list?: boolean }
+const { event, list } = Astro.props;
+const e = event.data;
+const address = e.street || e.city ? ` ${[e.street, e.city].filter(Boolean).join(' ')} ` : '';
+---
+<table class="table eventtable ">
+	<tbody>
+		<tr><th>Date:</th> <td>{fmtLong(e.date)}</td></tr>
+		{e.location && <tr><th>Location:</th> <td>{e.location}</td></tr>}
+		{address && <tr><th>Address:</th> <td>{address}</td></tr>}
+		{e.eventUrl && <tr><th>Event:</th> <td class={list ? 'qt-break-word' : undefined}><a href={e.eventUrl} target="_blank" rel="external nofollow">{e.eventUrl}</a></td></tr>}
+	</tbody>
+</table>
+{!list && (
+	<p class="qw-buylinks">
+		{e.buyLinks.map((b) => (
+			<a href={b.url} target="_blank" rel="external nofollow" class="btn qt-btn-ghost">
+				<i class="fa fa-cart"></i> {b.label}</a>
+		))}
+	</p>
+)}

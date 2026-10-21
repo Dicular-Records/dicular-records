@@ -1,0 +1,32 @@
+---
+// "Related"-Karussell des Themes (part-related-*.php)
+import { thumb, type ThumbSize } from '../lib/media';
+interface Item { href: string; image?: string; title: string }
+interface Props { heading: string; items: Item[]; dataItems: number; nav?: string; size: ThumbSize; linkClass: string }
+const { heading, items, dataItems, nav = '', size, linkClass } = Astro.props;
+const [w, h] = size === 'gridthumb' ? [500, 500] : [600, 350];
+const imagesize = size === 'gridthumb' ? 'qantumthemes_gridthumb' : 'qantumthemes_medium-thumb';
+---
+{items.length > 0 && (
+<div class="qt-related-section">
+	<div class="container">
+		<h2>{heading}</h2>
+		<div id="related" class="owl-carousel qt-owlcarousel dots-true" data-items={dataItems} data-margin="30" data-loop="true" data-center="false" data-mouseDrag="true" data-touchDrag="true" data-pullDrag="true" data-freeDrag="false" data-stagePadding="0" data-mergeFit="true" data-autoWidth="false" data-startPosition="0" data-URLhashListener="false" data-nav={nav} data-navRewind="true" data-navText="',next','prev'" data-autoplayHoverPause="true" data-dots="true" data-autoplay="false" data-autoplaytimeout="5000" data-video="false" data-videoHeight="false" data-videoWidth="false">
+			{items.map((it) => (
+				<div class="qt-figure">
+					<figure>
+						<img src={thumb(it.image, size)} data-imagesize={imagesize} width={w} height={h} alt={it.title} />
+						<figcaption>
+							<p class="hide-on-med-and-down"><i class="fa fa-link"></i> Read more</p>
+							<h2 class="hide-on-med-and-down">{it.title}</h2>
+							<a href={it.href} class={linkClass}>View more</a>
+						</figcaption>
+					</figure>
+					<h5 class="hide-on-large-only"><a href={it.href} class={linkClass}>{it.title}</a></h5>
+				</div>
+			))}
+		</div>
+		<i class="qt-swipe hide-on-large-only"></i>
+	</div>
+</div>
+)}

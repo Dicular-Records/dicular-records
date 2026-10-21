@@ -1,0 +1,39 @@
+---
+// Release-Übersicht (archive-release.php), 8 pro Seite, "Load more" lädt /releases/page/N/ nach
+import { getEntry } from 'astro:content';
+import Legacy from '../../layouts/Legacy.astro';
+import Body from '../../components/Body.astro';
+import FeaturedImage from '../../components/FeaturedImage.astro';
+import ReleaseListItem from '../../components/ReleaseListItem.astro';
+import LoadMore from '../../components/LoadMore.astro';
+import { releasesSorted } from '../../lib/content';
+import { wpPaginate, pageUrl, pagedClass, type PageInfo } from '../../lib/paginate';
+import site from '../../data/site.json';
+
+export async function getStaticPaths() {
+  return wpPaginate(await releasesSorted(), 8, '/releases/');
+}
+const { pageInfo } = Astro.props as { pageInfo: PageInfo<Awaited<ReturnType<typeof releasesSorted>>[number]> };
+const page = (await getEntry('pages', 'releases'))!;
+const p = page.data;
+const paged = pagedClass(pageInfo.current);
+const next = pageInfo.current < pageInfo.last ? pageUrl(pageInfo.base, pageInfo.current + 1) : undefined;
+---
+<Legacy critical="page" title={p.title} pageId={p.wpId} template="archive-release.php" customCss={p.customCss}
+	bodyClass={`${paged.prefix}wp-singular page-template page-template-archive-release page-template-archive-release-php page page-id-${p.wpId}${paged.suffix}`}>
+	<article class={`qt-content  post-${p.wpId} page type-page status-publish hentry`} id={`page${p.wpId}`}>
+		<FeaturedImage src={p.image ?? p.headerImage ?? site.defaultHeader} />
+		<header class="qt-header">
+			<div class="container">
+				{pageInfo.current === 1 ? <h1 class="qt-titdeco-eq text-center center">{p.title}</h1> : <h2>{p.title} / Page {pageInfo.current}</h2>}
+			</div>
+		</header>
+		<main class="container" role="main">
+			{pageInfo.current === 1 && <Body entry={page} />}
+			<div class="row" id="itemslist">
+				{pageInfo.items.map((r, i) => <ReleaseListItem release={r} first={i === 0} />)}
+			</div>
+			<LoadMore id="qtArtistsLoadmore" next={next} callback="fn.qtSquaredItems" />
+		</main>
+	</article>
+</Legacy>

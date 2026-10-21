@@ -1,0 +1,59 @@
+---
+// Inhaltszeile eines Releases (Metas, Cover, Trackliste, Text) — Teil von ReleaseBlock
+import type { CollectionEntry } from 'astro:content';
+import Body from './Body.astro';
+import { audio, fitSize } from '../lib/media';
+import { fmtLong } from '../lib/content';
+
+// playerId gesetzt → Track spielt im 360°-Player (data-playtrack); sonst im Player der Kopfleiste (data-mp3url)
+interface Props { release: CollectionEntry<'releases'>; playerId?: string }
+const { release, playerId } = Astro.props;
+const r = release.data;
+const releasePage = `/release/${release.id}/`;
+const [cw, ch] = await fitSize(r.cover, 900, 900);
+---
+	<div class="row">
+		<div class="col m12 s12 l4">
+			<p class="qt-metas qt-release-metas  qt-border top  thick qt-border-color-ink">
+				<i class="fa fa-tag"></i> {r.label}{r.catalog && <Fragment><i class="fa fa-folder"></i> {r.catalog}</Fragment>}{r.date && <Fragment><i class="fa fa-calendar"></i> {fmtLong(r.date)}</Fragment>}
+			</p>
+			<a class="qw-imgfx" href={r.cover}>
+				<img decoding="async" width={cw} height={ch} src={r.cover} class="img-responsive wp-post-image" alt="" />
+			</a>
+			<div class="qt-tags">
+			</div>
+		</div>
+
+		<div class="col m12 s12 l8">
+			{r.tracks.length > 0 && (
+				<ul class="qt-tracklist qt-border top bottom thick qt-border-color-ink">
+					{r.tracks.map((t, i) => (
+						<li>
+							<div>
+								<h4 class="qt-ellipsis">{t.title}</h4>
+								<p class="qt-ellipsis">
+									{t.artist}
+								</p>
+							</div>
+							<p class="qt-act">
+								{t.mp3 && (
+									<a class={`playable-mp3-link btn btn-primary${i === 0 ? ' beingplayed' : ''}`} data-album={r.title} data-pathinfo="mp3" data-target={playerId ?? ''} data-playtrack={playerId ? audio(t.mp3) : undefined} data-mp3url={playerId ? undefined : audio(t.mp3)} data-title={t.title} data-author={t.artist} data-buyurl={t.buyUrl ?? ''} data-releasepage={releasePage} href="#">
+										<i class="mdi-av-play-arrow"></i>
+									</a>
+								)}
+								{t.buyUrl && (
+									<a href={t.buyUrl} target="_blank" class="qw-disableembedding qw-track-buylink btn transparent button">
+										<i class="fa fa-shopping-cart"></i>
+									</a>
+								)}
+							</p>
+							<hr class="canc">
+						</li>
+					))}
+				</ul>
+			)}
+			<div class="qt-thecontent">
+				<Body entry={release} />
+			</div>
+		</div>
+	</div>

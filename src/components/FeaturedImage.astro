@@ -1,0 +1,23 @@
+---
+// Unscharfer Kopf-Hintergrund des Themes (.qt-featuredimage, wird per JS als Background gesetzt)
+interface Props { src?: string; variant?: 'page' | 'artist' | 'archive' }
+const { src, variant = 'page' } = Astro.props;
+---
+{src && variant === 'page' && (
+	<div class="qt-featuredimage-container qt-fade-to-paperX">
+		<div class="qt-featuredimage  qt-fade-to-paperX" data-blur="15" data-blurStart="0" data-type="background" data-bgimageurl={src}>
+		</div>
+	</div>
+)}
+{src && variant === 'artist' && (
+	<div class="qt-featuredimage-container qt-fade-to-pape">
+		<div class="qt-featuredimage qt-fade-to-pape" data-blur="5" data-blurStart="0" data-type="background" data-bgimageurl={src}>
+		</div>
+	</div>
+)}
+{src && variant === 'archive' && (
+	<div class="qt-featuredimage-container qt-fade-to-paper">
+		<div class="qt-featuredimage" data-blur="15" data-blurStart="0" data-type="background" data-bgimageurl={src}>
+		</div>
+	</div>
+)}

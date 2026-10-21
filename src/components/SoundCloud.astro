@@ -1,0 +1,7 @@
+---
+// Eingebetteter SoundCloud-Player (neu, Artist-Self-Service) — Track- oder Profil-URL
+interface Props { url: string }
+const { url } = Astro.props;
+const src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%232a5982&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&visual=false`;
+---
+<iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy" src={src} title="SoundCloud"></iframe>

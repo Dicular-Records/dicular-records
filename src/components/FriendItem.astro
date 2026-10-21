@@ -1,0 +1,32 @@
+---
+// Friend/Member-Kachel (part-archive-item-members.php) — /friends/ und /membertype/<typ>/
+import type { CollectionEntry } from 'astro:content';
+import { fitSize } from '../lib/media';
+import { autoExcerpt } from '../lib/content';
+import taxonomies from '../data/taxonomies.json';
+interface Props { friend: CollectionEntry<'friends'>; first?: boolean }
+const { friend, first } = Astro.props;
+const f = friend.data;
+const href = `/members/${friend.id}/`;
+const image = f.listImage ?? f.headerImage;
+const [w, h] = await fitSize(image, 100000, 100000);
+const typeName = (t: string) => (taxonomies.membertype as Record<string, string>)[t] ?? t;
+const types = f.memberTypes.map((t) => `<a href="/membertype/${t}/" rel="tag">${typeName(t)}</a>`).join(' / ');
+const classes = `item ms-item col qt-archivemembers-item post-${f.wpId} members type-members status-publish${image ? ' has-post-thumbnail' : ''} hentry${f.memberTypes.map((t) => ` membertype-${t}`).join('')}`;
+---
+<div class={classes} id={`page-${f.wpId}`}>
+	<div class="qt-relative qt-image qt-border qt-border-color-ink top thick" data-bgimage={image}>
+		<a href={href} class="qt-image-link-fx qt-border qt-border-accent bottom thick">
+			{image && <img width={w} height={h} src={image} class="attachment-qantumthemes_gridthumb  size-qantumthemes_gridthumb  wp-post-image" alt="" decoding="async" fetchpriority={first ? 'high' : undefined} loading={first ? undefined : 'lazy'} />}
+		</a>
+		<div class="qt-absolute bottom qt-socials">
+			{f.socials.map((s) => <a href={s.url} class="qw_social icon-l qw-disableembedding" target="_blank"><i class={s.icon}></i></a>)}
+		</div>
+	</div>
+	<div class="text negative">
+		<h3 class="qt-title center-align"><a href={href}>{f.name}</a></h3>
+		<h4 class="color-main-light center-align" set:html={types}></h4>
+		<div class="text-small" set:html={f.excerpt ?? autoExcerpt(friend.body ?? '')}></div>
+		<p class="center-align"><a href={href} class="btn">Read More</a></p>
+	</div>
+</div>

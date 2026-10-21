@@ -1,0 +1,52 @@
+---
+// Event-Detailseite (single-event.php)
+import { getCollection } from 'astro:content';
+import Legacy from '../../layouts/Legacy.astro';
+import Body from '../../components/Body.astro';
+import FeaturedImage from '../../components/FeaturedImage.astro';
+import EventInfo from '../../components/EventInfo.astro';
+import { fmtLong } from '../../lib/content';
+import { fitSize } from '../../lib/media';
+
+export async function getStaticPaths() {
+  return (await getCollection('events')).map((event) => ({ params: { slug: event.id }, props: { event } }));
+}
+const { event } = Astro.props;
+const e = event.data;
+const [w, h] = await fitSize(e.image, 900, 900);
+---
+<Legacy critical="event" title={e.title} bodyClass={`wp-singular event-template-default single single-event postid-${e.wpId}`}>
+	<FeaturedImage src={e.background ?? e.image} />
+	<div id="qwjquerycontent">
+		<article class={`qt-content qt-event-content containerqt-fade-to-paper post-${e.wpId} event type-event status-publish${e.image ? ' has-post-thumbnail' : ''} hentry`} id={`post${e.wpId}`}>
+			<header class="qt-header">
+				<h4 class="container">
+					{fmtLong(e.date)}
+				</h4>
+				<div class="container">
+					<h1 class="qt-titdeco-eq text-center center">{e.title}</h1>
+				</div>
+			</header>
+			<div class="container">
+				<div class="row">
+					<div class="col s12 m4">
+						{e.image && (
+							<a href={e.image} class="qw-imgfx">
+								<img width={w} height={h} src={e.image} class="img-responsive wp-post-image" alt="" decoding="async" fetchpriority="high" />
+							</a>
+						)}
+						<div class="qt-tags">
+						</div>
+					</div>
+					<div class="col s12 m8 qt-event-details">
+						<h3 class="qt-titdeco qt-border top thick">
+							Event info
+						</h3>
+						<EventInfo event={event} />
+						<Body entry={event} />
+					</div>
+				</div>
+			</div>
+		</article>
+	</div>
+</Legacy>

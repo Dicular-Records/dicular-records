@@ -1,0 +1,33 @@
+---
+// Beitrag in Kategorie-/Tag-/Autoren-Archiven (part-archive-item-post-full.php)
+import type { CollectionEntry } from 'astro:content';
+import { fitSize } from '../lib/media';
+import { fmtDayMonth } from '../lib/content';
+import taxonomies from '../data/taxonomies.json';
+interface Props { post: CollectionEntry<'news'>; variant: 'full' | 'list'; first?: boolean }
+const { post, variant, first } = Astro.props;
+const n = post.data;
+const href = `/${post.id}/`;
+const [w, h] = await fitSize(n.image, 900, 900);
+const catName = (c: string) => (taxonomies.category as Record<string, string>)[c] ?? c;
+const classes = `qt-part-post-full qt-border top thick post-${n.wpId} post type-post status-publish format-standard${n.image ? ' has-post-thumbnail' : ''} hentry`
+  + n.categories.map((c) => ` category-${c}`).join('') + n.tags.map((t) => ` tag-${t}`).join('');
+const cats = ' ' + n.categories.map((c) => `<a href="/category/${c}/" >${catName(c)}</a> `).join('');
+---
+<article class={classes} id={`page-${n.wpId}`}>
+	{n.image && (
+		<div class="qt-featimg">
+			<img width={w} height={h} src={n.image} class="attachment-large size-large wp-post-image" alt="" {...{ '0': 'img-responsive ' }} decoding="async" fetchpriority={first ? 'high' : undefined} />
+			{variant === 'full' && <div class="qt-fade-to-paper dark"></div>}
+		</div>
+	)}
+	<div class="qt-reading-opt qt-contentwrap">
+		<div class="qt-tags" set:html={cats}></div>
+		<h2><a href={href}>{n.title}</a></h2>
+		<p class="qt-metas">
+			Written by <a href="/author/dicular-admin/" rel="author">{n.author}</a> on {fmtDayMonth(n.date)}
+		</p>
+		{n.excerpt && <Fragment set:html={n.excerpt} />}
+		<p class="qt-readmore"><a href={href} class="btn">Read More</a></p>
+	</div>
+</article>

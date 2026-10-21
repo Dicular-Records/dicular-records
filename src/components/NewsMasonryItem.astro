@@ -1,0 +1,36 @@
+---
+// News-Kachel im Masonry-Raster (part-archive-item-masonry.php)
+import type { CollectionEntry } from 'astro:content';
+import { thumb } from '../lib/media';
+import { fmtDayMonth, autoExcerpt } from '../lib/content';
+interface Props { post: CollectionEntry<'news'>; first?: boolean }
+const { post, first } = Astro.props;
+const n = post.data;
+const href = `/${post.id}/`;
+const classes = `qt-content item ms-item col  post-${n.wpId} post type-post status-publish format-standard${n.image ? ' has-post-thumbnail' : ''} hentry`
+  + n.categories.map((c) => ` category-${c}`).join('') + n.tags.map((t) => ` tag-${t}`).join('');
+const date = fmtDayMonth(n.date);
+---
+<div class={classes} id={`page-${n.wpId}`}>
+	{n.image && (
+		<div class="qt-image-fx-roll">
+			<a href={href} class="qw-imgfx">
+				<img width="500" height="500" src={thumb(n.image, 'gridthumb')} class="attachment-qantumthemes_gridthumb size-qantumthemes_gridthumb wp-post-image" alt="" decoding="async" fetchpriority={first ? 'high' : undefined} loading={first ? undefined : 'lazy'} />
+				<span class="qt-masonry-post-overlay negative">
+					<i class="fa fa-search qt-bigiconfx bottom bg-accent"></i>
+					{date}
+				</span>
+			</a>
+		</div>
+	)}
+	<div class="text negative">
+		<h4 class="qt-title"><a href={href}>{n.title}</a></h4>
+		<p class="qt-metas">
+			<i class="fa fa-user"></i>
+			<a href="/author/dicular-admin/" rel="author">{n.author}</a> <i class="fa fa-calendar"></i>
+			{date}
+		</p>
+		<div class="qt-small" set:html={n.excerpt ?? autoExcerpt(post.body ?? '')}></div>
+		<a href={href} class="btn">Read More</a>
+	</div>
+</div>
