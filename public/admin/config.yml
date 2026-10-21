@@ -1,0 +1,166 @@
+# Decap CMS — Redaktionsoberfläche unter /admin/
+# Anmeldung mit GitHub. Jede Änderung wird ein Pull Request (editorial_workflow).
+# Rechte werden über GitHub durchgesetzt (CODEOWNERS + Pfadprüfung), nicht hier:
+#   Artists: Änderungen nur am eigenen Artist-Eintrag → automatische Prüfung → automatische Veröffentlichung
+#   Alles andere: Freigabe durch einen Admin (Tomtron oder Yoka)
+backend:
+  name: github
+  repo: yokadeeds-dev/dicular-records
+  branch: main
+  commit_messages:
+    create: 'Neu: {{collection}} „{{slug}}“'
+    update: 'Geändert: {{collection}} „{{slug}}“'
+    delete: 'Gelöscht: {{collection}} „{{slug}}“'
+    uploadMedia: 'Bild hochgeladen: {{path}}'
+
+publish_mode: editorial_workflow
+# Lokal testen ohne GitHub-Login: `npx decap-server` starten, dann /admin/ öffnen
+local_backend: true
+locale: de
+site_url: https://dicular-records.com
+logo_url: /wp-content/uploads/2022/01/cropped-Logo_Dicular-Rec-Metal-600x600-2.png
+
+# Vorschau im Editor aus: die echte Seite zeigt der Vorschau-Link (Netlify) — 1:1 im Original-Design
+editor:
+  preview: false
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  # ---------------------------------------------------------------- Artists (Self-Service)
+  - name: artists
+    label: Artists
+    label_singular: Artist
+    description: "Deine Artist-Seite. Änderungen an deinem eigenen Eintrag gehen nach der automatischen Prüfung direkt online."
+    folder: src/content/artists
+    create: false
+    delete: false
+    slug: '{{slug}}'
+    summary: '{{name}}'
+    preview_path: 'artist/{{slug}}/'
+    fields:
+      - { name: name, label: Name, widget: string }
+      - { name: subtitle, label: "Herkunft (Zeile unter dem Namen)", widget: string, required: false, hint: 'z. B. „German /“' }
+      - { name: photo, label: Foto, widget: image, required: false, hint: "Hochformat, mind. 1000 × 1250 px, JPG" }
+      - name: body
+        label: Biografie
+        widget: markdown
+        buttons: [bold, italic, link, heading-three, bulleted-list, numbered-list, quote]
+        editor_components: []
+      - name: soundcloud
+        label: SoundCloud
+        label_singular: SoundCloud-Link
+        widget: list
+        required: false
+        hint: "Link zu einem Track, Set oder Profil auf soundcloud.com — erscheint als Player auf deiner Seite"
+        field: { name: url, label: Link, widget: string, pattern: ['^https://(www\.|on\.)?soundcloud\.com/', 'Bitte einen soundcloud.com-Link eintragen'] }
+      - name: booking
+        label: Booking
+        label_singular: Booking-Angabe
+        widget: list
+        required: false
+        summary: '{{fields.label}}: {{fields.value}}'
+        fields:
+          - { name: label, label: Bezeichnung, widget: string, hint: "z. B. Agency, Email" }
+          - { name: value, label: Wert, widget: string }
+      - name: genres
+        label: Genres
+        widget: select
+        multiple: true
+        required: false
+        options: [progressive, progressive-house, techno, melodic-techno, trance, deephouse]
+      - name: custom
+        label: Eigener Abschnitt
+        widget: object
+        required: false
+        collapsed: true
+        hint: "Optional, z. B. „Discography“"
+        fields:
+          - { name: title, label: Überschrift, widget: string }
+          - { name: content, label: Inhalt, widget: markdown, required: false }
+      # technische Felder aus dem WordPress-Import (unverändert übernehmen)
+      - { name: wpId, widget: hidden, required: false }
+      - { name: listOrder, widget: hidden, required: false }
+      - { name: background, widget: hidden, required: false }
+      - { name: excerpt, widget: hidden, required: false }
+      - { name: music, widget: hidden, required: false }
+      - { name: format, widget: hidden, required: false }
+
+  # ---------------------------------------------------------------- nur Admins
+  - name: releases
+    label: Releases
+    label_singular: Release
+    folder: src/content/releases
+    create: true
+    slug: '{{slug}}'
+    preview_path: 'release/{{slug}}/'
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Titel, widget: string }
+      - { name: catalog, label: Katalognummer, widget: string, required: false, hint: "z. B. DIC035" }
+      - { name: label, label: Label, widget: string, default: DICULAR RECORDS }
+      - { name: date, label: Release-Datum, widget: datetime, time_format: false, date_format: "DD.MM.YYYY", format: "YYYY-MM-DD", required: false }
+      - { name: cover, label: Cover, widget: image, hint: "quadratisch, mind. 1400 × 1400 px" }
+      - name: tracks
+        label: Tracks
+        label_singular: Track
+        widget: list
+        summary: '{{fields.title}} — {{fields.artist}}'
+        fields:
+          - { name: title, label: Titel, widget: string }
+          - { name: artist, label: Artist, widget: string }
+          - { name: mp3, label: MP3, widget: file, required: false }
+          - { name: buyUrl, label: Kauf-Link (z. B. Beatport), widget: string, required: false }
+          - { name: video, label: Video-Link (YouTube), widget: string, required: false }
+      - { name: artists, label: "Artists (für „Music“ auf der Artist-Seite)", widget: relation, collection: artists, value_field: '{{slug}}', search_fields: [name], display_fields: [name], multiple: true, required: false }
+      - { name: headerPlayer, label: "Großer Player im Kopf", widget: boolean, default: true }
+      - { name: body, label: Text, widget: markdown }
+      - { name: wpId, widget: hidden, required: false }
+      - { name: listOrder, widget: hidden, required: false }
+      - { name: format, widget: hidden, required: false }
+
+  - name: news
+    label: News
+    label_singular: Beitrag
+    folder: src/content/news
+    create: true
+    slug: '{{slug}}'
+    preview_path: '{{slug}}/'
+    fields:
+      - { name: title, label: Titel, widget: string }
+      - { name: date, label: Datum, widget: datetime, time_format: false, date_format: "DD.MM.YYYY", format: "YYYY-MM-DD" }
+      - { name: image, label: Beitragsbild, widget: image, required: false }
+      - { name: categories, label: Kategorien, widget: select, multiple: true, default: [uncategorized], options: [uncategorized, news, music, electronic-music, organic-trance] }
+      - { name: body, label: Text, widget: markdown }
+      - { name: wpId, widget: hidden, required: false }
+      - { name: listOrder, widget: hidden, required: false }
+      - { name: excerpt, widget: hidden, required: false }
+      - { name: format, widget: hidden, required: false }
+
+  - name: events
+    label: Events
+    label_singular: Event
+    folder: src/content/events
+    create: true
+    slug: '{{slug}}'
+    preview_path: 'event/{{slug}}/'
+    fields:
+      - { name: title, label: Titel, widget: string }
+      - { name: date, label: Datum, widget: datetime, time_format: false, date_format: "DD.MM.YYYY", format: "YYYY-MM-DD" }
+      - { name: location, label: Location, widget: string, required: false }
+      - { name: street, label: Straße, widget: string, required: false }
+      - { name: city, label: Stadt, widget: string, required: false }
+      - { name: eventUrl, label: Event-Link (z. B. Facebook), widget: string, required: false }
+      - { name: image, label: Flyer/Bild, widget: image, required: false }
+      - name: buyLinks
+        label: Tickets
+        widget: list
+        required: false
+        fields:
+          - { name: label, label: Text, widget: string, default: VVK Tickets }
+          - { name: url, label: Link, widget: string }
+      - { name: body, label: Beschreibung, widget: markdown, required: false }
+      - { name: wpId, widget: hidden, required: false }
+      - { name: listOrder, widget: hidden, required: false }
+      - { name: format, widget: hidden, required: false }

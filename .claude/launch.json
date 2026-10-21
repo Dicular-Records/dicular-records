@@ -6,6 +6,13 @@
       "runtimeExecutable": "C:/Users/yoka/AppData/Local/Programs/node/node.exe",
       "runtimeArgs": ["C:/Users/yoka/Claude-Arbeit/Dicular-Records/node_modules/astro/astro.js", "preview", "--root", "C:/Users/yoka/Claude-Arbeit/Dicular-Records", "--port", "4321"],
       "port": 4321
+    },
+    {
+      "name": "decap-server",
+      "runtimeExecutable": "C:/Users/yoka/AppData/Local/Programs/node/node.exe",
+      "runtimeArgs": ["C:/Users/yoka/Claude-Arbeit/Dicular-Records/node_modules/decap-server/dist/index.js"],
+      "env": { "GIT_REPO_DIRECTORY": "C:/Users/yoka/Claude-Arbeit/Dicular-Records", "PORT": "8081", "DECAP_NO_BROWSER": "1" },
+      "port": 8081
     }
   ]
 }

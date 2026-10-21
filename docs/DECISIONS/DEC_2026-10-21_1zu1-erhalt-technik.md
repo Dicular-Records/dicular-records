@@ -47,3 +47,11 @@ Rest: Cover/Logo-Resampling (Entscheidung 5) und laufende Equalizer-Animation im
 | 20 | **Critical-CSS je Seitentyp** (`src/legacy/critical/*.css`) und zwei Kopf-Varianten (Boost / normal) wie im Original | Jetpack Boost erzeugt es pro Vorlage; Tag- und Autoren-Archive laden live ohne Boost. |
 | 21 | Release-Feld **`headerPlayer`**: bei 17 Releases ist der 360°-Player im Kopf aus; deren Tracks spielen über den Player der Kopfleiste | Theme-Option je Release im Original. |
 | 22 | **„Sonik Radio“** bleibt ohne Stream (Entscheidung 8), Klick tut nichts | Kein Einfluss auf die Initialisierung (geprüft). |
+
+## Redaktionsoberfläche (2026-10-22)
+
+| # | Entscheidung | Begründung |
+|---|---|---|
+| 23 | **Decap CMS 3.17.1** unter `/admin/`, deutsch, GitHub-Login, jede Änderung als Pull Request; lokal testbar mit `decap-server` | Übergabe-Architektur. Rechte per GitHub (CODEOWNERS/Pfadprüfung), weil Decap selbst keine Rechte pro Person kennt — Artists *sehen* alle Artist-Einträge, Änderungen an fremden landen aber bei den Admins. |
+| 24 | Importierte Texte **nicht** in Markdown umwandeln | Test an allen 12 Artist-Seiten: 5–40 % Pixelabweichung (Absatzabstände, Bildgrößen). Stattdessen kommt für Texte mit `format: html` ein **HTML-fähiger WYSIWYG-Editor** (eigenes Decap-Widget), der die Original-Formatierung direkt bearbeitet — 1:1 bleibt erhalten, Artists sehen normalen Text statt Code. |
+| 25 | Editor-Vorschau aus | Die Standard-Vorschau von Decap ist ungestylt; die echte Vorschau liefert der Netlify-Vorschau-Link im Original-Design. |
