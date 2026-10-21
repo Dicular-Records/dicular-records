@@ -30,7 +30,7 @@ const headerClass = single ? (showPlayer ? 'qt-header qt-polydecor poly6' : 'qt-
 				<div class="clearfix"></div>
 				<div class="qt-releaseplayer-controls">
 				</div>
-				{playerTitle && <h5 id="qtTracktitle" class="text-center tracktitle"><i class="fa fa-music"></i> {playerTitle}</h5>}
+				{(playerTitle !== undefined || firstTrack) && <h5 id="qtTracktitle" class="text-center tracktitle"><i class="fa fa-music"></i> {playerTitle ?? ''}</h5>}
 			</Fragment>
 		)}
 		<h1 class="qt-titdeco-eq text-center">{r.title}</h1>
