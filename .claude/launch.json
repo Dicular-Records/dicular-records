@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dicular-preview",
+      "runtimeExecutable": "C:/Users/yoka/AppData/Local/Programs/node/node.exe",
+      "runtimeArgs": ["C:/Users/yoka/Claude-Arbeit/Dicular-Records/node_modules/astro/astro.js", "preview", "--root", "C:/Users/yoka/Claude-Arbeit/Dicular-Records", "--port", "4321"],
+      "port": 4321
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+---
+// Footer wörtlich aus dem Sonik-Theme (footer.php); Social-Links + Footer-Menü aus src/data/.
+import menu from '../data/menu.json';
+import site from '../data/site.json';
+import { menuHtml } from '../lib/menu';
+---
+<footer class="qt-footer">
+	<a href="#qtBody" class="qt-btn-rhombus qt-btn-ghost qt-link-top qwsmoothscroll"><i class="fa fa-chevron-up"></i></a>
+	<hr class="qt-spacer">
+	<div class="qt-social-icons">
+		{site.social.map((s) => <a href={s.href} class="qw_social qw-disableembedding" target="_blank"><span class={s.icon}></span></a>)}
+	</div>
+	<h4>
+		<p><small set:html={site.copyright}></small></p>
+	</h4>
+	<ul id="qtMenuFooter" class="qt-menu-footer qt-small" set:html={menuHtml(menu.footer, true)}></ul>
+	<hr class="qt-spacer">
+</footer>

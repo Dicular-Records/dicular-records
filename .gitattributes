@@ -1,0 +1,4 @@
+* text=auto eol=lf
+# Original-Assets der Live-Seite byte-identisch halten
+public/** -text
+*.mp3 binary

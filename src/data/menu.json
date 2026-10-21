@@ -1,0 +1,17 @@
+{
+  "main": [
+    { "id": 3199, "label": "Releases", "href": "/releases/" },
+    { "id": 3308, "label": "News", "href": "/dicular-rec-news/" },
+    { "id": 4480, "label": "Artists", "href": "/artists/" },
+    { "id": 4342, "label": "Events", "href": "/gigs/" },
+    { "id": 3531, "label": "Friends", "href": "/friends/" },
+    { "id": 3589, "label": "Team", "href": "/team/" },
+    { "id": 4184, "label": "About Us", "href": "/about/" },
+    { "id": 3309, "label": "Contact", "href": "/sample-page/" },
+    { "id": 4619, "label": "DICULAR DIGITAL", "href": "/my-charts-2/" }
+  ],
+  "footer": [
+    { "id": 3515, "label": "Impressum", "href": "/impressum/" },
+    { "id": 3518, "label": "Privacy Policy", "href": "/privacy-policy/" }
+  ]
+}

@@ -1,0 +1,36 @@
+---
+// Startseite "Bio" (WP page-id 3209, Template page-composer) — WPBakery-Markup 1:1.
+import { getEntry } from 'astro:content';
+import Legacy from '../layouts/Legacy.astro';
+import ReleaseBlock from '../components/ReleaseBlock.astro';
+
+const page = (await getEntry('pages', 'home'))!;
+const p = page.data;
+const release = p.featuredRelease ? await getEntry(p.featuredRelease) : undefined;
+---
+<Legacy
+	title={p.title}
+	htmlClass="qt-template-page-composer"
+	bodyClass={`home wp-singular page-template page-template-page-composer page-template-page-composer-php page page-id-${p.wpId} template-page-composer.php`}
+	customCss={p.customCss}
+>
+	<!-- ================================================================================ end header.php ============================================================== -->
+	<article class={`qt-content qt-polydecor-page qt-polydecor-composer qt-transparent-menu post-${p.wpId} page type-page status-publish hentry`} id={`page${p.wpId}`}>
+		<div data-vc-parallax="1.5" data-vc-parallax-image={p.parallaxImage} class="vc_row wpb_row vc_row-fluid vc_row-has-fill vc_row-o-equal-height vc_row-flex vc_general vc_parallax vc_parallax-content-moving nopoly">
+			<div data-vc-parallax="2" data-vc-parallax-o-fade="on" class="wpb_column vc_column_container vc_col-sm-12 vc_col-has-fill vc_general vc_parallax vc_parallax-content-moving-fade js-vc_parallax-o-fade"><div class="vc_column-inner"><div class="wpb_wrapper"><div class="vc_row wpb_row vc_inner vc_row-fluid"><div class="wpb_column vc_column_container vc_col-sm-3"><div class="vc_column-inner"><div class="wpb_wrapper"></div></div></div><div class="wpb_column vc_column_container vc_col-sm-6"><div class="vc_column-inner"><div class="wpb_wrapper">
+				<div class="wpb_single_image wpb_content_element vc_align_center  wpb_animate_when_almost_visible wpb_bottom-to-top bottom-to-top vc_custom_1641903075456  img-responsive">
+					<figure class="wpb_wrapper vc_figure">
+						<div class="vc_single_image-wrapper   vc_box_border_grey"><img fetchpriority="high" decoding="async" width="600" height="600" src={p.heroLogo} class="vc_single_image-img attachment-full" alt="" title="Logo_Dicular Rec - Metal 600x600 2" /></div>
+					</figure>
+				</div>
+			</div></div></div><div class="wpb_column vc_column_container vc_col-sm-3"><div class="vc_column-inner"><div class="wpb_wrapper"></div></div></div></div></div></div></div>
+		</div>
+		<div class="vc_row wpb_row vc_row-fluid vc_custom_1690497947705 vc_row-has-fill">
+			<div class="container">
+				<div class="wpb_column vc_column_container vc_col-sm-12"><div class="vc_column-inner"><div class="wpb_wrapper">
+					{release && <ReleaseBlock release={release} />}
+				</div></div></div>
+			</div>
+		</div>
+	</article>
+</Legacy>

@@ -1,0 +1,60 @@
+---
+// Header/Navigation wörtlich aus dem Sonik-Theme (header.php); Menü aus src/data/menu.json.
+import menu from '../data/menu.json';
+import site from '../data/site.json';
+import { menuHtml } from '../lib/menu';
+---
+<div class="qw-headernav">
+	<nav class="qw-animated qt-site-navbar" id="qwMainNavbar">
+		<div class=" qw-wrapper qw-nav-desktop">
+			<div class=" qw-block-100p ">
+				<div class="nav-wrapper maincolor">
+					<a href="/" class="brand-logo" id="logo-container"><img src={site.logo} class="img-responsive qw-animated fast" alt="Home"></a>
+					<ul id="qwtoggle" class="dropDownMenu" set:html={menuHtml(menu.main, true)}></ul>
+					<ul id="headerbuttons" class="right qt-icon-nav qt-tabs-controller">
+					</ul>
+					<div class="qw-musicplayer" id="qwMusicPlayerContainer" data-autoplay="0" data-soundmanagerswf="/wp-content/themes/sonik/assets/js/soundmanager2.swf">
+						<div id="qtVolumeControl" class="qw-animated qw-volume-control maincolor dark hidden-ipad-and-down">
+							<a class="qw-playerbutton btn" href="#" id="theVolCursor">
+								<span id="qwVolNum">100</span><!-- <i class="mdi-av-volume-down"></i> -->
+							</a>
+							<div class="qw-volume-icon" id="radioname"><i class="mdi-device-signal-cellular-3-bar"></i></div>
+						</div>
+						<div class="qw-radiolist" id="channelsList">
+							{/* Sonik Radio: im Original der Theme-Test-Stream von QantumThemes (kein Dicular-Inhalt) → nur optisch, ohne Stream */}
+							<a href="#" data-mp3url={site.radio.functional ? site.radio.stream : undefined} data-sonikradio="1" class="waves-effect waves-light btn qwPlayerPlayList mp3soundmanager">
+								<i class="mdi-av-play-arrow"></i>{site.radio.label}
+							</a>
+						</div>
+					</div>
+					<a href="#" class="button-collapse2"><i class="mdi-navigation-menu"></i></a>
+					<div class="canc"></div>
+				</div>
+			</div>
+		</div>
+		<ul id="nav-mobile" class="side-nav " set:html={menuHtml(menu.main, false)}></ul>
+	</nav>
+	<div class=" qt-stroke-container">
+		<hr class="qt-stroke">
+	</div>
+</div>
+<div class=" qt-extracontents">
+	<div class="qt-tabs-container qt-extra-contents" id="qtExtraTabs">
+		<div class="container">
+		</div>
+	</div>
+</div>
+<!-- qt-headerbar -->
+<div class="qt-headerbar hide-on-small-only">
+	<div class="qt-fullcontainer">
+		<div class="row">
+			<div class="col s12 ">
+			</div>
+			<div class="col s12  qt-social-icons ">
+			</div>
+		</div>
+	</div>
+</div>
+<!-- qt-headerbar-end -->
+<div class="container">
+</div>

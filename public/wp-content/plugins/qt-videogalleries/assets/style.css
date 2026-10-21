@@ -1,0 +1,52 @@
+/*
+	Styles for qt subpages plugin
+	Based on quicksand
+	Copyright (c) 2010 Jacek Galanciak (razorjack.net) and agilope.com
+*/
+
+.vdl-subpages-container .canc {clear:both;width:100%;height:20px;}
+.vdl-subpages-container img {max-width:100%;height:auto;margin: 0 auto;}
+.vdl-subpages-container  {padding:0;}
+.vdl-subpages-container .vdl-subpages-tagcloud {margin: 10px 0 25px 0;display:block;width:100%;}
+.vdl-subpages-container .vdl-subpages-tagcloud li {list-style-type:none;float:left;text-transform: uppercase;font-size:14px; margin: 0 6px 6px 0;padding: 0;}
+.vdl-subpages-container .vdl-subpages-tagcloud li::after {content:"";display:none;}
+.vdl-subpages-container .vdl-subpages-tagcloud  a {text-decoration: none;display:block;padding:0 10px;border:1px solid #888;-moz-transition:all 0.3s;transition:all .3s;}
+.vdl-subpages-item {margin-bottom:20px;overflow:hidden;}
+.vdl-subpages-item .vdl-element {height:200px;white-space: break-world;padding-right:28px;overflow:hidden;width:100%;height:100%;box-sizing:border-box;}
+.vdl-subpages-item .vdl-elementcontents { position:relative;box-sizing:border-box;box-sizing:border-box; display: block;height:100%;width:100%;overflow:hidden;}
+.vdl-elementcontents a.vdl-link {display:block;width:100%;height:100%;overflow: hidden;background-color:#dedede;}
+.vdl-elementcontents a.vdl-link > img {	max-width:100%;opacity: 0;height:auto;position:absolute;top:-5000px;}
+.vdl-elementcontents a.vdl-link .detail {display:block;position:absolute;width:100%;height:100%;-moz-transition: opacity .3s;transition: opacity .3s; opacity:0;background:rgba(0,0,0,.5)}
+.vdl-elementcontents a.vdl-link:hover .detail {opacity:1;}
+.vdl-elementcontents a.vdl-link .detail .title {-moz-transition: line-height .7s;transition: line-height .7s;line-height: 100em;display:block;font-size: 16px;font-weight:100;margin-bottom:12px;margin-top:50px;width:100%;text-align: center;}
+.vdl-elementcontents a.vdl-link:hover .detail .title{opacity:1;line-height: 1.6em;}
+.vdl-elementcontents a.vdl-link .detail p.trmlist{margin:10px 0 0 0;padding:0;text-align: center;}
+.vdl-elementcontents a.vdl-link .detail p.trmlist span.trm {margin: 1px 4px 1px 0;padding: 0 4px;font-size: 11px;text-transform: uppercase;border: 1px solid #444;display: inline-block;line-height: 1.3em;}
+.vdl-subpages-container .blockrestore {clear:both;width:100%;display:block;}
+.vdl-elementcontents a.vdl-link .spanicon {display:inline-block;width:20px;height:30px;margin:8px 8px 0 0;background:#F00;}
+.vdl-elementcontents a.vdl-link .actionsicons {text-align:center}
+.vdl-elementcontents .excerpt {display:none;visibility:hidden;overflow:hidden;height:1px;}
+.sumrow { margin-left: -15px;  margin-right: -15px;}
+.sumrow:before,.sumrow:after { content: " "; display: table;}
+.sumrow:after {  clear: both;}
+
+
+@media (min-width: 768px) {
+  .vdlcol-md-6, .vdlcol-md-2, .vdlcol-md-3, .vdlcol-md-4 { float: left; position: relative; min-height: 1px; padding-left: 15px; padding-right: 15px; box-sizing: border-box; }
+  .vdlcol-md-4 { width: 33.33333333%;}
+  .vdlcol-md-3 { width: 25%;  }
+  .vdlcol-md-2 { width: 16.66666667%;}
+  .vdlcol-md-6 { width: 50%;}
+}
+@media (max-width: 768px){
+	.vdl-element {padding-right:0px;}
+	.vdl-subpages-item .vdl-element {padding-right:14px;padding-left:14px;}
+	.vdl-elementcontents a.vdl-link .detail .title {font-size:25px;}
+	
+}
+
+
+
+
+
+

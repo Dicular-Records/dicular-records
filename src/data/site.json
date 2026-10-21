@@ -1,0 +1,13 @@
+{
+  "name": "Dicular Records",
+  "logo": "/wp-content/uploads/2023/07/LogoNoShadow_Small2_280.png",
+  "favicon": "/wp-content/uploads/2022/01/cropped-Logo_Dicular-Rec-Metal-600x600-2.png",
+  "copyright": "© 2026 Dicular Records,<br />all rights reserved",
+  "social": [
+    { "icon": "qticon-beatport", "href": "https://www.beatport.com/label/dicular-records/105345" },
+    { "icon": "qticon-facebook", "href": "https://www.facebook.com/Dicular-Records-101603755756039#" },
+    { "icon": "qticon-instagram", "href": "https://www.instagram.com/dicular_records/" },
+    { "icon": "qticon-soundcloud", "href": "https://soundcloud.com/dicular-records" }
+  ],
+  "radio": { "label": "Sonik Radio", "functional": false, "stream": "https://streams.radio.co/sd1bcd1376/listen#.mp3" }
+}

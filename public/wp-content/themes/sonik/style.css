@@ -1,0 +1,24 @@
+/* 
+Theme Name: Sonik
+Theme URI: http://qantumthemes.com/
+Author: QantumThemes 
+Author URI: http://qantumthemes.com
+Description: Premium Music WordPress Theme.
+Version: 2.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: light, responsive-layout, custom-background, custom-menu, editor-style, featured-images, post-formats, sticky-post
+Text Domain: sonik
+Domain Path: /languages/
+*/
+
+
+/*========= INFORMATIONS FOR DEVELOPERS ===============
+
+*	The styles are in: assets/css/main.css
+*  	The main css file is minified and compressed.
+*   It has been created via SASS.
+*   The original SASS files are in sonik/assets/scss
+*	To add your own styles, please activate the child theme and add your CSS in Appearance->Editor
+
+======================================================*/
