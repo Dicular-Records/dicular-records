@@ -25,3 +25,8 @@
 | Mobil 390×844 | 2862 / 2862 | 0,14 % |
 
 Rest: Cover/Logo-Resampling (Entscheidung 5) und laufende Equalizer-Animation im Titel.
+
+## Abnahme
+
+- **2026-10-21: Startseite von Yoka abgenommen.** Entscheidungen 1–10 damit bestätigt (keine Einwände). Nächster Schritt: Unterseiten 1:1.
+- Offen: Archivseiten (A/B/C) und Weglassen der 134 unverlinkten Demo-URLs — siehe `docs/SEITENINVENTAR.md`, Abschnitt C.
