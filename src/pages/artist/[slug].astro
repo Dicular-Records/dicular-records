@@ -8,6 +8,7 @@ import RelatedCarousel from '../../components/RelatedCarousel.astro';
 import SoundCloud from '../../components/SoundCloud.astro';
 import { releasesSorted, relatedArtists } from '../../lib/content';
 import { thumb, fitSize } from '../../lib/media';
+import { sanitizeArtistHtml as clean } from '../../lib/sanitize';
 
 export async function getStaticPaths() {
   return (await getCollection('artists')).map((artist) => ({ params: { slug: artist.id }, props: { artist } }));
@@ -23,7 +24,7 @@ const menu = [
   ...(music.length ? [{ id: 'music', label: a.music!.title }] : []),
   ...(a.soundcloud.length ? [{ id: 'soundcloud', label: 'SoundCloud' }] : []),
   ...(a.booking.length ? [{ id: 'booking', label: 'Booking' }] : []),
-  ...(a.custom ? [{ id: 'custom', label: a.custom.title }] : []),
+  ...(a.custom?.title ? [{ id: 'custom', label: a.custom.title }] : []),
 ];
 ---
 <Legacy critical="artist" title={a.name} bodyClass={`wp-singular artist-template-default single single-artist postid-${a.wpId}`}>
@@ -36,7 +37,7 @@ const menu = [
 				<div class="row">
 					<div class="col s12 m12 l8 offset-l4 qt-artist">
 						<h2 class="qt-title qt-titdeco">{a.name}</h2>
-						{a.subtitle && <h4 set:html={` ${a.subtitle}  `} />}
+						{a.subtitle && <h4 set:html={clean(` ${a.subtitle}  `)} />}
 						{a.photo && (
 							<a href={a.photo}>
 								<img width={pw} height={ph} src={a.photo} class="img-responsive wp-post-image" alt="" decoding="async" fetchpriority="high" />
@@ -82,17 +83,17 @@ const menu = [
 									{a.booking.map((b, i) => (
 										<p class={i === 0 ? 'qw-top30' : undefined}>
 											<span class={`qw-detTit qw-negative ghost ghost-accentcolor${i === 0 ? ' ' : ''}`}>{b.label}</span>
-											<span class="qw-detail-value negative" set:html={b.value}></span>
+											<span class="qw-detail-value negative" set:html={clean(b.value)}></span>
 										</p>
 									))}
 								</div>
 							</div>
 						)}
-						{a.custom && (
+						{a.custom?.title && (
 							<Fragment>
 								<a id="custom" class="qt-section-index"></a>
 								<h3 class="qt-titdeco qt-section">{a.custom.title}</h3>
-								{a.custom.content && <Fragment set:html={a.custom.content} />}
+								{a.custom.content && <Fragment set:html={clean(a.custom.content)} />}
 							</Fragment>
 						)}
 					</div>

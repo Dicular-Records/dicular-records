@@ -43,11 +43,7 @@ collections:
       - { name: name, label: Name, widget: string }
       - { name: subtitle, label: "Herkunft (Zeile unter dem Namen)", widget: string, required: false, hint: 'z. B. „German /“' }
       - { name: photo, label: Foto, widget: image, required: false, hint: "Hochformat, mind. 1000 × 1250 px, JPG" }
-      - name: body
-        label: Biografie
-        widget: markdown
-        buttons: [bold, italic, link, heading-three, bulleted-list, numbered-list, quote]
-        editor_components: []
+      - { name: body, label: Biografie, widget: htmlrich }
       - name: soundcloud
         label: SoundCloud
         label_singular: SoundCloud-Link
@@ -77,15 +73,16 @@ collections:
         collapsed: true
         hint: "Optional, z. B. „Discography“"
         fields:
-          - { name: title, label: Überschrift, widget: string }
-          - { name: content, label: Inhalt, widget: markdown, required: false }
+          - { name: title, label: Überschrift, widget: string, required: false, hint: "Ohne Überschrift wird der Abschnitt nicht angezeigt" }
+          - { name: content, label: Inhalt, widget: htmlrich, required: false }
       # technische Felder aus dem WordPress-Import (unverändert übernehmen)
       - { name: wpId, widget: hidden, required: false }
       - { name: listOrder, widget: hidden, required: false }
       - { name: background, widget: hidden, required: false }
       - { name: excerpt, widget: hidden, required: false }
       - { name: music, widget: hidden, required: false }
-      - { name: format, widget: hidden, required: false }
+      # Biografien sind HTML (Editor "htmlrich"), auch neue
+      - { name: format, widget: hidden, default: html }
 
   # ---------------------------------------------------------------- nur Admins
   - name: releases

@@ -1,9 +1,12 @@
 ---
 // Fließtext eines Eintrags: importierter WordPress-Text (format: html) wörtlich, neue Inhalte als Markdown.
 import { render, type CollectionEntry } from 'astro:content';
+import { sanitizeArtistHtml } from '../lib/sanitize';
 interface Props { entry: CollectionEntry<'releases' | 'artists' | 'news' | 'events' | 'friends' | 'pages'> }
 const { entry } = Astro.props;
 const isHtml = entry.data.format === 'html';
+// Artist-Texte kommen aus dem Self-Service → bereinigen
+const html = isHtml ? (entry.collection === 'artists' ? sanitizeArtistHtml(entry.body ?? '') : entry.body ?? '') : '';
 const { Content } = isHtml ? { Content: null } : await render(entry);
 ---
-{isHtml ? <Fragment set:html={entry.body ?? ''} /> : Content && <Content />}
+{isHtml ? <Fragment set:html={html} /> : Content && <Content />}

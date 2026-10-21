@@ -9,5 +9,16 @@
 <body>
   <!-- Decap CMS: Redaktionsoberfläche, speichert Änderungen als Git-Commits / Pull Requests (Konfiguration: config.yml) -->
   <script src="https://unpkg.com/decap-cms@3.17.1/dist/decap-cms.js"></script>
+  <!-- eigener Editor für HTML-Texte (Biografien) -->
+  <script src="/admin/widgets/html-editor.js"></script>
+  <script>
+    // Schutz: Decap lädt beim direkten Sprung von einem Eintrag zum nächsten (Adresse/Browser-Zurück) den
+    // neuen Eintrag nicht — die Felder zeigen sonst noch den alten Inhalt. Dann neu laden.
+    window.addEventListener('hashchange', function (e) {
+      var entry = /\/entries\/[^/?]+/;
+      var a = (e.oldURL.split('#')[1] || '').match(entry), b = (e.newURL.split('#')[1] || '').match(entry);
+      if (a && b && a[0] !== b[0]) location.reload();
+    });
+  </script>
 </body>
 </html>

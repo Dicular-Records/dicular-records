@@ -66,7 +66,7 @@ const artists = defineCollection({
     genres: z.array(z.string()).default([]),
     booking: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
     music: z.object({ title: z.string() }).optional(),
-    custom: z.object({ title: z.string(), content: z.string().optional() }).optional(),
+    custom: z.object({ title: z.string().optional(), content: z.string().optional() }).optional(),
     excerpt: z.string().optional(),
     /** SoundCloud-Track/-Profil-URLs → eingebetteter Player auf der Artist-Seite */
     soundcloud: z.array(z.string().url()).default([]),
