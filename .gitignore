@@ -12,3 +12,4 @@ compare/
 public/**/*.mp3
 public/_thumbs/
 compare-run.log
+.netlify/

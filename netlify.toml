@@ -17,3 +17,4 @@
   from = "/"
   to = "/entwurf/"
   status = 302
+  force = true  # gilt auch, obwohl unter / die 1:1-Startseite liegt
