@@ -15,7 +15,7 @@ const { term } = Astro.params as { term: string };
 const name = (taxonomies.membertype as Record<string, string>)[term];
 const friends = (await friendsSorted()).filter((f) => f.data.memberTypes.includes(term));
 ---
-<Legacy critical="membertype" title={name} template="archive" bodyClass={`archive tax-membertype term-${term} term-${(taxonomies.ids.membertype as Record<string, number>)[term]}`}>
+<Legacy critical="membertype" title={name} image={friends[0]?.data.listImage ?? friends[0]?.data.headerImage} template="archive" bodyClass={`archive tax-membertype term-${term} term-${(taxonomies.ids.membertype as Record<string, number>)[term]}`}>
 	<div class="qt-content qt-animatedheader">
 		<FeaturedImage src={site.defaultHeader} variant="archive" />
 		<header class="qt-header">

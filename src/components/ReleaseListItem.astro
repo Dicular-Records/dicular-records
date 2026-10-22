@@ -10,7 +10,7 @@ const [w, h] = await fitSize(r.cover, 350, 350);
 ---
 <div class="col s6 m4 l3 ">
 	<figure class="qt-release-listing qtSquaredItem">
-		<img width={w} height={h} src={r.cover} class="img-responsive wp-post-image" alt="" decoding="async" fetchpriority={first ? 'high' : undefined} loading={first ? undefined : 'lazy'} />
+		<img width={w} height={h} src={r.cover} class="img-responsive wp-post-image" alt={r.title} decoding="async" fetchpriority={first ? 'high' : undefined} loading={first ? undefined : 'lazy'} />
 		<figcaption class="">
 			<h2 class="qt-titdeco">{r.title}</h2>
 			<p class="qt-metas hide-on-med-and-down">

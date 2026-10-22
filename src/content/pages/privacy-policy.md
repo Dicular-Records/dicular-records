@@ -8,27 +8,23 @@ format: html
 
 
 
-<p class="wp-block-paragraph">&gt;Our website address is: /.</p>
+<p class="wp-block-paragraph">Our website address is: https://dicular-records.com. Responsible for this website (controller under the GDPR) is Dieter Offermanns, Heckenstrasse 5, 45896 Gelsenkirchen, Germany, email: info@dicular-records.com (see <a href="/impressum/">Impressum</a>).</p>
 
 
 
-<h2 class="wp-block-heading">Comments</h2>
+<h2 class="wp-block-heading">No tracking, no advertising</h2>
 
 
 
-<p class="wp-block-paragraph">When visitors leave comments on the site we collect the data shown in the comments form, and also the visitor’s IP address and browser user agent string to help spam detection.</p>
+<p class="wp-block-paragraph">We do not use analytics, tracking or advertising services, and no content from other providers is loaded when you open a page of this website. All pages, images, fonts and music files are delivered from our own web server.</p>
 
 
 
-<p class="wp-block-paragraph">An anonymized string created from your email address (also called a hash) may be provided to the Gravatar service to see if you are using it. The Gravatar service privacy policy is available here: https://automattic.com/privacy/. After approval of your comment, your profile picture is visible to the public in the context of your comment.</p>
+<h2 class="wp-block-heading">Server log files</h2>
 
 
 
-<h2 class="wp-block-heading">Media</h2>
-
-
-
-<p class="wp-block-paragraph">If you upload images to the website, you should avoid uploading images with embedded location data (EXIF GPS) included. Visitors to the website can download and extract any location data from images on the website.</p>
+<p class="wp-block-paragraph">When you visit the website, our hosting provider automatically records technical information in server log files: IP address, date and time of the request, the page or file requested, the referring page, the amount of data transferred and the browser and operating system used. This is necessary to deliver the website and to keep it secure (legal basis: Art. 6 (1) (f) GDPR). The log files are deleted automatically after a short period and are not combined with other data.</p>
 
 
 
@@ -36,64 +32,32 @@ format: html
 
 
 
-<p class="wp-block-paragraph">If you leave a comment on our site you may opt-in to saving your name, email address and website in cookies. These are for your convenience so that you do not have to fill in your details again when you leave another comment. These cookies will last for one year.</p>
+<p class="wp-block-paragraph">We do not use cookies for tracking or advertising. The music player of the website stores three technical cookies in your browser so that the music keeps playing and the volume stays the same when you move to another page: <em>playerstatus</em> (playing or stopped), <em>playerurl</em> (the track currently playing) and <em>mainVolumeLevel</em> (volume). They contain no personal data and expire after one day. These cookies are strictly necessary for the function you request (§ 25 (2) no. 2 TDDDG).</p>
 
 
 
-<p class="wp-block-paragraph">If you visit our login page, we will set a temporary cookie to determine if your browser accepts cookies. This cookie contains no personal data and is discarded when you close your browser.</p>
+<h2 class="wp-block-heading">Comments and contact</h2>
 
 
 
-<p class="wp-block-paragraph">When you log in, we will also set up several cookies to save your login information and your screen display choices. Login cookies last for two days, and screen options cookies last for a year. If you select “Remember Me”, your login will persist for two weeks. If you log out of your account, the login cookies will be removed.</p>
+<p class="wp-block-paragraph">If you use the comment form below a news article, the data you enter (comment, name, email address and website, all except the comment are optional) is sent to us by email so that we can read and answer it. Comments are not published automatically. If you contact us by email, for example to send us your demo, we use your data only to answer your request. Legal basis: Art. 6 (1) (b) and (f) GDPR. We delete the data when it is no longer needed for this purpose, unless we are legally required to keep it.</p>
 
 
 
-<p class="wp-block-paragraph">If you edit or publish an article, an additional cookie will be saved in your browser. This cookie includes no personal data and simply indicates the post ID of the article you just edited. It expires after 1 day.</p>
+<h2 class="wp-block-heading">Videos and links to other websites</h2>
 
 
 
-<h2 class="wp-block-heading">Embedded content from other websites</h2>
+<p class="wp-block-paragraph">Some pages contain videos or music players from YouTube, SoundCloud or Mixcloud. They are not loaded automatically: you first see a placeholder, and the player is only loaded when you click it (YouTube in its privacy-enhanced mode, youtube-nocookie.com). From that moment the provider receives your IP address and may set cookies; the provider's privacy policy applies (YouTube/Google: https://policies.google.com/privacy, SoundCloud: https://soundcloud.com/pages/privacy, Mixcloud: https://www.mixcloud.com/privacy/). Links to videos that open in an overlay work the same way: nothing is loaded before you click. The same applies when you follow a link to other websites such as Beatport, Bandcamp, SoundCloud, Facebook or Instagram: no data is transferred to these providers before you click.</p>
 
 
 
-<p class="wp-block-paragraph">Articles on this site may include embedded content (e.g. videos, images, articles, etc.). Embedded content from other websites behaves in the exact same way as if the visitor has visited the other website.</p>
+<h2 class="wp-block-heading">Your rights</h2>
 
 
 
-<p class="wp-block-paragraph">These websites may collect data about you, use cookies, embed additional third-party tracking, and monitor your interaction with that embedded content, including tracking your interaction with the embedded content if you have an account and are logged in to that website.</p>
+<p class="wp-block-paragraph">You have the right to access the personal data we hold about you, to have it corrected or erased, to restrict its processing, to data portability and to object to processing based on our legitimate interests (Art. 15 to 21 GDPR). To exercise these rights, simply send an email to info@dicular-records.com. You also have the right to lodge a complaint with a data protection supervisory authority, for example the State Commissioner for Data Protection and Freedom of Information North Rhine-Westphalia (LDI NRW).</p>
 
 
 
-<h2 class="wp-block-heading">Who we share your data with</h2>
-
-
-
-<p class="wp-block-paragraph">If you request a password reset, your IP address will be included in the reset email.</p>
-
-
-
-<h2 class="wp-block-heading">How long we retain your data</h2>
-
-
-
-<p class="wp-block-paragraph">If you leave a comment, the comment and its metadata are retained indefinitely. This is so we can recognize and approve any follow-up comments automatically instead of holding them in a moderation queue.</p>
-
-
-
-<p class="wp-block-paragraph">For users that register on our website (if any), we also store the personal information they provide in their user profile. All users can see, edit, or delete their personal information at any time (except they cannot change their username). Website administrators can also see and edit that information.</p>
-
-
-
-<h2 class="wp-block-heading">What rights you have over your data</h2>
-
-
-
-<p class="wp-block-paragraph">If you have an account on this site, or have left comments, you can request to receive an exported file of the personal data we hold about you, including any data you have provided to us. You can also request that we erase any personal data we hold about you. This does not include any data we are obliged to keep for administrative, legal, or security purposes.</p>
-
-
-
-<h2 class="wp-block-heading">Where we send your data</h2>
-
-
-
-<p class="wp-block-paragraph">Visitor comments may be checked through an automated spam detection service.</p>
+<p class="wp-block-paragraph">Last updated: October 2026</p>

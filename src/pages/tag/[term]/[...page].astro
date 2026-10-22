@@ -7,7 +7,8 @@ import taxonomies from '../../../data/taxonomies.json';
 
 export async function getStaticPaths() {
   const news = await newsSorted();
-  return Object.keys(taxonomies.tag).flatMap((term) =>
+  // nur Tags, die mindestens ein Beitrag trägt (die Demo-Tags des Themes wurden entfernt)
+  return Object.keys(taxonomies.tag).filter((term) => news.some((n) => n.data.tags.includes(term))).flatMap((term) =>
     wpPaginate(news.filter((n) => n.data.tags.includes(term)), 10, `/tag/${term}/`, {})
       .map((p) => ({ params: { term, page: p.params.page }, props: p.props })));
 }

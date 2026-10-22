@@ -8,14 +8,6 @@ image: /wp-content/uploads/2022/01/MetalLogo_Dicular-Records-scaled.jpg
 categories:
   - electronic-music
   - news
-tags:
-  - cool-music
-  - dj
-  - edm
-  - music-wordpress-themes
-  - party
-  - singer
-  - synthesizer
 excerpt: "        <p>We are very happy to announce that dicular records has been founded. We will bring you the full range of progressive trance and progressive house music. More information about the upcoming releases will follow soon. Greetings Tomtron &nbsp; &nbsp; &nbsp;</p>"
 listOrder: 23
 format: html

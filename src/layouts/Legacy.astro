@@ -5,7 +5,6 @@ import boostHead from '../legacy/boost/head.html?raw';
 import boostScripts from '../legacy/boost/scripts.html?raw';
 import plainHead from '../legacy/plain/head.html?raw';
 import plainScripts from '../legacy/plain/scripts.html?raw';
-import cookieBarHtml from '../legacy/cookiebar.html?raw';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import site from '../data/site.json';
@@ -26,9 +25,17 @@ interface Props {
    * asynchrones Laden der Stylesheets. Ohne Angabe: normale Stylesheets (wie Tag-/Autoren-Archive live).
    */
   critical?: 'home' | 'page' | 'post' | 'release' | 'artist' | 'event' | 'members' | 'category' | 'genre' | 'membertype';
+  /** Vorschaubild beim Teilen (wie live: Beitragsbild/Cover); ohne Angabe site.shareImage */
+  image?: string;
+  /** Beschreibung für Google und Vorschau beim Teilen; ohne Angabe site.description */
+  description?: string;
+  /** "article" für News-Beiträge */
+  ogType?: 'website' | 'article';
 }
 const criticalCss = import.meta.glob('../legacy/critical/*.css', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
-const { title, bodyClass, template = '', customCss, pageId, critical } = Astro.props;
+const { title, bodyClass, template = '', customCss, pageId, critical, image, description, ogType = 'website' } = Astro.props;
+const shareImage = new URL(image ?? site.shareImage, Astro.site).href;
+const metaDescription = description ?? site.description;
 const headHtml = critical ? boostHead : plainHead;
 const scriptsHtml = critical ? boostScripts : plainScripts;
 const criticalStyle = critical ? criticalCss[`../legacy/critical/${critical}.css`] : undefined;
@@ -50,9 +57,15 @@ const fav = site.favicon;
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<meta property="og:site_name" content={site.name} />
 		<meta property="og:url" content={canonical} />
-		<meta property="og:type" content="website" />
+		<meta property="og:type" content={ogType} />
 		<meta property="og:title" content={fullTitle} />
+		<meta property="og:description" content={metaDescription} />
+		<meta property="og:image" content={shareImage} />
+		<meta name="description" content={metaDescription} />
+		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={fullTitle} />
+		<meta name="twitter:description" content={metaDescription} />
+		<meta name="twitter:image" content={shareImage} />
 		<link rel="canonical" href={canonical} />
 		<title>{fullTitle}</title>
 		<meta name="robots" content="max-image-preview:large" />
@@ -69,7 +82,8 @@ const fav = site.favicon;
 				<Footer currentPageId={pageId} />
 			</div>
 		</div>
-		<Fragment set:html={cookieBarHtml} />
 		<Fragment set:html={scriptsHtml} />
+		<script is:inline src="/js/privacy-embeds.js"></script>
+		<script is:inline src="/js/dicular-radio.js"></script>
 	</body>
 </html>

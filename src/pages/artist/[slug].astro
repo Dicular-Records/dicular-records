@@ -6,7 +6,7 @@ import Body from '../../components/Body.astro';
 import FeaturedImage from '../../components/FeaturedImage.astro';
 import RelatedCarousel from '../../components/RelatedCarousel.astro';
 import SoundCloud from '../../components/SoundCloud.astro';
-import { releasesSorted, relatedArtists } from '../../lib/content';
+import { releasesSorted, relatedArtists, plainText } from '../../lib/content';
 import { thumb, fitSize } from '../../lib/media';
 import { sanitizeArtistHtml as clean } from '../../lib/sanitize';
 
@@ -27,7 +27,7 @@ const menu = [
   ...(a.custom?.title ? [{ id: 'custom', label: a.custom.title }] : []),
 ];
 ---
-<Legacy critical="artist" title={a.name} bodyClass={`wp-singular artist-template-default single single-artist postid-${a.wpId}`}>
+<Legacy critical="artist" title={a.name} image={a.photo} description={plainText(a.excerpt ?? artist.body)} bodyClass={`wp-singular artist-template-default single single-artist postid-${a.wpId}`}>
 	<article class={`qt-content qt-header-animation-container post-${a.wpId} artist type-artist status-publish${a.photo ? ' has-post-thumbnail' : ''} hentry${genreClasses}`} id={`page${a.wpId}`}>
 		<FeaturedImage src={a.background ?? a.photo} variant="artist" />
 		<h1 class="qt-header-animation-title qt-titdeco-eq center text-center">{a.name}</h1>
@@ -40,7 +40,7 @@ const menu = [
 						{a.subtitle && <h4 set:html={clean(` ${a.subtitle}  `)} />}
 						{a.photo && (
 							<a href={a.photo}>
-								<img width={pw} height={ph} src={a.photo} class="img-responsive wp-post-image" alt="" decoding="async" fetchpriority="high" />
+								<img width={pw} height={ph} src={a.photo} class="img-responsive wp-post-image" alt={a.name} decoding="async" fetchpriority="high" />
 							</a>
 						)}
 						<h3 class="qt-titdeco qt-section">Biography</h3>
@@ -56,7 +56,7 @@ const menu = [
 										{music.map((r) => (
 											<div class="qt-owl-card">
 												<a href={`/release/${r.id}/`} class="qw-imgfx">
-													<img width="500" height="500" src={thumb(r.data.cover, 'gridthumb')} class="attachment-qantumthemes_gridthumb size-qantumthemes_gridthumb wp-post-image" alt="" decoding="async" loading="lazy" />
+													<img width="500" height="500" src={thumb(r.data.cover, 'gridthumb')} class="attachment-qantumthemes_gridthumb size-qantumthemes_gridthumb wp-post-image" alt={r.data.title} decoding="async" loading="lazy" />
 												</a>
 												<a href={`/release/${r.id}/`}>
 													<h4>{r.data.title}</h4>

@@ -36,6 +36,13 @@ const settle = async (page) => {
     await Promise.all([...document.images].map((i) => (i.complete ? null : new Promise((r) => { i.onload = i.onerror = r; setTimeout(r, 8000); }))));
   });
   await page.waitForTimeout(3000);
+  // Headless-Chromium zeichnet Bilder mit srcset im Ganzseiten-Screenshot teils schwarz, obwohl sie im Browser
+  // sichtbar sind (geprüft). Einmal neu zuweisen (beide Seiten gleich) → werden korrekt gezeichnet.
+  await page.evaluate(async () => {
+    for (const i of document.images) if (i.srcset) { const s = i.srcset; i.srcset = ''; i.srcset = s; }
+    await new Promise((r) => setTimeout(r, 1500));
+    await Promise.all([...document.images].map((i) => i.decode().catch(() => {})));
+  });
 };
 const dirName = (p) => (decodeURIComponent(p).replace(/^\/|\/$/g, '').replace(/[\/\\:*?"<>|]/g, '_') || 'home');
 

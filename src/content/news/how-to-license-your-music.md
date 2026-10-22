@@ -8,12 +8,6 @@ image: /wp-content/uploads/2016/06/dj_tassilo_foto_by_akisutra0020.webp
 categories:
   - electronic-music
   - news
-tags:
-  - cool-music
-  - dj
-  - music-themes
-  - music-wordpress-themes
-  - techno
 excerpt: "        <p>I say welcome DJ Tassilo to dicular records! From now on DJ Tassilo will not only support us as an experienced DJ. He also control the administration of the website! Welcome Matthias 😉 greetings Tomtron 😉</p>"
 listOrder: 22
 format: html

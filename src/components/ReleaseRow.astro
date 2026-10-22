@@ -19,7 +19,7 @@ const [cw, ch] = await fitSize(r.cover, 900, 900);
 				<i class="fa fa-tag"></i> {r.label}{r.catalog && <Fragment><i class="fa fa-folder"></i> {r.catalog}</Fragment>}{r.date && <Fragment><i class="fa fa-calendar"></i> {fmtLong(r.date)}</Fragment>}
 			</p>
 			<a class="qw-imgfx" href={r.cover}>
-				<img decoding="async" width={cw} height={ch} src={r.cover} class="img-responsive wp-post-image" alt="" />
+				<img decoding="async" width={cw} height={ch} src={r.cover} class="img-responsive wp-post-image" alt={r.title} />
 			</a>
 			<div class="qt-tags" set:html={r.genres.map((g) => `<a href="/genre/${g}/" rel="tag">${(taxonomies.genre as Record<string, string>)[g] ?? g}</a>`).join(' ')}></div>
 		</div>

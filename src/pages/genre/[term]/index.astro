@@ -17,7 +17,7 @@ const releases = (await releasesSorted()).filter((r) => r.data.genres.includes(t
 const first = releases[0]?.data;
 const firstClasses = first ? ` post-${first.wpId} release type-release status-publish has-post-thumbnail hentry${first.genres.map((g) => ` genre-${g}`).join('')}` : '';
 ---
-<Legacy critical="genre" title={name} template="archive" bodyClass={`archive tax-genre term-${term} term-${(taxonomies.ids.genre as Record<string, number>)[term]}`}>
+<Legacy critical="genre" title={name} image={first?.cover} template="archive" bodyClass={`archive tax-genre term-${term} term-${(taxonomies.ids.genre as Record<string, number>)[term]}`}>
 	<article class={`qt-content qt-fade-to-paper qt-animatedheader${firstClasses}`} id={first ? `page${first.wpId}` : undefined}>
 		<FeaturedImage src={site.defaultHeader} variant="archive" />
 		<header class="qt-header">

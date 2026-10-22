@@ -1,5 +1,7 @@
 {
   "name": "Dicular Records",
+  "description": "Dicular Records – independent label for progressive trance, progressive house and techno. Releases, artists, news and gigs.",
+  "shareImage": "/wp-content/uploads/2024/01/Dicular-RecordsFacebook.jpg",
   "logo": "/wp-content/uploads/2023/07/LogoNoShadow_Small2_280.png",
   "favicon": "/wp-content/uploads/2022/01/cropped-Logo_Dicular-Rec-Metal-600x600-2.png",
   "copyright": "© 2026 Dicular Records,<br />all rights reserved",
@@ -22,9 +24,8 @@
     }
   ],
   "radio": {
-    "label": "Sonik Radio",
-    "functional": false,
-    "stream": "https://streams.radio.co/sd1bcd1376/listen#.mp3"
+    "label": "Dicular Radio",
+    "source": "releases"
   },
   "audioBase": "https://dicular-records.com",
   "defaultHeader": "/wp-content/uploads/2023/07/Screenshot-2023-07-27-at-23.24.19.png"

@@ -45,14 +45,14 @@ const monthYear = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', y
 										{e.street ?? ''} // {e.country ?? ''}
 									</p>
 								</div>
-								{e.image && <img width="150" height="150" src={thumb(e.image, 'thumbnail')} class="img-responsive right hide-on-med-and-down wp-post-image" alt="" decoding="async" loading="lazy" />}
+								{e.image && <img width="150" height="150" src={thumb(e.image, 'thumbnail')} class="img-responsive right hide-on-med-and-down wp-post-image" alt={e.title} decoding="async" loading="lazy" />}
 							</div>
 							<div class="collapsible-body negative">
 								<div class="row qt-event-details">
 									<div class="col s12 m4">
 										{e.image && (
 											<a href={e.image} class="qw-imgfx">
-												<img width={w} height={h} src={e.image} class="img-responsive wp-post-image" alt="" decoding="async" loading="lazy" />
+												<img width={w} height={h} src={e.image} class="img-responsive wp-post-image" alt={e.title} decoding="async" loading="lazy" />
 											</a>
 										)}
 									</div>

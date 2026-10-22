@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import Legacy from '../../layouts/Legacy.astro';
 import Body from '../../components/Body.astro';
 import { thumb } from '../../lib/media';
+import { plainText } from '../../lib/content';
 import taxonomies from '../../data/taxonomies.json';
 
 export async function getStaticPaths() {
@@ -15,7 +16,7 @@ const typeName = (t: string) => (taxonomies.membertype as Record<string, string>
 const types = f.memberTypes.map((t) => `<a href="/membertype/${t}/" rel="tag">${typeName(t)}</a>`).join(' / ');
 const classes = `qt-content qt-member post-${f.wpId} members type-members status-publish${f.headerImage ? ' has-post-thumbnail' : ''} hentry${f.memberTypes.map((t) => ` membertype-${t}`).join('')}`;
 ---
-<Legacy critical="members" title={f.name} bodyClass={`wp-singular members-template-default single single-members postid-${f.wpId}`}>
+<Legacy critical="members" title={f.name} image={f.headerImage ?? f.profilePic} description={plainText(f.excerpt ?? friend.body)} bodyClass={`wp-singular members-template-default single single-members postid-${f.wpId}`}>
 	<div id="qwjquerycontent">
 		<article class={classes} id={`page${f.wpId}`}>
 			<header class="qt-header qt-vp " data-bgimage={f.headerImage}>

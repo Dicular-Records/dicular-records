@@ -15,7 +15,7 @@ const date = fmtDayMonth(n.date);
 	{n.image && (
 		<div class="qt-image-fx-roll">
 			<a href={href} class="qw-imgfx">
-				<img width="500" height="500" src={thumb(n.image, 'gridthumb')} class="attachment-qantumthemes_gridthumb size-qantumthemes_gridthumb wp-post-image" alt="" decoding="async" fetchpriority={first ? 'high' : undefined} loading={first ? undefined : 'lazy'} />
+				<img width="500" height="500" src={thumb(n.image, 'gridthumb')} class="attachment-qantumthemes_gridthumb size-qantumthemes_gridthumb wp-post-image" alt={n.title} decoding="async" fetchpriority={first ? 'high' : undefined} loading={first ? undefined : 'lazy'} />
 				<span class="qt-masonry-post-overlay negative">
 					<i class="fa fa-search qt-bigiconfx bottom bg-accent"></i>
 					{date}

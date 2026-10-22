@@ -8,12 +8,6 @@ image: /wp-content/uploads/2022/01/IMG_0585.jpg
 categories:
   - music
   - news
-tags:
-  - cool-music
-  - edm
-  - music-wordpress-themes
-  - party
-  - singer
 excerpt: "        <p>The first dicular release is coming soon. The artist Tomtron brings the first single from the forthcoming album Psy Holiday! More infos coming soon! The release will be release on all the usual channels such as Bandcamp, Beatport etc. You can hear a little foretaste on this page in the player;)</p>"
 listOrder: 21
 format: html

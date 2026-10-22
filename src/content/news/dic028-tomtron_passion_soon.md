@@ -30,7 +30,7 @@ format: html
 <div dir="auto">Catalog number: DIC028</div>
 </div>
 <div class="x14z9mp xat24cr x1lziwak x1vvkbs xtlvy1s x126k92a">
-<div dir="auto">Stay tuned for the upcoming release and get ready to feel the Passion. <span class="html-span xexx8yu xyri2b x18d9i69 x1c1uobl x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xm2jcoa x1mpyi22 xxymvpz xlup9mm x1kky2od"><img decoding="async" class="xz74otr x15mokao x1ga7v0g x16uus16 xbiv7yw" src="https://static.xx.fbcdn.net/images/emoji.php/v9/t1f/1/16/1f3b6.png" alt="🎶" width="16" height="16"></span><span class="html-span xexx8yu xyri2b x18d9i69 x1c1uobl x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xm2jcoa x1mpyi22 xxymvpz xlup9mm x1kky2od"><img decoding="async" class="xz74otr x15mokao x1ga7v0g x16uus16 xbiv7yw" src="https://static.xx.fbcdn.net/images/emoji.php/v9/t50/1/16/1f525.png" alt="🔥" width="16" height="16"></span></div>
+<div dir="auto">Stay tuned for the upcoming release and get ready to feel the Passion. <span class="html-span xexx8yu xyri2b x18d9i69 x1c1uobl x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xm2jcoa x1mpyi22 xxymvpz xlup9mm x1kky2od">🎶</span><span class="html-span xexx8yu xyri2b x18d9i69 x1c1uobl x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xm2jcoa x1mpyi22 xxymvpz xlup9mm x1kky2od">🔥</span></div>
 </div>
 <div dir="auto"></div>
 <div dir="auto"></div>

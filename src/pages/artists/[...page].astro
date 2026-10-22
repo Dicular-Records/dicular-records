@@ -35,7 +35,7 @@ const items = await Promise.all(pageInfo.items.map(async (a) => ({ a, size: awai
 				{items.map(({ a, size: [w, h] }, i) => (
 					<div class="qt-figure col s12 m6 l6 qt-artist-listing">
 						<figure>
-							<img width={w} height={h} src={a.data.photo} class="attachment-large size-large wp-post-image" alt="" decoding="async" fetchpriority={i === 0 && pageInfo.current === 1 ? 'high' : undefined} loading={i === 0 && pageInfo.current === 1 ? undefined : 'lazy'} />
+							<img width={w} height={h} src={a.data.photo} class="attachment-large size-large wp-post-image" alt={a.data.name} decoding="async" fetchpriority={i === 0 && pageInfo.current === 1 ? 'high' : undefined} loading={i === 0 && pageInfo.current === 1 ? undefined : 'lazy'} />
 							<figcaption>
 								<h3 class="qt-titdeco">{a.data.name}</h3>
 								<p set:html={a.data.excerpt ?? autoExcerpt(a.body ?? '', 7).replace(/^<p>|<\/p>$/g, '')} />

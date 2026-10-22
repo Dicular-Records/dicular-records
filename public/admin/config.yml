@@ -5,7 +5,7 @@
 #   Alles andere: Freigabe durch einen Admin (Tomtron oder Yoka)
 backend:
   name: github
-  repo: yokadeeds-dev/dicular-records
+  repo: Dicular-Records/dicular-records
   branch: main
   commit_messages:
     create: 'Neu: {{collection}} „{{slug}}“'

@@ -17,7 +17,7 @@ const cats = ' ' + n.categories.map((c) => `<a href="/category/${c}/" >${catName
 <article class={classes} id={`page-${n.wpId}`}>
 	{n.image && (
 		<div class="qt-featimg">
-			<img width={w} height={h} src={n.image} class="attachment-large size-large wp-post-image" alt="" {...{ '0': 'img-responsive ' }} decoding="async" fetchpriority={first ? 'high' : undefined} />
+			<img width={w} height={h} src={n.image} class="attachment-large size-large wp-post-image" alt={n.title} {...{ '0': 'img-responsive ' }} decoding="async" fetchpriority={first ? 'high' : undefined} />
 			<div class="qt-fade-to-paper dark"></div>
 		</div>
 	)}

@@ -8,6 +8,7 @@
     "dev": "astro dev",
     "prebuild": "node scripts/thumbs.mjs",
     "build": "astro build",
+    "postbuild": "node scripts/optimize-dist.mjs",
     "preview": "astro preview",
     "mirror:assets": "bash scripts/mirror-theme-assets.sh",
     "import": "node scripts/cache-live.mjs && node scripts/import-live.mjs"

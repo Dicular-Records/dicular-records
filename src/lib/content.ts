@@ -55,3 +55,11 @@ export function autoExcerpt(html: string, words = 55): string {
   const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().split(' ');
   return `<p>${text.slice(0, words).join(' ')}${text.length > words ? ' [&hellip;]' : ''}</p>`;
 }
+
+/** Kurzbeschreibung (Google, Vorschau beim Teilen): reiner Text aus HTML, an Wortgrenze gekürzt */
+export function plainText(html: string | undefined, max = 160): string | undefined {
+  if (!html) return undefined;
+  const text = html.replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/&amp;/g, '&').replace(/&[a-z#0-9]+;/gi, ' ').replace(/\s+/g, ' ').trim();
+  if (!text) return undefined;
+  return text.length <= max ? text : text.slice(0, text.lastIndexOf(' ', max - 1)).replace(/[,;:.\s–-]+$/, '') + ' …';
+}

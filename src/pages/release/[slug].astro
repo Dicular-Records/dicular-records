@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import Legacy from '../../layouts/Legacy.astro';
 import ReleaseBlock from '../../components/ReleaseBlock.astro';
 import RelatedCarousel from '../../components/RelatedCarousel.astro';
-import { relatedReleases } from '../../lib/content';
+import { relatedReleases, plainText } from '../../lib/content';
 
 export async function getStaticPaths() {
   return (await getCollection('releases')).map((release) => ({ params: { slug: release.id }, props: { release } }));
@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 const { release } = Astro.props;
 const related = await relatedReleases(release);
 ---
-<Legacy critical="release" title={release.data.title} bodyClass={`wp-singular release-template-default single single-release postid-${release.data.wpId}`}>
+<Legacy critical="release" title={release.data.title} image={release.data.cover} description={plainText(`${release.data.catalog ? `${release.data.catalog} · ` : ''}${release.data.title} – ${release.data.label}. ${release.data.tracks.map((t) => [t.artist, t.title].filter(Boolean).join(' – ')).filter(Boolean).join(' / ')} ${release.body ?? ''}`)} bodyClass={`wp-singular release-template-default single single-release postid-${release.data.wpId}`}>
 	<div id="qwjquerycontent">
 		<ReleaseBlock release={release} />
 	</div>

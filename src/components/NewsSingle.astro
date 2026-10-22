@@ -6,7 +6,7 @@ import Body from './Body.astro';
 import FeaturedImage from './FeaturedImage.astro';
 import RelatedCarousel from './RelatedCarousel.astro';
 import CommentForm from './CommentForm.astro';
-import { relatedNews, fmtDayMonth } from '../lib/content';
+import { relatedNews, fmtDayMonth, plainText } from '../lib/content';
 import taxonomies from '../data/taxonomies.json';
 import site from '../data/site.json';
 
@@ -22,7 +22,7 @@ const catLinks = n.categories.map((c) => `<a href="/category/${c}/" >${catName(c
 const tagLinks = n.tags.length ? `<h5>Tagged as </h5><p>${n.tags.map((t) => `<a href="/tag/${t}/" rel="tag">${tagName(t)}</a>`).join(' ')}</p> ` : '';
 const related = await relatedNews(entry);
 ---
-<Legacy critical="post" title={n.title} bodyClass={`wp-singular post-template-default single single-post postid-${n.wpId} single-format-standard`}>
+<Legacy critical="post" title={n.title} image={n.image} description={plainText(n.excerpt ?? entry.body)} ogType="article" bodyClass={`wp-singular post-template-default single single-post postid-${n.wpId} single-format-standard`}>
 	<div id="qwjquerycontent qt-single">
 		<article class={classes} id={`post${n.wpId}`}>
 			<FeaturedImage src={n.image ?? site.defaultHeader} />

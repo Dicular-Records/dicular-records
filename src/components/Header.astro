@@ -3,6 +3,10 @@
 import menu from '../data/menu.json';
 import site from '../data/site.json';
 import { menuHtml } from '../lib/menu';
+import { releasesSorted } from '../lib/content';
+import { audio } from '../lib/media';
+// Dicular Radio: alle Release-Tracks, zufällige Reihenfolge und Weiterspielen übernimmt /js/dicular-radio.js
+const radioTracks = (await releasesSorted()).flatMap((r) => r.data.tracks.map((t) => audio(t.mp3)).filter(Boolean)) as string[];
 ---
 <div class="qw-headernav">
 	<nav class="qw-animated qt-site-navbar" id="qwMainNavbar">
@@ -21,8 +25,8 @@ import { menuHtml } from '../lib/menu';
 							<div class="qw-volume-icon" id="radioname"><i class="mdi-device-signal-cellular-3-bar"></i></div>
 						</div>
 						<div class="qw-radiolist" id="channelsList">
-							{/* Sonik Radio: im Original der Theme-Test-Stream von QantumThemes (kein Dicular-Inhalt) → nur optisch, ohne Stream */}
-							<a href="#" data-mp3url={site.radio.functional ? site.radio.stream : undefined} data-sonikradio="1" class="waves-effect waves-light btn qwPlayerPlayList mp3soundmanager">
+							{/* Im Original "Sonik Radio" mit dem Test-Stream des Themes; hier die Tracks des Labels */}
+							<a href="#" id="dicularRadio" data-mp3url={radioTracks[0]} data-playlist={JSON.stringify(radioTracks)} data-sonikradio="1" class="waves-effect waves-light btn qwPlayerPlayList mp3soundmanager">
 								<i class="mdi-av-play-arrow"></i>{site.radio.label}
 							</a>
 						</div>

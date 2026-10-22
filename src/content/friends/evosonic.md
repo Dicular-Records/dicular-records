@@ -8,7 +8,7 @@ listOrder: 3
 format: html
 ---
                                 <p>&nbsp;</p>
-<p><img data-recalc-dims="1" decoding="async" src="https://i0.wp.com/www.evosonic.de/wp-content/uploads/2020/12/CMSchmidt_Rhein_schwarzweiss_500.png?w=900&amp;ssl=1" alt="Chris Maico Schmidt"></p>
+<p><img data-recalc-dims="1" decoding="async" src="/wp-content/uploads/external/evosonic.de/CMSchmidt_Rhein_schwarzweiss_500.png" alt="Chris Maico Schmidt"></p>
 <p>Welcome our friend Chris Maico Schmidt and Evosonic!</p>
 <p>Give this great artist who works so hard and with so much love on so many levels for electronic music!</p>
 <p>Don’t miss his almost 24 hours live radio channel with the finest electronic music</p>

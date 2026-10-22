@@ -17,7 +17,7 @@ const classes = `item ms-item col qt-archivemembers-item post-${f.wpId} members 
 <div class={classes} id={`page-${f.wpId}`}>
 	<div class="qt-relative qt-image qt-border qt-border-color-ink top thick" data-bgimage={image}>
 		<a href={href} class="qt-image-link-fx qt-border qt-border-accent bottom thick">
-			{image && <img width={w} height={h} src={image} class="attachment-qantumthemes_gridthumb  size-qantumthemes_gridthumb  wp-post-image" alt="" decoding="async" fetchpriority={first ? 'high' : undefined} loading={first ? undefined : 'lazy'} />}
+			{image && <img width={w} height={h} src={image} class="attachment-qantumthemes_gridthumb  size-qantumthemes_gridthumb  wp-post-image" alt={f.name} decoding="async" fetchpriority={first ? 'high' : undefined} loading={first ? undefined : 'lazy'} />}
 		</a>
 		<div class="qt-absolute bottom qt-socials">
 			{f.socials.map((s) => <a href={s.url} class="qw_social icon-l qw-disableembedding" target="_blank"><i class={s.icon}></i></a>)}

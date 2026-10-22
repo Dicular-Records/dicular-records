@@ -1,7 +1,13 @@
 ---
-// Eingebetteter SoundCloud-Player (neu, Artist-Self-Service) — Track- oder Profil-URL
+// SoundCloud-Player (neu, Artist-Self-Service) — Track- oder Profil-URL.
+// Zwei-Klick-Lösung: erst der Klick lädt den Player von SoundCloud (public/js/privacy-embeds.js).
 interface Props { url: string }
 const { url } = Astro.props;
-const src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%232a5982&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&visual=false`;
+const src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%232a5982&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&visual=false`;
 ---
-<iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy" src={src} title="SoundCloud"></iframe>
+<div class="dicular-embed" data-embed-src={src} data-embed-height="166" style="min-height:166px">
+	<div>
+		<a href={url} class="btn accentcolor dicular-embed-load qw-disableembedding" target="_blank" rel="noopener">▶ Play on SoundCloud</a>
+		<p>Loads SoundCloud. Data is then sent to SoundCloud — see our <a href="/privacy-policy/">privacy policy</a>.</p>
+	</div>
+</div>
