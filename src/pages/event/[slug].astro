@@ -1,52 +1,76 @@
 ---
-// Event-Detailseite (single-event.php)
+// Redesign: Event-Seite — Flyer schräg, Datumsblock, Ort/Adresse, Event-Link und Tickets; Beschreibung (meist Line-up); weitere Gigs.
 import { getCollection } from 'astro:content';
-import Legacy from '../../layouts/Legacy.astro';
-import Body from '../../components/Body.astro';
-import FeaturedImage from '../../components/FeaturedImage.astro';
-import EventInfo from '../../components/EventInfo.astro';
-import { fmtLong, plainText } from '../../lib/content';
-import { fitSize } from '../../lib/media';
+import Redesign from '../../layouts/Redesign.astro';
+import RBody from '../../components/RBody.astro';
+import { eventsSorted, plainText } from '../../lib/content';
+import { thumb } from '../../lib/media';
 
 export async function getStaticPaths() {
   return (await getCollection('events')).map((event) => ({ params: { slug: event.id }, props: { event } }));
 }
 const { event } = Astro.props;
 const e = event.data;
-const [w, h] = await fitSize(e.image, 900, 900);
+const today = new Date(new Date().toISOString().slice(0, 10));
+const upcoming = e.date >= today;
+const others = (await eventsSorted()).filter((x) => x.id !== event.id).reverse().slice(0, 4);
+const fmt = (o: Intl.DateTimeFormatOptions, d = e.date) => d.toLocaleDateString('en-GB', { ...o, timeZone: 'UTC' });
+const address = [e.street, e.city, e.country].filter(Boolean).join(', ');
+const hasBody = (event.body ?? '').replace(/<[^>]+>|&nbsp;|\s/g, '').length > 0;
 ---
-<Legacy critical="event" title={e.title} image={e.image} description={plainText(`${fmtLong(e.date)}${e.location ? ` · ${e.location}` : ''}${e.city ? `, ${e.city}` : ''}. ${e.excerpt ?? event.body ?? ''}`)} bodyClass={`wp-singular event-template-default single single-event postid-${e.wpId}`}>
-	<FeaturedImage src={e.background ?? e.image} />
-	<div id="qwjquerycontent">
-		<article class={`qt-content qt-event-content containerqt-fade-to-paper post-${e.wpId} event type-event status-publish${e.image ? ' has-post-thumbnail' : ''} hentry`} id={`post${e.wpId}`}>
-			<header class="qt-header">
-				<h4 class="container">
-					{fmtLong(e.date)}{e.location && ` [${e.location}]`}
-				</h4>
-				<div class="container">
-					<h1 class="qt-titdeco-eq text-center center">{e.title}</h1>
-				</div>
-			</header>
-			<div class="container">
-				<div class="row">
-					<div class="col s12 m4">
-						{e.image && (
-							<a href={e.image} class="qw-imgfx">
-								<img width={w} height={h} src={e.image} class="img-responsive wp-post-image" alt={e.title} decoding="async" fetchpriority="high" />
-							</a>
-						)}
-						<div class="qt-tags">
+<Redesign title={e.title} description={plainText(`${fmt({ day: 'numeric', month: 'long', year: 'numeric' })}${e.location ? ` · ${e.location}` : ''}. ${e.excerpt ?? event.body ?? ''}`)} image={e.image}>
+	<main>
+		<section class={`latest event-head${e.image ? '' : ' no-image'}`} style={e.image ? `--cover:url("${e.image}")` : undefined}>
+			{e.image && <div class="latest-bg" aria-hidden="true"></div>}
+			<div class={`wrap ${e.image ? 'latest-grid' : 'narrow'}`}>
+				{e.image && <a href={e.image} class="card tilt-l latest-cover" data-reveal><img src={e.image} alt={e.title} width="900" height="900" fetchpriority="high" /></a>}
+				<div class="latest-info" data-reveal>
+					<p class="crumb"><a href="/gigs/">Gigs</a></p>
+					<div class="event-when">
+						<span class="date big"><b>{fmt({ day: '2-digit' })}</b>{fmt({ month: 'short', year: 'numeric' })}</span>
+						<span><span class={`badge ${upcoming ? 'up' : ''}`}>{upcoming ? 'Upcoming' : 'Past'}</span><em>{fmt({ weekday: 'long' })}</em></span>
+					</div>
+					<h1 class="headline">{e.title}</h1>
+					{(e.location || address) && (
+						<p class="event-where"><strong>{e.location}</strong>{address && <span>{address}</span>}</p>
+					)}
+					{(e.eventUrl || e.buyLinks.length > 0) && (
+						<div class="actions">
+							{e.buyLinks.map((b) => <a class="btn" href={b.url} target="_blank" rel="noopener">{b.label || 'Tickets'}</a>)}
+							{e.eventUrl && <a class="btn ghost" href={e.eventUrl} target="_blank" rel="noopener">Event page</a>}
 						</div>
-					</div>
-					<div class="col s12 m8 qt-event-details">
-						<h3 class="qt-titdeco qt-border top thick">
-							Event info
-						</h3>
-						<EventInfo event={event} />
-						<Body entry={event} />
-					</div>
+					)}
 				</div>
 			</div>
-		</article>
-	</div>
-</Legacy>
+		</section>
+
+		{hasBody && (
+			<section class="block">
+				<div class="wrap narrow">
+					<div class="prose" data-reveal><RBody entry={event} /></div>
+				</div>
+			</section>
+		)}
+
+		{others.length > 0 && (
+			<section class="block">
+				<div class="wrap">
+					<h2 class="section-title" data-reveal>More Gigs</h2>
+					<ul class="gig-list">
+						{others.map((x, i) => (
+							<li data-reveal style={`--d:${i * 60}ms`}>
+								<a href={`/event/${x.id}/`} class="gig-row">
+									<span class="date"><b>{fmt({ day: '2-digit' }, x.data.date)}</b>{fmt({ month: 'short', year: 'numeric' }, x.data.date)}</span>
+									<span class="gig-flyer">{x.data.image && <img src={thumb(x.data.image, 'thumbnail')} alt="" width="150" height="150" loading="lazy" />}</span>
+									<span class="gig"><em class="gig-day">{fmt({ weekday: 'long' }, x.data.date)}</em><strong>{x.data.title}</strong><em>{[x.data.location, x.data.city].filter(Boolean).join(', ')}</em></span>
+									<span class={`badge ${x.data.date >= today ? 'up' : ''}`}>{x.data.date >= today ? 'Upcoming' : 'Past'}</span>
+								</a>
+							</li>
+						))}
+					</ul>
+					<p class="more" data-reveal><a class="btn ghost" href="/gigs/">All Gigs</a></p>
+				</div>
+			</section>
+		)}
+	</main>
+</Redesign>

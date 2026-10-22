@@ -9,6 +9,10 @@ export function artistName(full: string): { name: string; roles: string } {
 /** Herkunftszeile aus WordPress ("German / ") ohne Schrägstrich-Reste */
 export const cleanSubtitle = (s?: string) => (s ?? '').replace(/<[^>]+>/g, '').replace(/[\s/]+$/, '').replace(/^[\s/]+/, '').trim();
 
+/** Member-Typ aus WordPress ("music-producer", "IOT") lesbar: "Music Producer", "IoT" */
+const MEMBER_TYPES: Record<string, string> = { iot: 'IoT', seo: 'SEO' };
+export const memberTypeName = (t: string) => MEMBER_TYPES[t] ?? t.split('-').map((w) => w[0].toUpperCase() + w.slice(1)).join(' ');
+
 /** Datum als "30 May 2025" */
 export const fmtDate = (d?: Date) => d?.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 

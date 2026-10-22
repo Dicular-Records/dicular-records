@@ -68,10 +68,10 @@
 
   // ------------------------------------------------ Nur Entwurf: Seiten, die es im neuen Design noch nicht gibt.
   // Klick zeigt einen Hinweis statt die alte 1:1-Seite zu öffnen (dort optional erreichbar).
-  var READY = ['/entwurf/', '/release/', '/artist/', '/releases/', '/artists/', '/dicular-rec-news/', '/gigs/'];
+  var NOT_YET = ['/category/', '/tag/', '/genre/', '/membertype/', '/author/'];
   var note = document.createElement('div');
   note.className = 'soon'; note.hidden = true; note.setAttribute('role', 'status');
-  note.innerHTML = '<strong>Diese Seite folgt im neuen Design.</strong><span>Neu gestaltet sind bisher Startseite, Übersichten, Release- und Artist-Seiten.</span>'
+  note.innerHTML = '<strong>Diese Seite folgt im neuen Design.</strong><span>Noch nicht umgestellt sind die Archive nach Kategorie, Genre, Member-Typ und Autor.</span>'
     + '<div><a class="btn ghost" data-old target="_blank" rel="noopener">Altes Design ansehen</a><button class="btn" type="button">OK</button></div>';
   body.appendChild(note);
   var noteTimer;
@@ -84,7 +84,7 @@
     if (url.pathname === '/') { e.preventDefault(); location.href = '/entwurf/' + url.search; return; }
     if (/\.[a-z0-9]{2,5}$/i.test(url.pathname)) return; // Dateien (Bilder, MP3)
     if (url.hash && url.pathname === location.pathname) return; // Sprungmarke auf derselben Seite
-    if (READY.some(function (p) { return url.pathname.indexOf(p) === 0; })) return;
+    if (!NOT_YET.some(function (p) { return url.pathname.indexOf(p) === 0; })) return;
     e.preventDefault();
     note.querySelector('[data-old]').href = url.origin + url.pathname;
     note.hidden = false;

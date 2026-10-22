@@ -1,33 +1,28 @@
 ---
-// Friends-Übersicht (archive-members.php), Masonry-Raster
-import { getEntry } from 'astro:content';
-import Legacy from '../../layouts/Legacy.astro';
-import Body from '../../components/Body.astro';
-import FeaturedImage from '../../components/FeaturedImage.astro';
-import FriendItem from '../../components/FriendItem.astro';
-import LoadMore from '../../components/LoadMore.astro';
-import { friendsSorted } from '../../lib/content';
-import site from '../../data/site.json';
+// Redesign: Friends — befreundete Labels, Künstler und Partner als schräge Karten mit Tätigkeiten.
+import Redesign from '../../layouts/Redesign.astro';
+import RPageHead from '../../components/RPageHead.astro';
+import RCard from '../../components/RCard.astro';
+import { friendsSorted, plainText } from '../../lib/content';
+import { thumb } from '../../lib/media';
+import { memberTypeName } from '../../lib/redesign';
 
-const page = (await getEntry('pages', 'friends'))!;
-const p = page.data;
 const friends = await friendsSorted();
 ---
-<Legacy critical="page" title={p.title} pageId={p.wpId} template="archive-members.php" customCss={p.customCss}
-	bodyClass={`wp-singular page-template page-template-archive-members page-template-archive-members-php page page-id-${p.wpId}`}>
-	<div class="qt-content qt-animatedheader">
-		<FeaturedImage src={p.image ?? p.headerImage ?? site.defaultHeader} />
-		<header class="qt-header">
-			<div class="container">
-				<h1 class="qt-titdeco-eq text-center center">{p.title}</h1>
+<Redesign title="Friends" description="Friends and partners of Dicular Records">
+	<main>
+		<RPageHead title="Friends" kicker="Labels · Artists · Partners" intro="The people and projects we work with." />
+		<section class="block">
+			<div class="wrap">
+				<div class="cards friends">
+					{friends.map((f, i) => (
+						<div class="friend-tile">
+							<RCard href={`/members/${f.id}/`} src={thumb(f.data.listImage ?? f.data.headerImage ?? f.data.profilePic, 'gridthumb')} label={f.data.name} tilt={(['l', 'r', 's'] as const)[i % 3]} delay={(i % 4) * 80} />
+							<p class="tile-meta" data-reveal style={`--d:${(i % 4) * 80 + 60}ms`}>{f.data.memberTypes.map(memberTypeName).join(' · ') || plainText(f.data.excerpt, 60)}</p>
+						</div>
+					))}
+				</div>
 			</div>
-		</header>
-		<div class="container qt-archive " id="qtArchive">
-			<Body entry={page} />
-			<div id="masonrycontainer" class="row qt-masonry masonrycontainer">
-				{friends.map((f, i) => <FriendItem friend={f} first={i === 0} />)}
-			</div>
-			<LoadMore id="qtChartLoadmore" />
-		</div>
-	</div>
-</Legacy>
+		</section>
+	</main>
+</Redesign>

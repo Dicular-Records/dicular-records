@@ -1,0 +1,51 @@
+---
+// Redesign: Contact — Kontaktdaten und Demo-Einsendung. Das WordPress-Upload-Plugin funktioniert ohne WordPress nicht mehr;
+// Vorschlag: Demo-Link statt Datei-Upload, das Formular öffnet die eigene Mail-App (keine Daten auf der Website, kein Server).
+// Ob später doch ein Upload per PHP kommt (DEC Nr. 31), entscheiden Yoka/Tomtron.
+import type { CollectionEntry } from 'astro:content';
+import Redesign from '../layouts/Redesign.astro';
+import RPageHead from './RPageHead.astro';
+import site from '../data/site.json';
+
+interface Props { entry: CollectionEntry<'pages'> }
+const { entry } = Astro.props;
+const mail = 'info@dicular-records.com';
+---
+<Redesign title={entry.data.title} description="Contact Dicular Records and submit your demo.">
+	<main>
+		<RPageHead title="Contact" kicker="Dicular Records" intro="Questions, bookings, collaborations — or your next track." />
+		<section class="block">
+			<div class="wrap contact-grid">
+				<div data-reveal>
+					<h2 class="section-title">Get in touch</h2>
+					<p class="contact-mail"><a href={`mailto:${mail}`}>{mail}</a></p>
+					<p>Follow us:</p>
+					<p class="chips">{site.social.map((s) => <a class="chip" href={s.href} target="_blank" rel="noopener">{s.icon.replace('qticon-', '')}</a>)}</p>
+				</div>
+				<div data-reveal style="--d:120ms">
+					<h2 class="section-title">Submit your demo</h2>
+					<p>Dicular Records is deeply committed to protecting your personal information — we don't store any data on our website.
+						Share a private link to your track (SoundCloud, Dropbox, WeTransfer, Google Drive …). The form opens your own mail app with everything filled in.</p>
+					<form class="demo-form" id="demoForm" data-mail={mail}>
+						<label>Name<input name="name" required autocomplete="name" /></label>
+						<label>Email<input name="email" type="email" required autocomplete="email" /></label>
+						<label>Artist name<input name="artist" /></label>
+						<label>Link to your demo<input name="link" type="url" required placeholder="https://" /></label>
+						<label class="wide">Message<textarea name="message" rows="5"></textarea></label>
+						<button class="btn" type="submit">Open mail &amp; send demo</button>
+					</form>
+				</div>
+			</div>
+		</section>
+	</main>
+	<script is:inline>
+		// Demo-Formular → vorbereitete E-Mail in der eigenen Mail-App (nichts wird an die Website gesendet)
+		document.getElementById('demoForm').addEventListener('submit', function (e) {
+			e.preventDefault();
+			var f = e.target, v = function (n) { return (f.elements[n].value || '').trim(); };
+			var subject = 'Demo: ' + (v('artist') || v('name'));
+			var bodyText = 'Name: ' + v('name') + '\nEmail: ' + v('email') + '\nArtist: ' + v('artist') + '\nDemo: ' + v('link') + '\n\n' + v('message');
+			location.href = 'mailto:' + f.dataset.mail + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(bodyText);
+		});
+	</script>
+</Redesign>

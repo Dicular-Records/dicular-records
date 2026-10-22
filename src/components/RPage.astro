@@ -1,0 +1,25 @@
+---
+// Redesign: Textseite (About, Team, Dicular Digital, Impressum, Privacy Policy) — Chrome-Titel, Text im Lesesatz.
+// Die WPBakery-Hüllen aus WordPress (leere vc_row/wpb_wrapper) bleiben im HTML, haben im Redesign aber keine Wirkung.
+import type { CollectionEntry } from 'astro:content';
+import Redesign from '../layouts/Redesign.astro';
+import RPageHead from './RPageHead.astro';
+import RBody from './RBody.astro';
+import { plainText } from '../lib/content';
+
+interface Props { entry: CollectionEntry<'pages'> }
+const { entry } = Astro.props;
+const p = entry.data;
+const kicker: Record<string, string> = { about: 'Dicular Records', team: 'The people behind the label', 'my-charts-2': 'Sub-label', impressum: 'Legal', 'privacy-policy': 'Legal' };
+const title = entry.id === 'my-charts-2' ? 'Dicular Digital' : p.title;
+---
+<Redesign title={title} description={plainText(entry.body)} image={p.image}>
+	<main>
+		<RPageHead title={title} kicker={kicker[entry.id]} image={p.image ?? p.headerImage} />
+		<section class="block">
+			<div class={`wrap narrow page-${entry.id}`}>
+				<div class="prose" data-reveal><RBody entry={entry} /></div>
+			</div>
+		</section>
+	</main>
+</Redesign>

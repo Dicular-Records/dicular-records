@@ -57,7 +57,14 @@ Gemeinsamer Rahmen `src/layouts/Redesign.astro` (Kopfleiste, Chrome-Menü, Fußz
   Releases nach Jahr gruppiert · Artists als Porträtkarten mit Rollen/Herkunft · News: neuester Beitrag groß, Rest als Kartenraster · Gigs: Upcoming (aufsteigend) und Past (neueste zuerst) mit Datum, Wochentag, Flyer, Ort.
   Alte Adressen `/releases/page/N/`, `/artists/page/N/`, `/dicular-rec-news/page/N/` → 301 auf die Übersicht (netlify.toml; **beim Umzug als .htaccess übernehmen**).
 - Sichtbare Texte durchgehend **englisch** wie die Website (nur Entwurf-Umschalter und Hinweis deutsch).
-- Noch altes Design (Klick zeigt Hinweis): News-Beiträge, Events, Friends/Members, Team, About, Contact, Impressum/Privacy, Archive (Kategorie, Genre, Member-Typ, Autor).
+- **News-Beitrag** (`RNews`): Kopf mit schrägem Beitragsbild, Datum, Kategorien; Text; „More News“. Titel-Dekor wie „### … ###“ wird für die Anzeige geglättet. **Kommentarformular entfällt im Entwurf** (live kein einziger Kommentar) — Entscheidung offen.
+- **Event-Seite**: Flyer schräg, großer Datumsblock mit Wochentag, Upcoming/Past, Ort + Adresse, Tickets und Event-Link; Beschreibung; „More Gigs“.
+- **Friends** (Übersicht als Karten mit Tätigkeiten) und **Friend-Seite** (Profilbild mit Namensbalken über dem Kopfbild, Tätigkeiten, Social Links, Text).
+- **Textseiten** (`RPage`): About, Team, Dicular Digital (my-charts-2), Impressum, Privacy Policy im Lesesatz.
+- **Contact** (`RContact`): Kontaktdaten + **Demo-Formular mit Link statt Upload**; öffnet die eigene Mail-App (keine Daten auf der Website, kein Server). Ersetzt das WordPress-Upload-Plugin — **Vorschlag, Entscheidung Yoka/Tomtron** (Alternative: Upload per PHP, DEC Nr. 31).
+- Text-Robustheit: lange Links/kopierte Textstücke brechen um, `<pre>`-Blöcke aus kopierten Texten werden wie Fließtext gesetzt; Social-Links in der Fußzeile umbrechen am Handy.
+- Noch altes Design (Klick zeigt Hinweis): nur die Archive nach Kategorie, Genre, Member-Typ, Autor.
+- Geprüft: alle 90 neuen Seiten × Desktop/Handy ohne JS-Fehler, Fehlerseiten, Fremdanfragen, Querscrollen.
 - Geprüft: 46 Seiten (Start, 33 Releases, 12 Artists) × Desktop/Handy ohne JS-Fehler, ohne Fehlerseiten, ohne Fremdanfragen, ohne Querscrollen.
 
 ## DNA, die bleibt

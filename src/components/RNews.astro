@@ -1,0 +1,61 @@
+---
+// Redesign: News-Beitrag — Kopf mit schrägem Beitragsbild, Datum, Kategorien; Text; weitere Beiträge.
+// Das alte Kommentarformular entfällt im Entwurf (live gibt es keinen einzigen Kommentar; Entscheidung offen).
+import type { CollectionEntry } from 'astro:content';
+import Redesign from '../layouts/Redesign.astro';
+import RBody from './RBody.astro';
+import { relatedNews, plainText } from '../lib/content';
+import { thumb } from '../lib/media';
+import { fmtDate } from '../lib/redesign';
+import taxonomies from '../data/taxonomies.json';
+
+interface Props { entry: CollectionEntry<'news'> }
+const { entry } = Astro.props;
+const n = entry.data;
+const related = (await relatedNews(entry)).filter((x) => x.id !== entry.id).slice(0, 3);
+const cats = n.categories.filter((c) => c !== 'uncategorized').map((c) => (taxonomies.category as Record<string, string>)[c] ?? c);
+// Titel aus WordPress tragen teils Dekor wie "### News Flash ###" → für die Anzeige glätten
+const title = n.title.replace(/#{2,}/g, '').replace(/\s{2,}/g, ' ').trim();
+---
+<Redesign title={title} description={plainText(n.excerpt ?? entry.body)} image={n.image}>
+	<main>
+		<section class={`latest article-head${n.image ? '' : ' no-image'}`} style={n.image ? `--cover:url("${n.image}")` : undefined}>
+			{n.image && <div class="latest-bg" aria-hidden="true"></div>}
+			<div class={`wrap ${n.image ? 'latest-grid' : 'narrow'}`}>
+				{n.image && <span class="card tilt-l latest-cover" data-reveal><img src={n.image} alt="" width="900" height="900" fetchpriority="high" /></span>}
+				<div class="latest-info" data-reveal>
+					<p class="crumb"><a href="/dicular-rec-news/">News</a></p>
+					<p class="kicker">{fmtDate(n.date)}</p>
+					<h1 class="headline">{title}</h1>
+					{cats.length > 0 && <p class="chips">{cats.map((c) => <span class="chip ghost">{c}</span>)}</p>}
+				</div>
+			</div>
+		</section>
+
+		<section class="block">
+			<div class="wrap narrow">
+				<div class="prose" data-reveal><RBody entry={entry} /></div>
+			</div>
+		</section>
+
+		{related.length > 0 && (
+			<section class="block">
+				<div class="wrap">
+					<h2 class="section-title" data-reveal>More News</h2>
+					<div class="news-grid">
+						{related.map((x, i) => (
+							<a href={`/${x.id}/`} class="news-card" data-reveal style={`--d:${i * 80}ms`}>
+								<span class={`card ${i % 2 ? 'tilt-r' : 'tilt-l'}`}>
+									{x.data.image ? <img src={thumb(x.data.image, 'gridthumb')} alt="" width="500" height="500" loading="lazy" /> : <span class="card-empty" aria-hidden="true"></span>}
+								</span>
+								<time>{fmtDate(x.data.date)}</time>
+								<strong>{x.data.title.replace(/#{2,}/g, '').trim()}</strong>
+							</a>
+						))}
+					</div>
+					<p class="more" data-reveal><a class="btn ghost" href="/dicular-rec-news/">All News</a></p>
+				</div>
+			</section>
+		)}
+	</main>
+</Redesign>
