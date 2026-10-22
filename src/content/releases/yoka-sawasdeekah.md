@@ -9,10 +9,12 @@ tracks:
   - title: Sawasdeekah
     artist: YOKA
 buyLinks:
-  - label: Beatport
-    url: ""
-  - label: Bandcamp
-    url: ""
+  - label: Dicular on Beatport
+    url: https://www.beatport.com/label/dicular-records/105345
+  - label: Dicular on Bandcamp
+    url: https://dicular-records.bandcamp.com/
+  - label: Dicular on SoundCloud
+    url: https://soundcloud.com/dicular-records
   - label: Spotify
     url: ""
   - label: Apple Music
