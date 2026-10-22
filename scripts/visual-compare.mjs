@@ -41,7 +41,8 @@ const settle = async (page) => {
   await page.evaluate(async () => {
     for (const i of document.images) if (i.srcset) { const s = i.srcset; i.srcset = ''; i.srcset = s; }
     await new Promise((r) => setTimeout(r, 1500));
-    await Promise.all([...document.images].map((i) => i.decode().catch(() => {})));
+    // decode() wartet bei nie geladenen Bildern (ausgeblendet + lazy) unbegrenzt → höchstens 5 s
+    await Promise.race([Promise.all([...document.images].map((i) => i.decode().catch(() => {}))), new Promise((r) => setTimeout(r, 5000))]);
   });
 };
 const dirName = (p) => (decodeURIComponent(p).replace(/^\/|\/$/g, '').replace(/[\/\\:*?"<>|]/g, '_') || 'home');
