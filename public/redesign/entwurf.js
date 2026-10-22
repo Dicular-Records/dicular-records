@@ -53,6 +53,27 @@
     items.forEach(function (el) { io.observe(el); });
   } else items.forEach(function (el) { el.classList.add('in'); });
 
+  // ------------------------------------------------ Nur Entwurf: Unterseiten gibt es im neuen Design noch nicht.
+  // Klick auf einen internen Link zeigt einen Hinweis statt die alte 1:1-Seite zu öffnen (dort optional erreichbar).
+  var note = document.createElement('div');
+  note.className = 'soon'; note.hidden = true; note.setAttribute('role', 'status');
+  note.innerHTML = '<strong>Diese Seite folgt im neuen Design.</strong><span>Bisher ist nur die Startseite neu gestaltet.</span>'
+    + '<div><a class="btn ghost" data-old target="_blank" rel="noopener">Altes Design ansehen</a><button class="btn" type="button">OK</button></div>';
+  document.body.appendChild(note);
+  var noteTimer;
+  note.querySelector('button').addEventListener('click', function () { note.hidden = true; });
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a || a.target === '_blank' || a.closest('.soon')) return;
+    var url = new URL(a.href, location.href);
+    if (url.origin === location.origin && url.pathname === '/') { e.preventDefault(); scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    if (url.origin !== location.origin || url.pathname.indexOf('/entwurf/') === 0 || url.hash && url.pathname === location.pathname) return;
+    e.preventDefault();
+    note.querySelector('[data-old]').href = url.href;
+    note.hidden = false;
+    clearTimeout(noteTimer); noteTimer = setTimeout(function () { note.hidden = true; }, 6000);
+  });
+
   // ------------------------------------------------ Player: eine Warteschlange für Release-Tracks oder Dicular Radio,
   // gesteuert über die Knöpfe auf der Seite und die Player-Leiste (zurück / abspielen / vor / spulen)
   var player = document.getElementById('player');

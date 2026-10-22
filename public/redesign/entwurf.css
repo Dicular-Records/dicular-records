@@ -199,6 +199,16 @@ a { color: inherit; }
 .pb-source { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--green); white-space: nowrap; }
 .playerbar:not([hidden]) ~ .switcher { bottom: 84px; }
 
+/* ---------------------------------------------------------------- Hinweis „folgt im neuen Design“ (nur Entwurf) */
+.soon { position: fixed; left: 50%; top: 90px; z-index: 40; transform: translateX(-50%); width: min(440px, calc(100% - 32px)); padding: 18px 20px;
+  background: rgba(0, 24, 35, .96); border-left: 4px solid var(--blue); box-shadow: 0 16px 40px rgba(0, 0, 0, .6); animation: soonIn .4s var(--ease); }
+.soon[hidden] { display: none; }
+@keyframes soonIn { from { opacity: 0; transform: translate(-50%, -12px); } }
+.soon strong { display: block; color: var(--light); font-weight: 600; }
+.soon span { display: block; font-size: 16px; margin: 2px 0 14px; }
+.soon div { display: flex; gap: 10px; justify-content: flex-end; }
+.soon .btn { font-size: 13px; padding: 7px 14px; border: 0; cursor: pointer; font-family: inherit; }
+
 /* ---------------------------------------------------------------- Umschalter (nur Entwurf) */
 .switcher { position: fixed; right: 16px; bottom: 16px; z-index: 30; padding: 10px 12px; background: rgba(0, 15, 23, .88); border: 1px solid var(--blue);
   font-size: 13px; display: grid; gap: 6px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
