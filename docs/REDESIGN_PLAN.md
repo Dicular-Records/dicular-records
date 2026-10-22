@@ -22,6 +22,20 @@ Zweig `redesign`, Arbeitsordner `C:\Users\yoka\Claude-Arbeit\Dicular-Records-Red
 - **2026-10-22, Yoka:** Prototyp Logo-Intro + Chrome-Menü „mega gut, echt spitze; auch der Effekt auf den Menüs ist super“.
   Noch offen daran: Drehung Münze oder Schallplatte; Abgrenzung der Menüleiste (A/B/C).
 
+## Entwurf Startseite (2026-10-22)
+
+Seite `/entwurf/` (src/pages/entwurf/index.astro, public/redesign/entwurf.css + .js), echte Inhalte aus den Collections.
+Lokal: Startkonfiguration `redesign-dev` → http://localhost:4322/entwurf/
+
+- Intro: Logo-Einblendung + Glanz, Wortmarke wie Filmtitel; danach Lichtlauf über das Chrome-Menü
+- Kopfleiste fixiert, kleines Logo erscheint beim Scrollen; **Abgrenzung umschaltbar A/B/C**
+- Neuestes Release: Cover schräg mit Namensbalken, Genre-Wörter als Konturschrift, Hintergrund = Cover unscharf + Punktraster, Tracks direkt abspielbar
+- Releases und Artists als schräge Karten mit blauen Namensbalken (gerade beim Darüberfahren)
+- Dicular Radio als Scheibe (dreht beim Abspielen), alle Release-Tracks gemischt
+- Gigs (Datum-Block, Upcoming/Past) und News nebeneinander
+- Einblenden beim Scrollen von oben, einmalig; „Bewegung reduzieren“ wird respektiert
+- **Umschalter (nur Entwurf):** Logo Münze/Schallplatte, Abgrenzung A/B/C, Intro nochmal; Auswahl steht in der Adresse (z. B. `?logo=record&sep=b`) → Link teilbar für Tomtron
+
 ## DNA, die bleibt
 
 - Farben: Petrol `#00283a`, Akzent Blau `#2a5982`, Akzent Grün `#2cc894`, Text `#adadad`
