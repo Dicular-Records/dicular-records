@@ -41,3 +41,8 @@
   from = "/author/dicular-admin/page/*"
   to = "/author/dicular-admin/"
   status = 301
+# Dicular Digital hat eine eigene Seite (vorher WordPress-Seite „my-charts-2“)
+[[redirects]]
+  from = "/my-charts-2/"
+  to = "/dicular-digital/"
+  status = 301

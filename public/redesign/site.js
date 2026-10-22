@@ -74,6 +74,16 @@
     if (url.origin === location.origin && url.pathname === '/') { e.preventDefault(); location.href = '/entwurf/' + url.search; }
   });
 
+  // ------------------------------------------------ Sprachumschalter für zweisprachige Texte (EN/DE)
+  document.querySelectorAll('.lang-switch').forEach(function (sw) {
+    var prose = sw.parentElement.querySelector('[data-show-lang]');
+    sw.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-lang]'); if (!b || !prose) return;
+      prose.setAttribute('data-show-lang', b.dataset.lang);
+      sw.querySelectorAll('[data-lang]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    });
+  });
+
   // ------------------------------------------------ Zwei-Klick-Player (YouTube, SoundCloud): erst der Klick lädt den fremden Inhalt
   document.addEventListener('click', function (e) {
     var load = e.target.closest && e.target.closest('.dicular-embed-load');

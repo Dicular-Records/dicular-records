@@ -13,7 +13,7 @@ export function getStaticPaths() {
 const releases = await releasesSorted();
 const groups: { year: string; items: typeof releases }[] = [];
 for (const r of releases) {
-  const year = r.data.date ? String(r.data.date.getUTCFullYear()) : 'Earlier';
+  const year = r.data.upcoming ? 'Coming soon' : r.data.date ? String(r.data.date.getUTCFullYear()) : 'Earlier';
   const g = groups.find((x) => x.year === year);
   if (g) g.items.push(r); else groups.push({ year, items: [r] });
 }

@@ -6,7 +6,7 @@ import Redesign from '../../layouts/Redesign.astro';
 import RCard from '../../components/RCard.astro';
 import RTracks from '../../components/RTracks.astro';
 import Body from '../../components/RBody.astro';
-import { relatedReleases, plainText } from '../../lib/content';
+import { relatedReleases, releasesSorted, plainText } from '../../lib/content';
 import { thumb } from '../../lib/media';
 import { artistName, fmtDate, youtubeId } from '../../lib/redesign';
 import taxonomies from '../../data/taxonomies.json';
@@ -16,12 +16,18 @@ export async function getStaticPaths() {
 }
 const { release } = Astro.props;
 const r = release.data;
-const related = (await relatedReleases(release)).filter((x) => x.id !== release.id).slice(0, 8);
+let related = (await relatedReleases(release)).filter((x) => x.id !== release.id).slice(0, 8);
+// neues Genre ohne weitere Releases (z. B. Psybient) → die neuesten Releases zeigen
+if (!related.length) related = (await releasesSorted()).filter((x) => x.id !== release.id).slice(0, 8);
 const artists = r.artists.length ? await getEntries(r.artists) : [];
 const genreName = (g: string) => (taxonomies.genre as Record<string, string>)[g] ?? g;
 // nur Genres mit eigenem Archiv werden verlinkt
 const genreHref = (g: string) => ((taxonomies.genre as Record<string, string>)[g] ? `/genre/${g}/` : undefined);
 const words = r.genres.length ? r.genres.flatMap((g) => genreName(g).split('-')) : ['Progressive', 'Trance', 'House', 'Techno'];
+// Sublabel Dicular Digital → Label verlinkt auf die Sublabel-Seite
+const labelHref = /digital/i.test(r.label) ? '/dicular-digital/' : undefined;
+// zweisprachiger Text (Blöcke <div class="lang" lang="en|de">) → Umschalter
+const bilingual = /class="lang" lang="de"/.test(release.body ?? '');
 const videos = r.tracks.filter((t) => youtubeId(t.video)).map((t) => ({ id: youtubeId(t.video)!, title: t.videoLabel || t.title || r.title }));
 const hasBody = (release.body ?? '').replace(/<[^>]+>|&nbsp;|\s/g, '').length > 0;
 const description = plainText(`${r.catalog ? `${r.catalog} · ` : ''}${r.title} – ${r.label}. ${release.body ?? ''}`);
@@ -36,7 +42,10 @@ const description = plainText(`${r.catalog ? `${r.catalog} · ` : ''}${r.title} 
 					label={[r.catalog, r.label].filter(Boolean).join(' · ')} />
 				<div class="latest-info" data-reveal>
 					<p class="crumb"><a href="/releases/">Releases</a></p>
-					<p class="kicker">{r.label}{r.date && ` · ${fmtDate(r.date)}`}</p>
+					<p class="kicker">
+						{labelHref ? <a href={labelHref}>{r.label}</a> : r.label}{r.date && !r.upcoming && ` · ${fmtDate(r.date)}`}
+						{r.upcoming && <span class="badge up soon-badge">Coming soon</span>}
+					</p>
 					<h1 class="headline">{r.title}</h1>
 					{(artists.length > 0 || r.genres.length > 0) && (
 						<p class="chips">
@@ -46,7 +55,9 @@ const description = plainText(`${r.catalog ? `${r.catalog} · ` : ''}${r.title} 
 					)}
 					<RTracks release={release} buy />
 					{r.buyLinks.length > 0 && (
-						<div class="actions">{r.buyLinks.map((b, i) => <a class={`btn${i ? ' ghost' : ''}`} href={b.url} target="_blank" rel="noopener">{b.label || 'Buy'}</a>)}</div>
+						<div class="actions">{r.buyLinks.map((b, i) => b.url
+							? <a class={`btn${i ? ' ghost' : ''}`} href={b.url} target="_blank" rel="noopener">{b.label || 'Buy'}</a>
+							: <span class="btn ghost pending" title="Link folgt zum Release">{b.label} <small>soon</small></span>)}</div>
 					)}
 				</div>
 			</div>
@@ -55,8 +66,13 @@ const description = plainText(`${r.catalog ? `${r.catalog} · ` : ''}${r.title} 
 		{(hasBody || videos.length > 0) && (
 			<section class="block">
 				<div class="wrap narrow">
+					{hasBody && bilingual && (
+						<div class="lang-switch" role="group" aria-label="Language" data-reveal>
+							<button type="button" data-lang="en" aria-pressed="true">English</button><button type="button" data-lang="de" aria-pressed="false">Deutsch</button>
+						</div>
+					)}
 					{hasBody && (
-						<div class="prose" data-reveal><Body entry={release} /></div>
+						<div class="prose" data-reveal data-show-lang={bilingual ? 'en' : undefined}><Body entry={release} /></div>
 					)}
 					{videos.map((v) => (
 						<div class="dicular-embed dicular-embed-video" data-embed-src={`https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0`} data-reveal>

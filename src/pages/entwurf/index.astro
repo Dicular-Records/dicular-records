@@ -9,8 +9,9 @@ import { thumb, audio } from '../../lib/media';
 import { artistName } from '../../lib/redesign';
 
 const releases = await releasesSorted();
-const latest = releases[0];
-const more = releases.slice(1, 9);
+// oben das neueste erschienene Release (nicht die angekündigten)
+const latest = releases.find((r) => !r.data.upcoming)!;
+const more = releases.filter((r) => r !== latest).slice(0, 8);
 const artists = await artistsSorted();
 const events = (await eventsSorted()).reverse().slice(0, 4);
 const news = (await newsSorted()).slice(0, 3);

@@ -7,7 +7,8 @@ import RPage from '../components/RPage.astro';
 import RContact from '../components/RContact.astro';
 
 export async function getStaticPaths() {
-  const LIST_PAGES = ['home', 'releases', 'dicular-rec-news', 'artists', 'gigs', 'friends'];
+  // my-charts-2 = Dicular Digital → eigene Seite /dicular-digital/ (alte Adresse wird umgeleitet)
+  const LIST_PAGES = ['home', 'releases', 'dicular-rec-news', 'artists', 'gigs', 'friends', 'my-charts-2'];
   const news = (await getCollection('news')).map((entry) => ({ params: { slug: entry.id }, props: { news: entry } }));
   const pages = (await getCollection('pages')).filter((p) => !LIST_PAGES.includes(p.id))
     .map((entry) => ({ params: { slug: entry.id }, props: { page: entry } }));

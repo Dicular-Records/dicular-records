@@ -112,6 +112,16 @@ collections:
           - { name: video, label: Video-Link (YouTube), widget: string, required: false }
       - { name: artists, label: "Artists (für „Music“ auf der Artist-Seite)", widget: relation, collection: artists, value_field: '{{slug}}', search_fields: [name], display_fields: [name], multiple: true, required: false }
       - { name: headerPlayer, label: "Großer Player im Kopf", widget: boolean, default: true }
+      - { name: upcoming, label: "Noch nicht erschienen (Coming soon)", widget: boolean, default: false, required: false, hint: "Zeigt „Coming soon“; Shop-Links ohne Adresse erscheinen als Vorschau" }
+      - name: buyLinks
+        label: Shops / Streaming
+        label_singular: Link
+        widget: list
+        required: false
+        summary: '{{fields.label}}'
+        fields:
+          - { name: label, label: Name, widget: string, hint: "z. B. Beatport, Bandcamp, Spotify, Apple Music" }
+          - { name: url, label: Link, widget: string, required: false, hint: "leer lassen, solange es noch keinen Link gibt" }
       - { name: body, label: Text, widget: markdown }
       - { name: wpId, widget: hidden, required: false }
       - { name: listOrder, widget: hidden, required: false }

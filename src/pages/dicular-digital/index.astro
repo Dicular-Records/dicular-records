@@ -1,0 +1,55 @@
+---
+// Redesign: Sublabel Dicular Digital — großes Chrome-Logo mit Glanz, Einleitung (bisher Seite „my-charts-2“),
+// Releases des Sublabels (Label enthält „Digital“), das nächste/aktuelle Release groß.
+import { getEntry } from 'astro:content';
+import Redesign from '../../layouts/Redesign.astro';
+import RCard from '../../components/RCard.astro';
+import RTracks from '../../components/RTracks.astro';
+import RBody from '../../components/RBody.astro';
+import { releasesSorted } from '../../lib/content';
+import { thumb } from '../../lib/media';
+
+const page = (await getEntry('pages', 'my-charts-2'))!;
+const releases = (await releasesSorted()).filter((r) => /digital/i.test(r.data.label));
+const [lead, ...rest] = releases;
+const logo = '/images/uploads/dicular-digital-logo.png';
+---
+<Redesign title="Dicular Digital" description="Dicular Digital — the sub-label of Dicular Records." image={lead?.data.cover ?? logo}>
+	<main>
+		<section class="latest digital-head" style={lead ? `--cover:url("${lead.data.cover}")` : undefined}>
+			{lead && <div class="latest-bg" aria-hidden="true"></div>}
+			<div class="wrap digital-hero">
+				<p class="kicker" data-reveal>Sub-label of Dicular Records</p>
+				<div class="digital-logo" data-reveal style={`--logo:url("${logo}")`}>
+					<img src={logo} alt="Dicular Digital" width="609" height="238" />
+					<span class="shine"></span>
+				</div>
+				<div class="prose digital-intro" data-reveal><RBody entry={page} /></div>
+			</div>
+		</section>
+
+		{lead && (
+			<section class="block">
+				<div class="wrap latest-grid">
+					<RCard href={`/release/${lead.id}/`} src={lead.data.cover} width={900} height={900} class="latest-cover"
+						label={[lead.data.catalog, lead.data.upcoming ? 'Coming soon' : 'Out now'].filter(Boolean).join(' · ')} />
+					<div class="latest-info" data-reveal>
+						<p class="kicker">{lead.data.upcoming ? 'Coming soon on Dicular Digital' : 'Out now on Dicular Digital'}</p>
+						<h2 class="headline">{lead.data.title}</h2>
+						<RTracks release={lead} />
+						<div class="actions"><a class="btn" href={`/release/${lead.id}/`}>View Release</a></div>
+					</div>
+				</div>
+			</section>
+		)}
+
+		{rest.length > 0 && (
+			<section class="block">
+				<div class="wrap">
+					<h2 class="section-title" data-reveal>Catalogue</h2>
+					<div class="cards">{rest.map((r, i) => <RCard href={`/release/${r.id}/`} src={thumb(r.data.cover, 'gridthumb')} label={r.data.title} tilt={i % 2 ? 'r' : 'l'} delay={(i % 4) * 80} />)}</div>
+				</div>
+			</section>
+		)}
+	</main>
+</Redesign>

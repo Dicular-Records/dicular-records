@@ -34,6 +34,8 @@ const releases = defineCollection({
     background: z.string().optional(),
     /** großer 360°-Player im Kopf der Release-Seite (sonst spielen Tracks über den Player in der Kopfleiste) */
     headerPlayer: z.boolean().default(true),
+    /** noch nicht erschienen (Platzhalter): „Coming soon“, Shop-Links ohne Adresse erscheinen als Vorschau */
+    upcoming: z.boolean().default(false),
     /** Titel über dem 360°-Player (Standard: erster Track) */
     playerTitle: z.string().optional(),
     tracks: z.array(z.object({
