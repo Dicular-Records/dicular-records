@@ -36,6 +36,13 @@ Lokal: Startkonfiguration `redesign-dev` → http://localhost:4322/entwurf/
 - Einblenden beim Scrollen von oben, einmalig; „Bewegung reduzieren“ wird respektiert
 - **Umschalter (nur Entwurf):** Logo Münze/Schallplatte, Abgrenzung A/B/C, Intro nochmal; Auswahl steht in der Adresse (z. B. `?logo=record&sep=b`) → Link teilbar für Tomtron
 
+## Rückmeldung Yoka zum Entwurf (2026-10-22)
+
+- „richtig gutes Design, bin schwer begeistert“
+- Menü **mittig** statt rechtsbündig → umgesetzt
+- Player: Tracks **vor und zurück** skippen → Player-Leiste unten (zurück/abspielen/vor, Zeit, Spulen), gilt für Release-Tracks und Radio
+- Vorschau für Tomtron über eine **Subdomain von provolution.org** (Netlify, DNS dort ebenfalls Netlify) statt Plesk → nur Vorschau, Livebetrieb bleibt Plesk (DEC Nr. 29). Zweig `redesign` hat dafür `noindex` und Weiterleitung / → /entwurf/ in netlify.toml.
+
 ## DNA, die bleibt
 
 - Farben: Petrol `#00283a`, Akzent Blau `#2a5982`, Akzent Grün `#2cc894`, Text `#adadad`

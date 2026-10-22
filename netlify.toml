@@ -4,3 +4,16 @@
 
 [build.environment]
   NODE_VERSION = "24"
+
+# ---- nur Zweig "redesign": Vorschau unter provolution.org (nicht der Livebetrieb, der bleibt auf Plesk)
+# Vorschau nicht in Suchmaschinen
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+# Startadresse führt auf den Entwurf
+[[redirects]]
+  from = "/"
+  to = "/entwurf/"
+  status = 302

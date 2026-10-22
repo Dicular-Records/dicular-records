@@ -53,25 +53,61 @@
     items.forEach(function (el) { io.observe(el); });
   } else items.forEach(function (el) { el.classList.add('in'); });
 
-  // ------------------------------------------------ Player: Track-Knöpfe und Dicular Radio teilen sich ein <audio>
-  var player = document.getElementById('player'), current = null;
+  // ------------------------------------------------ Player: eine Warteschlange für Release-Tracks oder Dicular Radio,
+  // gesteuert über die Knöpfe auf der Seite und die Player-Leiste (zurück / abspielen / vor / spulen)
+  var player = document.getElementById('player');
   var radioBtn = document.getElementById('radioBtn'), radioNow = document.getElementById('radioNow');
-  var playlist = JSON.parse(radioBtn.dataset.playlist || '[]'), pos = 0;
-  for (var i = playlist.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = playlist[i]; playlist[i] = playlist[j]; playlist[j] = t; }
-  function setOn(btn) { document.querySelectorAll('.play.on, .radio-disc.on').forEach(function (b) { b.classList.remove('on'); }); if (btn) btn.classList.add('on'); current = btn; }
-  function start(src, btn) { player.src = src; player.play().catch(function () {}); setOn(btn); }
-  document.querySelectorAll('.play').forEach(function (b) {
-    b.addEventListener('click', function () {
-      if (current === b && !player.paused) { player.pause(); setOn(null); return; }
-      start(b.dataset.src, b);
-    });
-  });
-  function radioTrack() { var t = playlist[pos]; radioNow.textContent = 'Läuft: ' + t.title + (t.artist ? ' – ' + t.artist : ''); start(t.src, radioBtn); }
-  radioBtn.addEventListener('click', function () {
-    if (current === radioBtn && !player.paused) { player.pause(); setOn(null); radioNow.textContent = 'Pausiert'; return; }
-    if (playlist.length) radioTrack();
-  });
+  var bar = document.getElementById('playerbar'), seek = document.getElementById('pbSeek');
+  var trackBtns = [].slice.call(document.querySelectorAll('.play'));
+  var releaseQueue = trackBtns.map(function (b) { return { title: b.dataset.title, artist: (b.parentNode.querySelector('em') || {}).textContent || '', src: b.dataset.src, btn: b }; });
+  var radioQueue = JSON.parse(radioBtn.dataset.playlist || '[]');
+  for (var i = radioQueue.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = radioQueue[i]; radioQueue[i] = radioQueue[j]; radioQueue[j] = t; }
+  var queue = [], idx = 0, mode = null; // mode: 'release' | 'radio'
+
+  function mark() {
+    document.querySelectorAll('.play.on, .radio-disc.on').forEach(function (b) { b.classList.remove('on'); });
+    var playing = !player.paused;
+    bar.classList.toggle('playing', playing);
+    if (!playing) return;
+    if (mode === 'radio') radioBtn.classList.add('on'); else if (queue[idx] && queue[idx].btn) queue[idx].btn.classList.add('on');
+  }
+  function load(n) {
+    if (!queue.length) return;
+    idx = (n + queue.length) % queue.length;
+    var t = queue[idx];
+    player.src = t.src; player.play().catch(function () {});
+    bar.hidden = false;
+    document.getElementById('pbTitle').textContent = t.title;
+    document.getElementById('pbArtist').textContent = t.artist || '';
+    document.getElementById('pbSource').textContent = mode === 'radio' ? 'Dicular Radio' : 'Release · ' + (idx + 1) + '/' + queue.length;
+    if (mode === 'radio') radioNow.textContent = 'Läuft: ' + t.title + (t.artist ? ' – ' + t.artist : '');
+  }
+  function playPause() { if (!queue.length) return; if (player.paused) player.play().catch(function () {}); else player.pause(); }
+  function playFrom(m, q, n) {
+    if (mode === m && idx === n && player.src) { playPause(); return; }
+    mode = m; queue = q; load(n);
+  }
+  trackBtns.forEach(function (b, n) { b.addEventListener('click', function () { playFrom('release', releaseQueue, n); }); });
+  radioBtn.addEventListener('click', function () { playFrom('radio', radioQueue, mode === 'radio' ? idx : 0); });
+  document.getElementById('pbToggle').addEventListener('click', playPause);
+  // zurück: nach den ersten Sekunden an den Anfang des Tracks, sonst zum vorherigen
+  document.getElementById('pbPrev').addEventListener('click', function () { if (player.currentTime > 3) player.currentTime = 0; else load(idx - 1); });
+  document.getElementById('pbNext').addEventListener('click', function () { load(idx + 1); });
   player.addEventListener('ended', function () {
-    if (current === radioBtn) { pos = (pos + 1) % playlist.length; radioTrack(); } else setOn(null);
+    if (mode === 'release' && idx === queue.length - 1) { mark(); return; } // Release zu Ende → anhalten
+    load(idx + 1);
   });
+  ['play', 'pause'].forEach(function (ev) { player.addEventListener(ev, mark); });
+  player.addEventListener('pause', function () { if (mode === 'radio') radioNow.textContent = 'Pausiert'; });
+
+  // Fortschritt und Spulen
+  var fmt = function (s) { s = Math.floor(s || 0); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); };
+  var dragging = false;
+  player.addEventListener('timeupdate', function () {
+    document.getElementById('pbCur').textContent = fmt(player.currentTime);
+    document.getElementById('pbDur').textContent = fmt(player.duration);
+    if (!dragging && player.duration) seek.value = Math.round(player.currentTime / player.duration * 1000);
+  });
+  seek.addEventListener('input', function () { dragging = true; });
+  seek.addEventListener('change', function () { if (player.duration) player.currentTime = seek.value / 1000 * player.duration; dragging = false; });
 })();

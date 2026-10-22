@@ -163,6 +163,17 @@ const mon = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
 	</footer>
 
 	<audio id="player" preload="none"></audio>
+	<!-- Player-Leiste: erscheint, sobald etwas läuft (Release-Tracks oder Radio) -->
+	<div class="playerbar" id="playerbar" hidden>
+		<div class="pb-buttons">
+			<button class="pb-prev" id="pbPrev" aria-label="Vorheriger Track"><i></i></button>
+			<button class="pb-toggle" id="pbToggle" aria-label="Abspielen/Pause"><i></i></button>
+			<button class="pb-next" id="pbNext" aria-label="Nächster Track"><i></i></button>
+		</div>
+		<div class="pb-info"><strong id="pbTitle"></strong><em id="pbArtist"></em></div>
+		<div class="pb-time"><span id="pbCur">0:00</span><input type="range" id="pbSeek" min="0" max="1000" value="0" aria-label="Position im Track" /><span id="pbDur">0:00</span></div>
+		<span class="pb-source" id="pbSource"></span>
+	</div>
 
 	<!-- Umschalter nur im Entwurf: Varianten vergleichen (Yoka/Tomtron) -->
 	<details class="switcher" id="switcher" open aria-label="Entwurf-Varianten">
