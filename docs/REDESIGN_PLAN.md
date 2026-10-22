@@ -73,7 +73,8 @@ Gemeinsamer Rahmen `src/layouts/Redesign.astro` (Kopfleiste, Chrome-Menü, Fußz
 - Menüpunkt **Digital** → `/dicular-digital/` (alte WordPress-Seite `/my-charts-2/` → 301). Sublabel-Seite: freigestelltes Chrome-Logo mit Glanz, bisheriger Einleitungstext, aktuelles Release groß, weitere als „Catalogue“. Sublabel-Releases erkennt die Seite am Label (enthält „Digital“).
 - **Erstes Release** `/release/yoka-sawasdeekah/`: DD001, Label DICULAR DIGITAL, Genre Psybient, Cover aus `Dicular-Records-Medien/Cover/YOKA-Sawasdeekah`. Platzhalter: **Coming soon**, Track ohne Hörprobe, Shops (Beatport, Bandcamp, Spotify, Apple Music) ohne Link als „soon“. Text EN mit Umschalter DE (Blöcke `<div class="lang" lang="en|de">` im Text).
 - Neues Feld `upcoming` (Schema + Decap) und Shop-Links in Decap. Startseite zeigt oben das neueste **erschienene** Release; Übersicht gruppiert angekündigte unter „Coming soon“.
-- Offen: Hörprobe/MP3, Release-Datum, Shop-Links (dann `upcoming` aus), Original-Logodatei von Tomtron.
+- Label-Shops verlinkt (Beatport, Bandcamp, SoundCloud), Spotify/Apple Music „soon“. **Erscheinungstermin laut Yoka in 2–3 Wochen (Stand 2026-10-22, also etwa Anfang/Mitte November 2026).**
+- Offen: Hörprobe/MP3, genaues Datum, Release-Links der Shops (dann `upcoming` aus), Original-Logodatei von Tomtron.
 - Geprüft: alle 106 Seiten der Sitemap × Desktop/Handy ohne Befund.
 
 ## DNA, die bleibt
