@@ -115,3 +115,9 @@ Ladegewicht vorher → nachher (lokal, unkomprimiert; `scripts/page-weight.mjs`)
 | 44 | Repository liegt jetzt in der Organisation **Dicular-Records** (`Dicular-Records/dicular-records`, privat). Owner der Organisation: Konto `DicularRecords`. `yokadeeds-dev` ist ebenfalls **Owner** (von Yoka gesetzt). Decap (`backend.repo`) und das lokale Remote sind umgestellt. | Das Label besitzt das Repository selbst, statt dass es an Yokas Entwickler-Konto hängt. Die Rechte für Artists laufen später über Teams der Organisation. Zwei Owner, damit die Organisation nicht an einem Login hängt. |
 
 **Gesamtvergleich nach A–H** (250 Aufnahmen): 18 entfallen auf die entfernten Tag-Seiten, 52 auf absichtlich geänderte Seiten (News-Beiträge ohne Tags und Formular-Optionen, Datenschutz, Video-Platzhalter Barbaros, Emojis Klang der Essenzen). Übrige 180: **160 unter 0,5 %, 175 unter 2 %**, gleiches Niveau wie vor A–H. Größere Werte gibt es nur bei News-Übersichten und Friends mobil (Masonry-Schwanken der Live-Seite, siehe Nr. 33).
+
+## Redesign-Vorschau (2026-10-22)
+
+| # | Entscheidung | Begründung |
+|---|---|---|
+| 45 | Der Redesign-Zweig ist als **Vorschau unter https://dicular.provolution.org/** erreichbar: Netlify-Projekt `dicular-redesign` im Team „Provolution“ (Yoka), hochgeladen per Netlify-Kommandozeile, `noindex`. Livebetrieb bleibt auf Plesk (Nr. 29). | Wunsch Yoka: Subdomain von provolution.org statt Plesk für die Vorschau. Netlifys Git-Verbindung für private Repositories einer Organisation kostet Pro (20 $/Monat). Yoka hat Weg A gewählt: Upload von Hand, kostenlos. Netlify hat Lesezugriff auf die GitHub-Organisation (von Yoka freigegeben). |
