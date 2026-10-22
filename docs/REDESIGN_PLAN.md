@@ -17,6 +17,11 @@ Zweig `redesign`, Arbeitsordner `C:\Users\yoka\Claude-Arbeit\Dicular-Records-Red
 - **Kein Trennstrich unter dem Menü** („etwas plump“; gemeint ist der breite graue Balken der jetzigen Seite).
   Alternativen zur Wahl: A nur Raum + Milchglas beim Scrollen · B feine Chrome-Lichtkante, die zu den Rändern ausläuft · C weicher Schatten.
 
+## Abgenommen
+
+- **2026-10-22, Yoka:** Prototyp Logo-Intro + Chrome-Menü „mega gut, echt spitze; auch der Effekt auf den Menüs ist super“.
+  Noch offen daran: Drehung Münze oder Schallplatte; Abgrenzung der Menüleiste (A/B/C).
+
 ## DNA, die bleibt
 
 - Farben: Petrol `#00283a`, Akzent Blau `#2a5982`, Akzent Grün `#2cc894`, Text `#adadad`
