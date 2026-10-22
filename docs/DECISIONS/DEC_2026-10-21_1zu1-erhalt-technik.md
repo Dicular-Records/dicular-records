@@ -58,3 +58,20 @@ Rest: Cover/Logo-Resampling (Entscheidung 5) und laufende Equalizer-Animation im
 | 26 | **Editor „htmlrich“** (`public/admin/widgets/html-editor.js`) für Biografien und den eigenen Artist-Abschnitt: bearbeitet das HTML direkt (contenteditable), Darstellung in Schrift/Farben der Website, Einfügen nur als reiner Text | Rundlauf getestet (`scripts/cms-smoke-test.mjs`): nach einer Änderung ist nur der neue Text im HTML hinzugekommen, alles andere zeichengleich. |
 | 27 | **Bereinigung** aller Artist-Inhalte beim Bauen (`src/lib/sanitize.ts`, sanitize-html): keine Skripte, Event-Handler, `javascript:`-Links, iframes, Styles-Blöcke | Artists veröffentlichen ohne Admin-Freigabe. Geprüft: alle 12 Artist-Seiten weiterhin 1:1, Schadcode-Test entfernt alles Gefährliche. |
 | 28 | **Schutz gegen Decap-Fehler**: beim direkten Sprung zwischen zwei Einträgen per Adresse lädt die Oberfläche neu | Decap zeigt sonst die Felder des vorherigen Eintrags → Gefahr, fremden Inhalt zu überschreiben. |
+
+## Hosting (2026-10-22, nach Gespräch Yoka/Tomtron)
+
+**Entscheidung Yoka:** Domain und Server bleiben, wo sie sind. Die fertige Seite wird dort hochgeladen und verlinkt. Bis dahin wird ohne Zeitdruck weitergearbeitet.
+
+Ist-Zustand, selbst ermittelt: DNS bei GoDaddy (`pdns13/14.domaincontrol.com`), Server `92.205.130.169` mit Plesk (Linux), nginx und PHP 8.5.
+
+Daraus folgt (von Claude entschieden, ersetzt den Netlify-Teil der Übergabe):
+
+| # | Entscheidung | Begründung |
+|---|---|---|
+| 29 | **Livebetrieb auf dem bestehenden Plesk-Server.** Nach jeder Änderung an `main` baut eine GitHub Action die Seite und lädt `dist/` per SFTP hoch. Netlify wird nicht gebraucht. | Die Astro-Seite ist rein statisch und läuft auf jedem Webserver. Artist-Änderungen gehen so weiterhin ohne Admin automatisch online. |
+| 30 | **GitHub-Login für Decap** über ein kleines OAuth-Skript in PHP auf demselben Server, statt über Netlify | PHP ist vorhanden. Kein zusätzlicher Dienst und kein weiteres Konto. |
+| 31 | **Kommentarformular und Demo-Upload** (Contact) per PHP-Skript auf dem Server statt Netlify Forms. Ersetzt den Versandweg aus Nr. 16. | Netlify Forms funktioniert nur auf Netlify. |
+| 32 | **MP3s bleiben auf dem Server**, `audioBase` bleibt. Damit ist der offene Punkt aus Nr. 11 erledigt. | Server bleibt. Die Dateien liegen dort schon unter denselben Pfaden. |
+
+Wird erst zum Umzug gebraucht: SFTP- bzw. Plesk-Zugang (als GitHub-Secret, nie im Repo) und ein Termin für die Umstellung von WordPress auf die neue Seite.
