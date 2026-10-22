@@ -75,3 +75,18 @@ Daraus folgt (von Claude entschieden, ersetzt den Netlify-Teil der Übergabe):
 | 32 | **MP3s bleiben auf dem Server**, `audioBase` bleibt. Damit ist der offene Punkt aus Nr. 11 erledigt. | Server bleibt. Die Dateien liegen dort schon unter denselben Pfaden. |
 
 Wird erst zum Umzug gebraucht: SFTP- bzw. Plesk-Zugang (als GitHub-Secret, nie im Repo) und ein Termin für die Umstellung von WordPress auf die neue Seite.
+
+## Abschließender Gesamtvergleich (2026-10-22)
+
+Zwei vollständige Läufe: 125 Seiten × Desktop/Mobil = 250 Aufnahmen gegen die Live-Seite (`scripts/visual-compare.mjs --all`).
+Zweiter Lauf: **222 unter 0,5 %, 237 unter 1 %, 246 unter 2 %**.
+
+| # | Entscheidung | Begründung |
+|---|---|---|
+| 33 | `theme-compat.js` wartet vor jedem `window.load`-Handler des Themes, bis die Webfonts geladen und laufende CSS-Übergänge abgeschlossen sind (mindestens zwei gezeichnete Bilder, höchstens 1,5 s). | Ursache war ein Zeitproblem im Original: Masonry misst die Kachelhöhen genau einmal. Die „Read More“-Buttons schrumpfen per 0,2-s-Übergang von 21 auf 14 px. Auf schnellem Hosting lief Masonry mitten in diesem Übergang, dadurch war jede Kachel ~10 px zu hoch. Jetzt landet das Layout bei jedem Laden auf denselben, vom Theme beabsichtigten Positionen. Friends mobil: 18,4 → 6,3 %, News Seite 2: 12,8 → 0,6 %. |
+
+**Bekannte Restabweichungen** (alle von Claude geprüft, keine inhaltlichen Unterschiede):
+- **Masonry-Seiten mobil** (News-Übersicht, Friends): Die Live-Seite schwankt selbst von Aufruf zu Aufruf um bis zu 90 px Gesamthöhe, weil dort dasselbe Zeitproblem zufällig zuschlägt. Lokal ist das Ergebnis stabil. Die Kacheln sind identisch (Messung mit `scripts/layout-diff.mjs`).
+- **Member-Typ-Archive Desktop:** 3–6 px Höhenunterschied aus demselben Grund (max. 1,2 %).
+- **Bildskalierung** (Event-Flyer, Artist-Kacheln, 0,5–3 %): Live liefert verkleinerte Bilder über den WordPress-Bild-CDN (i0.wp.com), lokal skaliert der Browser das Original. Optisch gleich, nur andere Glättung.
+- **Blocksatz** (Artist-Biografien, ~1,6 %): Kantenglättung der Schrift um Bruchteile eines Pixels verschoben, Zeilenumbrüche identisch.
