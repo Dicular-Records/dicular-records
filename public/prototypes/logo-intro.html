@@ -63,13 +63,34 @@
   .bar { width: 0; height: 4px; background: var(--blue); margin: -2vh auto 0; animation: bar 1s ease-out 3.6s forwards; }
   @keyframes bar { to { width: 120px; } }
 
+  /* Menü im Chrome-Look: echter Text mit Metallverlauf (wie das Logo), kein Bild nötig */
+  .nav { position: fixed; top: 0; left: 0; right: 0; display: flex; justify-content: center; gap: clamp(14px, 2.6vw, 38px);
+    padding: 22px 16px; flex-wrap: wrap; z-index: 2; opacity: 0; animation: navIn 1.2s ease-out 3.2s forwards; }
+  @keyframes navIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: none; } }
+  .nav a { position: relative; font-weight: 600; font-size: clamp(15px, 1.5vw, 19px); letter-spacing: .14em; text-transform: uppercase; text-decoration: none;
+    color: transparent; -webkit-background-clip: text; background-clip: text;
+    /* Chrome: helle Kante oben, dunkles Band in der Mitte (Horizont-Spiegelung), heller Grund unten */
+    background-image: linear-gradient(100deg, transparent 40%, rgba(255, 255, 255, .95) 50%, transparent 60%),
+      linear-gradient(180deg, #ffffff 0%, #e4ebf0 28%, #9aa9b5 47%, #4f5f6c 52%, #c9d3da 66%, #f3f6f8 82%, #8796a2 100%);
+    background-size: 300% 100%, 100% 100%; background-position: 130% 0, 0 0; background-repeat: no-repeat;
+    filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .9)) drop-shadow(0 3px 6px rgba(0, 0, 0, .5));
+    transition: filter .3s; }
+  .nav a::after { content: ""; position: absolute; left: 50%; right: 50%; bottom: -8px; height: 3px; background: var(--blue); transition: left .3s, right .3s; }
+  .nav a:hover::after, .nav a:focus-visible::after { left: 0; right: 0; }
+  .nav a:hover, .nav a:focus-visible { filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .9)) drop-shadow(0 0 10px rgba(160, 200, 230, .45)); animation: navShine .9s ease-out; }
+  @keyframes navShine { from { background-position: 130% 0, 0 0; } to { background-position: -30% 0, 0 0; } }
+  /* nach dem Intro einmal ein Lichtlauf über alle Punkte, versetzt von links nach rechts */
+  .done .nav a { animation: navShine 1.1s ease-in-out calc(1.6s + var(--i) * .12s) both; }
+  .done .nav a:hover { animation: navShine .9s ease-out; }
+
   .controls { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; z-index: 2; }
   .controls button { font: 600 14px Dosis, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #fff;
     background: rgba(42, 89, 130, .35); border: 1px solid var(--blue); padding: 8px 14px; cursor: pointer; }
   .controls button[aria-pressed="true"] { background: var(--blue); }
-  .hint { position: fixed; top: 16px; left: 16px; font-size: 13px; opacity: .6; }
+  .hint { position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%); font-size: 13px; opacity: .5; white-space: nowrap; }
 
   @media (prefers-reduced-motion: reduce) {
+    .nav, .nav a { animation: none !important; opacity: 1; }
     .logo, .title, .bar { animation: none !important; opacity: 1; transform: none; filter: none; letter-spacing: .32em; width: 120px; }
     .done .shine, .done .flash, .stage::before { animation: none !important; }
   }
@@ -78,6 +99,10 @@
 <body>
   <div class="hint">Prototyp Logo-Intro · Redesign Dicular Records</div>
   <main class="stage coin" id="stage">
+    <nav class="nav" aria-label="Hauptmenü">
+      <a href="#" style="--i:0">Releases</a><a href="#" style="--i:1">News</a><a href="#" style="--i:2">Artists</a><a href="#" style="--i:3">Events</a>
+      <a href="#" style="--i:4">Friends</a><a href="#" style="--i:5">Team</a><a href="#" style="--i:6">About Us</a><a href="#" style="--i:7">Contact</a>
+    </nav>
     <div class="logo" id="logo">
       <img src="/wp-content/uploads/2022/01/Logo_Dicular-Rec-Metal-600x600-2.png" alt="Dicular Records">
       <div class="shine"></div>

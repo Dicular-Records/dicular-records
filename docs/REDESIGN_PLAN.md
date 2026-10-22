@@ -12,6 +12,8 @@ Zweig `redesign`, Arbeitsordner `C:\Users\yoka\Claude-Arbeit\Dicular-Records-Red
   etwas Bewegung, aber nicht zu viel.
 - **Logo:** Das Dicular-Logo dreht sich und wird eingeblendet, „ein wenig movie-artig“. Steht es, läuft ab und zu
   ein Glanzeffekt darüber (Licht von oben links nach unten rechts).
+- **Menü im Chrome-Effekt** wie das Logo, rein optisch, „auch wenn es dafür Bildlinks statt Text braucht“.
+  → Umsetzung als echter Text mit CSS-Metallverlauf (keine Bilder): bleibt lesbar für Google/Screenreader und ohne Grafik änderbar.
 
 ## DNA, die bleibt
 
@@ -32,7 +34,7 @@ Zweig `redesign`, Arbeitsordner `C:\Users\yoka\Claude-Arbeit\Dicular-Records-Red
 
 ## Ideen (Sammlung, noch nicht entschieden)
 
-- Logo-Intro wie ein Filmvorspann + gelegentlicher Glanz → Prototyp `public/prototypes/logo-intro.html`
+- Logo-Intro wie ein Filmvorspann + gelegentlicher Glanz, Menü in Chrome mit einmaligem Lichtlauf nach dem Intro und Glanz beim Darüberfahren → Prototyp `public/prototypes/logo-intro.html` (Varianten: Münze / Schallplatte)
 - Artist- und Release-Karten schräg mit Namensbalken in Dicular-Blau
 - Kopfbereich mit gestapelten Genre-Wörtern (PROGRESSIVE / TRANCE / HOUSE / TECHNO) über dem aktuellen Release
 - Sanftes Einblenden beim Scrollen; Bewegung respektiert „Bewegung reduzieren“ im Betriebssystem
