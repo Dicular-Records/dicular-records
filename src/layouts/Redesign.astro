@@ -35,9 +35,9 @@ const path = Astro.url.pathname;
 </head>
 <body class={`logo-coin sep-a ${intro ? 'home' : 'sub scrolled intro-done'}`}>
 	<header class="top" id="top">
-		<a href={intro ? '#intro' : '/entwurf/'} class="top-logo" aria-label="Dicular Records – Startseite"><img src={logo} alt="" width="40" height="40" /></a>
+		<a href={intro ? '#intro' : '/entwurf/'} class="top-logo" aria-label="Dicular Records – Home"><img src={logo} alt="" width="40" height="40" /></a>
 		<button class="menu-toggle" aria-expanded="false" aria-controls="nav">Menu</button>
-		<nav class="nav chrome-nav" id="nav" aria-label="Hauptmenü">
+		<nav class="nav chrome-nav" id="nav" aria-label="Main menu">
 			{menu.map(([label, href], i) => <a href={href} style={`--i:${i}`} aria-current={path.startsWith(href) ? 'page' : undefined}>{label}</a>)}
 		</nav>
 	</header>
@@ -55,12 +55,12 @@ const path = Astro.url.pathname;
 	<!-- Player-Leiste: erscheint, sobald etwas läuft (Release-Tracks oder Radio) -->
 	<div class="playerbar" id="playerbar" hidden>
 		<div class="pb-buttons">
-			<button class="pb-prev" id="pbPrev" aria-label="Vorheriger Track"><i></i></button>
-			<button class="pb-toggle" id="pbToggle" aria-label="Abspielen/Pause"><i></i></button>
-			<button class="pb-next" id="pbNext" aria-label="Nächster Track"><i></i></button>
+			<button class="pb-prev" id="pbPrev" aria-label="Previous track"><i></i></button>
+			<button class="pb-toggle" id="pbToggle" aria-label="Play/Pause"><i></i></button>
+			<button class="pb-next" id="pbNext" aria-label="Next track"><i></i></button>
 		</div>
 		<div class="pb-info"><strong id="pbTitle"></strong><em id="pbArtist"></em></div>
-		<div class="pb-time"><span id="pbCur">0:00</span><input type="range" id="pbSeek" min="0" max="1000" value="0" aria-label="Position im Track" /><span id="pbDur">0:00</span></div>
+		<div class="pb-time"><span id="pbCur">0:00</span><input type="range" id="pbSeek" min="0" max="1000" value="0" aria-label="Track position" /><span id="pbDur">0:00</span></div>
 		<span class="pb-source" id="pbSource"></span>
 	</div>
 

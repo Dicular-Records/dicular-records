@@ -18,3 +18,18 @@
   to = "/entwurf/"
   status = 302
   force = true  # gilt auch, obwohl unter / die 1:1-Startseite liegt
+
+# Redesign zeigt Übersichten ohne Blättern: alte Seitenadressen auf die Übersicht umleiten
+# (beim Umzug auf den Plesk-Server als .htaccess-Regeln übernehmen)
+[[redirects]]
+  from = "/releases/page/*"
+  to = "/releases/"
+  status = 301
+[[redirects]]
+  from = "/artists/page/*"
+  to = "/artists/"
+  status = 301
+[[redirects]]
+  from = "/dicular-rec-news/page/*"
+  to = "/dicular-rec-news/"
+  status = 301

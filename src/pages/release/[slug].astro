@@ -75,7 +75,7 @@ const description = plainText(`${r.catalog ? `${r.catalog} · ` : ''}${r.title} 
 					<div class="cards">
 						{related.map((x, i) => <RCard href={`/release/${x.id}/`} src={thumb(x.data.cover, 'gridthumb')} label={x.data.title} tilt={i % 2 ? 'r' : 'l'} delay={(i % 4) * 80} />)}
 					</div>
-					<p class="more" data-reveal><a class="btn ghost" href="/releases/">Alle Releases</a></p>
+					<p class="more" data-reveal><a class="btn ghost" href="/releases/">All Releases</a></p>
 				</div>
 			</section>
 		)}

@@ -30,7 +30,7 @@ const mon = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
 		</div>
 		<h1 class="intro-title">Dicular Records</h1>
 		<span class="intro-bar"></span>
-		<a href="#latest" class="scroll-hint" aria-label="Weiter zum neuesten Release"><span></span></a>
+		<a href="#latest" class="scroll-hint" aria-label="Scroll to the latest release"><span></span></a>
 	</section>
 
 	<main>
@@ -46,7 +46,7 @@ const mon = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
 					<h2 class="headline">{latest.data.title}</h2>
 					<RTracks release={latest} />
 					<div class="actions">
-						<a class="btn" href={`/release/${latest.id}/`}>Zum Release</a>
+						<a class="btn" href={`/release/${latest.id}/`}>View Release</a>
 						{latest.data.buyLinks[0] && <a class="btn ghost" href={latest.data.buyLinks[0].url} target="_blank" rel="noopener">{latest.data.buyLinks[0].label || 'Buy'}</a>}
 					</div>
 				</div>
@@ -60,20 +60,20 @@ const mon = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
 				<div class="cards">
 					{more.map((r, i) => <RCard href={`/release/${r.id}/`} src={thumb(r.data.cover, 'gridthumb')} label={r.data.title} tilt={i % 2 ? 'r' : 'l'} delay={(i % 4) * 80} />)}
 				</div>
-				<p class="more" data-reveal><a class="btn ghost" href="/releases/">Alle Releases</a></p>
+				<p class="more" data-reveal><a class="btn ghost" href="/releases/">All Releases</a></p>
 			</div>
 		</section>
 
 		<!-- Dicular Radio -->
 		<section class="radio" data-reveal>
 			<div class="wrap radio-inner">
-				<button class="radio-disc" id="radioBtn" aria-label="Dicular Radio starten" data-playlist={JSON.stringify(radio)}>
+				<button class="radio-disc" id="radioBtn" aria-label="Start Dicular Radio" data-playlist={JSON.stringify(radio)}>
 					<img src={logo} alt="" width="600" height="600" /><i></i>
 				</button>
 				<div>
 					<p class="kicker">Dicular Radio</p>
-					<h2 class="headline small">Alle Releases. Zufällig gemischt.</h2>
-					<p class="now" id="radioNow">{radio.length} Tracks · Klick auf die Scheibe startet das Radio</p>
+					<h2 class="headline small">All releases. Shuffled.</h2>
+					<p class="now" id="radioNow">{radio.length} Tracks · tap the disc to start the radio</p>
 				</div>
 			</div>
 		</section>

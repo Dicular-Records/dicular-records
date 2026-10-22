@@ -68,10 +68,10 @@
 
   // ------------------------------------------------ Nur Entwurf: Seiten, die es im neuen Design noch nicht gibt.
   // Klick zeigt einen Hinweis statt die alte 1:1-Seite zu öffnen (dort optional erreichbar).
-  var READY = ['/entwurf/', '/release/', '/artist/'];
+  var READY = ['/entwurf/', '/release/', '/artist/', '/releases/', '/artists/', '/dicular-rec-news/', '/gigs/'];
   var note = document.createElement('div');
   note.className = 'soon'; note.hidden = true; note.setAttribute('role', 'status');
-  note.innerHTML = '<strong>Diese Seite folgt im neuen Design.</strong><span>Neu gestaltet sind bisher Startseite, Release- und Artist-Seiten.</span>'
+  note.innerHTML = '<strong>Diese Seite folgt im neuen Design.</strong><span>Neu gestaltet sind bisher Startseite, Übersichten, Release- und Artist-Seiten.</span>'
     + '<div><a class="btn ghost" data-old target="_blank" rel="noopener">Altes Design ansehen</a><button class="btn" type="button">OK</button></div>';
   body.appendChild(note);
   var noteTimer;
@@ -132,7 +132,7 @@
     $('pbTitle').textContent = t.title;
     $('pbArtist').textContent = t.artist || '';
     $('pbSource').textContent = mode === 'radio' ? 'Dicular Radio' : 'Release · ' + (idx + 1) + '/' + queue.length;
-    if (mode === 'radio' && radioNow) radioNow.textContent = 'Läuft: ' + t.title + (t.artist ? ' – ' + t.artist : '');
+    if (mode === 'radio' && radioNow) radioNow.textContent = 'Now playing: ' + t.title + (t.artist ? ' – ' + t.artist : '');
   }
   function playPause() { if (!queue.length) return; if (player.paused) player.play().catch(function () {}); else player.pause(); }
   function playFrom(m, q, n) {
@@ -150,7 +150,7 @@
     load(idx + 1);
   });
   ['play', 'pause'].forEach(function (ev) { player.addEventListener(ev, mark); });
-  player.addEventListener('pause', function () { if (mode === 'radio' && radioNow) radioNow.textContent = 'Pausiert'; });
+  player.addEventListener('pause', function () { if (mode === 'radio' && radioNow) radioNow.textContent = 'Paused'; });
 
   // Fortschritt und Spulen
   var fmt = function (s) { s = Math.floor(s || 0); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); };

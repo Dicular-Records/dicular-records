@@ -53,7 +53,11 @@ Gemeinsamer Rahmen `src/layouts/Redesign.astro` (Kopfleiste, Chrome-Menü, Fußz
 
 - **Release-Seite** `/release/<slug>/`: Kopf mit schrägem Cover, Genre-Wörtern, Punktraster; Label/Datum, Artists + Genres als Chips, Tracks mit Kauf-Link je Track, Kauf-Buttons; Text; Videos per Zwei-Klick (youtube-nocookie); „More Releases“.
 - **Artist-Seite** `/artist/<slug>/`: schräges Foto mit Namensbalken, Name in Chrome, Rollen/Herkunft, Genre-Chips, Sprungmarken; Biografie, Releases des Artists (jetzt immer, nicht nur bei gesetztem Music-Titel), SoundCloud per Zwei-Klick, Booking, eigener Abschnitt, „More Artists“.
-- Noch altes Design (Klick zeigt Hinweis): Übersichten Releases/Artists/News/Gigs, Friends, Team, About, Contact, News-Beiträge, Events, Archive.
+- **Übersichten** (Baustein `RPageHead`: großer Chrome-Titel, Hintergrund unscharf + Punktraster), jeweils alles auf einer Seite statt Blättern:
+  Releases nach Jahr gruppiert · Artists als Porträtkarten mit Rollen/Herkunft · News: neuester Beitrag groß, Rest als Kartenraster · Gigs: Upcoming (aufsteigend) und Past (neueste zuerst) mit Datum, Wochentag, Flyer, Ort.
+  Alte Adressen `/releases/page/N/`, `/artists/page/N/`, `/dicular-rec-news/page/N/` → 301 auf die Übersicht (netlify.toml; **beim Umzug als .htaccess übernehmen**).
+- Sichtbare Texte durchgehend **englisch** wie die Website (nur Entwurf-Umschalter und Hinweis deutsch).
+- Noch altes Design (Klick zeigt Hinweis): News-Beiträge, Events, Friends/Members, Team, About, Contact, Impressum/Privacy, Archive (Kategorie, Genre, Member-Typ, Autor).
 - Geprüft: 46 Seiten (Start, 33 Releases, 12 Artists) × Desktop/Handy ohne JS-Fehler, ohne Fehlerseiten, ohne Fremdanfragen, ohne Querscrollen.
 
 ## DNA, die bleibt

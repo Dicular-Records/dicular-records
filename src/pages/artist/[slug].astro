@@ -44,7 +44,7 @@ const sections = [
 					{(roles || origin) && <p class="kicker">{[roles, origin].filter(Boolean).join(' · ')}</p>}
 					<h1 class="artist-name chrome-text">{name}</h1>
 					{a.genres.length > 0 && <p class="chips">{a.genres.map((g) => <span class="chip ghost">{genreName(g)}</span>)}</p>}
-					<nav class="jump" aria-label="Abschnitte">{sections.map((s) => <a href={`#${s.id}`}>{s.label}</a>)}</nav>
+					<nav class="jump" aria-label="Sections">{sections.map((s) => <a href={`#${s.id}`}>{s.label}</a>)}</nav>
 				</div>
 			</div>
 		</section>
@@ -104,7 +104,7 @@ const sections = [
 					<div class="cards">
 						{related.map((x, i) => <RCard href={`/artist/${x.id}/`} src={x.data.photo} label={artistName(x.data.name).name} portrait tilt={(['l', 'r', 's'] as const)[i % 3]} delay={i * 80} />)}
 					</div>
-					<p class="more" data-reveal><a class="btn ghost" href="/artists/">Alle Artists</a></p>
+					<p class="more" data-reveal><a class="btn ghost" href="/artists/">All Artists</a></p>
 				</div>
 			</section>
 		)}

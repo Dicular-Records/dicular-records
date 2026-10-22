@@ -212,6 +212,39 @@ a.chip:hover { background: #33709f; }
 .portrait .card-empty { aspect-ratio: 4 / 5; }
 [id] { scroll-margin-top: 90px; }
 
+/* Übersichten (Releases, Artists, News, Gigs) */
+.page-head { padding: clamp(140px, 16vw, 210px) 0 clamp(50px, 7vw, 90px); }
+.page-head:not([style]) { background: radial-gradient(ellipse at 30% 30%, var(--petrol-2), var(--deep) 70%); }
+.page-head .wrap { position: relative; }
+.page-title { font-weight: 600; text-transform: uppercase; font-size: clamp(54px, 10vw, 150px); line-height: .9; letter-spacing: .03em; }
+.page-intro { margin: 18px 0 0; font-size: clamp(18px, 1.8vw, 22px); color: var(--light); }
+.year-block { padding-block: clamp(40px, 6vw, 80px); }
+.year { display: flex; align-items: baseline; gap: 18px; margin: 0 0 clamp(30px, 4vw, 50px); font-weight: 600; font-size: clamp(40px, 6vw, 80px); line-height: 1; color: transparent; -webkit-text-stroke: 1.5px rgba(223, 231, 236, .45); }
+.year span { -webkit-text-stroke: 0; color: var(--green); font-size: 15px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; }
+.artist-tile .tile-meta { margin: 16px 0 0; font-size: 15px; letter-spacing: .06em; text-align: center; }
+.news-feature { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(30px, 5vw, 70px); align-items: center; text-decoration: none; margin-bottom: clamp(60px, 8vw, 110px); }
+.news-feature .card img { aspect-ratio: 1; }
+.news-feature-text { display: block; }
+.news-feature time, .news-card time { display: block; color: var(--green); font-size: 14px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+.news-feature strong { display: block; color: var(--light); font-weight: 600; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.15; margin-bottom: 16px; }
+.news-feature em, .news-card em { display: block; font-style: normal; }
+.news-feature .btn { margin-top: 22px; }
+.news-feature:hover .card, .news-card:hover .card { transform: rotate(0) scale(1.03); }
+.news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(40px, 5vw, 64px) clamp(24px, 3vw, 40px); }
+.news-card { display: block; text-decoration: none; }
+.news-card .card { margin-bottom: 22px; }
+.news-card strong { display: block; color: var(--light); font-weight: 500; font-size: 21px; line-height: 1.25; margin-bottom: 8px; }
+.news-card em { font-size: 16px; line-height: 1.5; }
+.gig-list { list-style: none; margin: 0; padding: 0; }
+.gig-row { display: grid; grid-template-columns: 84px 96px minmax(0, 1fr) auto; gap: 22px; align-items: center; padding: 18px 0; border-bottom: 1px solid rgba(173, 173, 173, .15); text-decoration: none; transition: padding .25s, background .25s; }
+.gig-row:hover { padding-left: 12px; background: linear-gradient(90deg, rgba(42, 89, 130, .25), transparent); }
+.gig-row .date { padding: 10px 0; }
+.gig-row .date b { font-size: 34px; }
+.gig-flyer img { width: 96px; height: 96px; object-fit: cover; transform: rotate(-3deg); box-shadow: 0 8px 20px rgba(0, 0, 0, .45); transition: transform .25s; }
+.gig-row:hover .gig-flyer img { transform: rotate(0); }
+.gig .gig-day { display: block; color: var(--green); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
+.gig-row .gig strong { font-size: 22px; }
+
 /* Zwei-Klick-Player (YouTube, SoundCloud) */
 .dicular-embed { position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px; margin: 0 0 24px;
   background: radial-gradient(circle at 50% 40%, var(--petrol-2), var(--deep) 75%); box-shadow: inset 0 0 0 2px var(--blue); }
@@ -273,6 +306,11 @@ a.chip:hover { background: #33709f; }
   .cards, .cards.artists { grid-template-columns: repeat(2, 1fr); }
   .latest-grid, .split-grid, .artist-head .latest-grid { grid-template-columns: 1fr; }
   .artist-head .latest-cover { width: min(340px, 85%); justify-self: center; }
+  .news-feature { grid-template-columns: 1fr; }
+  .news-grid { grid-template-columns: repeat(2, 1fr); }
+  .gig-row { grid-template-columns: 70px minmax(0, 1fr) auto; gap: 14px; }
+  .gig-flyer { display: none; }
+  .gig-row .gig strong { font-size: 18px; }
   .booking { grid-template-columns: 1fr; gap: 2px; } .booking dd { margin-bottom: 12px; }
   .words { inset: 0; justify-content: flex-start; padding-top: 40px; }
   .menu-toggle { display: block; grid-column: 3; justify-self: end; font: 600 15px Dosis, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--light); background: none; border: 1px solid rgba(223, 231, 236, .4); padding: 6px 12px; }
@@ -286,7 +324,7 @@ a.chip:hover { background: #33709f; }
   .pb-time { grid-column: 1 / -1; } .pb-source { display: none; }
   .playerbar:not([hidden]) ~ .switcher { bottom: 120px; }
 }
-@media (max-width: 520px) { .cards { gap: 30px 18px; } .switcher span { width: auto; } }
+@media (max-width: 520px) { .cards { gap: 30px 18px; } .switcher span { width: auto; } .news-grid { grid-template-columns: 1fr; } .gig-row .badge { display: none; } .gig-row { grid-template-columns: 64px minmax(0, 1fr); } }
 
 /* Bewegung reduzieren: alles sofort sichtbar */
 @media (prefers-reduced-motion: reduce) {

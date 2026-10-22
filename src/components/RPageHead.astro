@@ -1,0 +1,14 @@
+---
+// Redesign: Kopf der Übersichtsseiten — großer Chrome-Titel, Unterzeile, Hintergrund (unscharfes Bild + Punktraster)
+interface Props { title: string; kicker?: string; intro?: string; image?: string }
+const { title, kicker, intro, image } = Astro.props;
+---
+<section class="latest page-head" style={image ? `--cover:url("${image}")` : undefined}>
+	{image && <div class="latest-bg" aria-hidden="true"></div>}
+	<div class="wrap">
+		{kicker && <p class="kicker" data-reveal>{kicker}</p>}
+		<h1 class="page-title chrome-text" data-reveal>{title}</h1>
+		{intro && <p class="page-intro" data-reveal>{intro}</p>}
+		<slot />
+	</div>
+</section>

@@ -1,39 +1,35 @@
 ---
-// Release-Übersicht (archive-release.php), 8 pro Seite, "Load more" lädt /releases/page/N/ nach
-import { getEntry } from 'astro:content';
-import Legacy from '../../layouts/Legacy.astro';
-import Body from '../../components/Body.astro';
-import FeaturedImage from '../../components/FeaturedImage.astro';
-import ReleaseListItem from '../../components/ReleaseListItem.astro';
-import LoadMore from '../../components/LoadMore.astro';
+// Redesign: Release-Übersicht — alle Releases auf einer Seite, nach Jahr gruppiert (Reihenfolge wie live).
+// Alte Seitenadressen /releases/page/N/ leiten auf diese Seite um (netlify.toml; später .htaccess auf dem Server).
+import Redesign from '../../layouts/Redesign.astro';
+import RPageHead from '../../components/RPageHead.astro';
+import RCard from '../../components/RCard.astro';
 import { releasesSorted } from '../../lib/content';
-import { wpPaginate, pageUrl, pagedClass, type PageInfo } from '../../lib/paginate';
-import site from '../../data/site.json';
+import { thumb } from '../../lib/media';
 
-export async function getStaticPaths() {
-  return wpPaginate(await releasesSorted(), 8, '/releases/');
+export function getStaticPaths() {
+  return [{ params: { page: undefined } }];
 }
-const { pageInfo } = Astro.props as { pageInfo: PageInfo<Awaited<ReturnType<typeof releasesSorted>>[number]> };
-const page = (await getEntry('pages', 'releases'))!;
-const p = page.data;
-const paged = pagedClass(pageInfo.current);
-const next = pageInfo.current < pageInfo.last ? pageUrl(pageInfo.base, pageInfo.current + 1) : undefined;
+const releases = await releasesSorted();
+const groups: { year: string; items: typeof releases }[] = [];
+for (const r of releases) {
+  const year = r.data.date ? String(r.data.date.getUTCFullYear()) : 'Earlier';
+  const g = groups.find((x) => x.year === year);
+  if (g) g.items.push(r); else groups.push({ year, items: [r] });
+}
 ---
-<Legacy critical="page" title={p.title} pageId={p.wpId} template="archive-release.php" customCss={p.customCss}
-	bodyClass={`${paged.prefix}wp-singular page-template page-template-archive-release page-template-archive-release-php page page-id-${p.wpId}${paged.suffix}`}>
-	<article class={`qt-content  post-${p.wpId} page type-page status-publish hentry`} id={`page${p.wpId}`}>
-		<FeaturedImage src={p.image ?? p.headerImage ?? site.defaultHeader} />
-		<header class="qt-header">
-			<div class="container">
-				{pageInfo.current === 1 ? <h1 class="qt-titdeco-eq text-center center">{p.title}</h1> : <h2>{p.title} / Page {pageInfo.current}</h2>}
-			</div>
-		</header>
-		<main class="container" role="main">
-			{pageInfo.current === 1 && <Body entry={page} />}
-			<div class="row" id="itemslist">
-				{pageInfo.items.map((r, i) => <ReleaseListItem release={r} first={i === 0} />)}
-			</div>
-			<LoadMore id="qtArtistsLoadmore" next={next} callback="fn.qtSquaredItems" />
-		</main>
-	</article>
-</Legacy>
+<Redesign title="Releases" description={`All ${releases.length} releases by Dicular Records`} image={releases[0].data.cover}>
+	<main>
+		<RPageHead title="Releases" kicker="Dicular Records Catalogue" intro={`${releases.length} releases — progressive house, trance and techno.`} image={releases[0].data.cover} />
+		{groups.map((g) => (
+			<section class="block year-block">
+				<div class="wrap">
+					<h2 class="year" data-reveal>{g.year}<span>{g.items.length} {g.items.length === 1 ? 'Release' : 'Releases'}</span></h2>
+					<div class="cards">
+						{g.items.map((r, i) => <RCard href={`/release/${r.id}/`} src={thumb(r.data.cover, 'gridthumb')} label={r.data.title} tilt={i % 2 ? 'r' : 'l'} delay={(i % 4) * 80} />)}
+					</div>
+				</div>
+			</section>
+		))}
+	</main>
+</Redesign>

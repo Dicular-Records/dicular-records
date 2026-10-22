@@ -1,52 +1,34 @@
 ---
-// Artist-Übersicht (archive-artist.php), 6 pro Seite
-import { getEntry } from 'astro:content';
-import Legacy from '../../layouts/Legacy.astro';
-import Body from '../../components/Body.astro';
-import FeaturedImage from '../../components/FeaturedImage.astro';
-import LoadMore from '../../components/LoadMore.astro';
-import { artistsSorted, autoExcerpt } from '../../lib/content';
-import { fitSize } from '../../lib/media';
-import { wpPaginate, pageUrl, pagedClass, type PageInfo } from '../../lib/paginate';
-import site from '../../data/site.json';
+// Redesign: Artist-Übersicht — alle Artists auf einer Seite (Reihenfolge wie live), schräge Porträtkarten.
+// Alte Seitenadressen /artists/page/N/ leiten auf diese Seite um.
+import Redesign from '../../layouts/Redesign.astro';
+import RPageHead from '../../components/RPageHead.astro';
+import RCard from '../../components/RCard.astro';
+import { artistsSorted } from '../../lib/content';
+import { artistName, cleanSubtitle } from '../../lib/redesign';
 
-export async function getStaticPaths() {
-  return wpPaginate(await artistsSorted(), 6, '/artists/');
+export function getStaticPaths() {
+  return [{ params: { page: undefined } }];
 }
-const { pageInfo } = Astro.props as { pageInfo: PageInfo<Awaited<ReturnType<typeof artistsSorted>>[number]> };
-const page = (await getEntry('pages', 'artists'))!;
-const p = page.data;
-const paged = pagedClass(pageInfo.current);
-const next = pageInfo.current < pageInfo.last ? pageUrl(pageInfo.base, pageInfo.current + 1) : undefined;
-const items = await Promise.all(pageInfo.items.map(async (a) => ({ a, size: await fitSize(a.data.photo, 1024, 1024) })));
+const artists = await artistsSorted();
 ---
-<Legacy critical="page" title={p.title} pageId={p.wpId} template="archive-artist.php" customCss={p.customCss}
-	bodyClass={`${paged.prefix}wp-singular page-template page-template-archive-artist page-template-archive-artist-php page page-id-${p.wpId}${paged.suffix}`}>
-	<article class={`qt-content  post-${p.wpId} page type-page status-publish hentry`} id={`page${p.wpId}`}>
-		<FeaturedImage src={p.image ?? p.headerImage ?? site.defaultHeader} />
-		<header class="qt-header">
-			<div class="container">
-				{pageInfo.current === 1 ? <h1 class="qt-titdeco-eq text-center center">{p.title}</h1> : <h2>{p.title} / Page {pageInfo.current}</h2>}
+<Redesign title="Artists" description={`The ${artists.length} artists of Dicular Records`}>
+	<main>
+		<RPageHead title="Artists" kicker="The Dicular Family" intro={`${artists.length} DJs and producers.`} />
+		<section class="block">
+			<div class="wrap">
+				<div class="cards artists">
+					{artists.map((a, i) => {
+						const n = artistName(a.data.name);
+						return (
+							<div class="artist-tile">
+								<RCard href={`/artist/${a.id}/`} src={a.data.photo} label={n.name} portrait tilt={(['l', 'r', 's'] as const)[i % 3]} delay={(i % 4) * 80} />
+								<p class="tile-meta" data-reveal style={`--d:${(i % 4) * 80 + 60}ms`}>{[n.roles, cleanSubtitle(a.data.subtitle)].filter(Boolean).join(' · ')}</p>
+							</div>
+						);
+					})}
+				</div>
 			</div>
-		</header>
-		<main class="container" role="main">
-			{pageInfo.current === 1 && <Body entry={page} />}
-			<div class="row qt-grid qt-loop-archiveartist" id="itemslist">
-				{items.map(({ a, size: [w, h] }, i) => (
-					<div class="qt-figure col s12 m6 l6 qt-artist-listing">
-						<figure>
-							<img width={w} height={h} src={a.data.photo} class="attachment-large size-large wp-post-image" alt={a.data.name} decoding="async" fetchpriority={i === 0 && pageInfo.current === 1 ? 'high' : undefined} loading={i === 0 && pageInfo.current === 1 ? undefined : 'lazy'} />
-							<figcaption>
-								<h3 class="qt-titdeco">{a.data.name}</h3>
-								<p set:html={a.data.excerpt ?? autoExcerpt(a.body ?? '', 7).replace(/^<p>|<\/p>$/g, '')} />
-								<h2>Read more</h2>
-								<a href={`/artist/${a.id}/`}>View more</a>
-							</figcaption>
-						</figure>
-					</div>
-				))}
-			</div>
-			<LoadMore id="qtArtistsLoadmore" next={next} />
-		</main>
-	</article>
-</Legacy>
+		</section>
+	</main>
+</Redesign>

@@ -10,10 +10,10 @@ const tracks = r.tracks.map((t) => ({ ...t, title: t.title || r.title, src: audi
 <ol class="tracks">
 	{tracks.map((t) => (
 		<li>
-			{t.src ? <button class="play" data-src={t.src} data-title={t.title} data-artist={t.artist} aria-label={`${t.title} abspielen`}><i></i></button>
+			{t.src ? <button class="play" data-src={t.src} data-title={t.title} data-artist={t.artist} aria-label={`Play ${t.title}`}><i></i></button>
 				: <span class="play none" aria-hidden="true"></span>}
 			<span class="track-name"><strong>{t.title}</strong>{t.artist && <em>{t.artist}</em>}</span>
-			{buy && t.buyUrl && <a class="track-buy" href={t.buyUrl} target="_blank" rel="noopener" aria-label={`${t.title} kaufen`}>Buy</a>}
+			{buy && t.buyUrl && <a class="track-buy" href={t.buyUrl} target="_blank" rel="noopener" aria-label={`Buy ${t.title}`}>Buy</a>}
 		</li>
 	))}
 </ol>
