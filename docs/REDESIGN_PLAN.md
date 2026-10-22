@@ -63,8 +63,9 @@ Gemeinsamer Rahmen `src/layouts/Redesign.astro` (Kopfleiste, Chrome-Menü, Fußz
 - **Textseiten** (`RPage`): About, Team, Dicular Digital (my-charts-2), Impressum, Privacy Policy im Lesesatz.
 - **Contact** (`RContact`): Kontaktdaten + **Demo-Formular mit Link statt Upload**; öffnet die eigene Mail-App (keine Daten auf der Website, kein Server). Ersetzt das WordPress-Upload-Plugin — **Vorschlag, Entscheidung Yoka/Tomtron** (Alternative: Upload per PHP, DEC Nr. 31).
 - Text-Robustheit: lange Links/kopierte Textstücke brechen um, `<pre>`-Blöcke aus kopierten Texten werden wie Fließtext gesetzt; Social-Links in der Fußzeile umbrechen am Handy.
-- Noch altes Design (Klick zeigt Hinweis): nur die Archive nach Kategorie, Genre, Member-Typ, Autor.
-- Geprüft: alle 90 neuen Seiten × Desktop/Handy ohne JS-Fehler, Fehlerseiten, Fremdanfragen, Querscrollen.
+- **Archive** (Kategorie, Tag, Autor als News-Raster `RNewsGrid`; Genre als Release-Karten; Member-Typ als Friend-Karten), jeweils eine Seite; leere Archive mit Hinweis. Chips verlinken: Genre am Release, Kategorie am Beitrag, Tätigkeit am Friend. Alte `/category/<x>/page/N/` und `/author/dicular-admin/page/N/` → 301.
+- **Damit ist die ganze Seite im neuen Design** (alle 105 Seiten der Sitemap außer `/`, die im Entwurf noch die 1:1-Startseite ist; neue Startseite unter `/entwurf/`). Der Hinweis „folgt im neuen Design“ ist entfernt.
+- Geprüft (Stand Archive): alle 105 Seiten der Sitemap × Desktop/Handy ohne Befund. Vorher: alle 90 neuen Seiten × Desktop/Handy ohne JS-Fehler, Fehlerseiten, Fremdanfragen, Querscrollen.
 - Geprüft: 46 Seiten (Start, 33 Releases, 12 Artists) × Desktop/Handy ohne JS-Fehler, ohne Fehlerseiten, ohne Fremdanfragen, ohne Querscrollen.
 
 ## DNA, die bleibt
@@ -95,6 +96,9 @@ Gemeinsamer Rahmen `src/layouts/Redesign.astro` (Kopfleiste, Chrome-Menü, Fußz
 - Eigener, schlanker Code statt WordPress-Theme-Rahmen
 
 ## Offen
+
+- Entscheidungen Yoka/Tomtron: Logo Münze/Schallplatte · Menü-Abgrenzung A/B/C · Demo-Formular (Link + Mail-App) statt Upload · Kommentare unter News ja/nein
+- Vor dem Livegang: neue Startseite von /entwurf/ nach / verschieben, Entwurf-Umschalter entfernen, Umleitungen als .htaccess, Inhaltspflege (###-Titel, „Weniger anzeigen“, Dateinamen als Tracktitel)
 
 - Entscheidungen zu den Ideen oben (mit Yoka/Tomtron)
 - Reihenfolge: zuerst Startseite als Entwurf, danach Release-, Artist- und Übersichtsseiten

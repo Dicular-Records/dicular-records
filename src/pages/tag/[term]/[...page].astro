@@ -1,19 +1,22 @@
 ---
-// Tag-Archiv (/tag/<term>/, 10 pro Seite)
-import PostArchive from '../../../components/PostArchive.astro';
+// Redesign: Tag-Archiv — nur Tags, die ein Beitrag trägt (die Demo-Tags des Themes sind entfernt, DEC Nr. 37)
+import Redesign from '../../../layouts/Redesign.astro';
+import RPageHead from '../../../components/RPageHead.astro';
+import RNewsGrid from '../../../components/RNewsGrid.astro';
 import { newsSorted } from '../../../lib/content';
-import { wpPaginate } from '../../../lib/paginate';
 import taxonomies from '../../../data/taxonomies.json';
 
 export async function getStaticPaths() {
   const news = await newsSorted();
-  // nur Tags, die mindestens ein Beitrag trägt (die Demo-Tags des Themes wurden entfernt)
-  return Object.keys(taxonomies.tag).filter((term) => news.some((n) => n.data.tags.includes(term))).flatMap((term) =>
-    wpPaginate(news.filter((n) => n.data.tags.includes(term)), 10, `/tag/${term}/`, {})
-      .map((p) => ({ params: { term, page: p.params.page }, props: p.props })));
+  return Object.keys(taxonomies.tag).filter((term) => news.some((n) => n.data.tags.includes(term))).map((term) => ({ params: { term, page: undefined } }));
 }
-const { term } = Astro.params;
-const { pageInfo } = Astro.props;
+const { term } = Astro.params as { term: string };
+const name = (taxonomies.tag as Record<string, string>)[term] ?? term;
+const items = (await newsSorted()).filter((n) => n.data.tags.includes(term));
 ---
-<PostArchive kind="tag" slug={term!} termId={(taxonomies.ids.tag as Record<string, number>)[term!]}
-	heading={(taxonomies.tag as Record<string, string>)[term!]} pageInfo={pageInfo} />
+<Redesign title={name} description={`News tagged ${name}`}>
+	<main>
+		<RPageHead title={name} kicker="Tag" intro={`${items.length} ${items.length === 1 ? 'post' : 'posts'}`} image={items[0]?.data.image} />
+		<section class="block"><div class="wrap"><RNewsGrid items={items} /></div></section>
+	</main>
+</Redesign>

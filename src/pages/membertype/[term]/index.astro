@@ -1,33 +1,28 @@
 ---
-// Member-Typ-Archiv für Friends (taxonomy-membertype.php)
-import Legacy from '../../../layouts/Legacy.astro';
-import FeaturedImage from '../../../components/FeaturedImage.astro';
-import FriendItem from '../../../components/FriendItem.astro';
-import LoadMore from '../../../components/LoadMore.astro';
+// Redesign: Member-Typ-Archiv — Friends mit dieser Tätigkeit als schräge Karten
+import Redesign from '../../../layouts/Redesign.astro';
+import RPageHead from '../../../components/RPageHead.astro';
+import RCard from '../../../components/RCard.astro';
 import { friendsSorted } from '../../../lib/content';
+import { thumb } from '../../../lib/media';
+import { memberTypeName } from '../../../lib/redesign';
 import taxonomies from '../../../data/taxonomies.json';
-import site from '../../../data/site.json';
 
-export async function getStaticPaths() {
+export function getStaticPaths() {
   return Object.keys(taxonomies.membertype).map((term) => ({ params: { term } }));
 }
 const { term } = Astro.params as { term: string };
-const name = (taxonomies.membertype as Record<string, string>)[term];
+const name = memberTypeName(term);
 const friends = (await friendsSorted()).filter((f) => f.data.memberTypes.includes(term));
 ---
-<Legacy critical="membertype" title={name} image={friends[0]?.data.listImage ?? friends[0]?.data.headerImage} template="archive" bodyClass={`archive tax-membertype term-${term} term-${(taxonomies.ids.membertype as Record<string, number>)[term]}`}>
-	<div class="qt-content qt-animatedheader">
-		<FeaturedImage src={site.defaultHeader} variant="archive" />
-		<header class="qt-header">
-			<div class="container">
-				<h1 class="qt-titdeco-eq text-center center">{name} </h1>
+<Redesign title={name} description={`Friends of Dicular Records: ${name}`}>
+	<main>
+		<RPageHead title={name} kicker="Friends" intro={`${friends.length} ${friends.length === 1 ? 'friend' : 'friends'}`} />
+		<section class="block"><div class="wrap">
+			<div class="cards friends">
+				{friends.map((f, i) => <RCard href={`/members/${f.id}/`} src={thumb(f.data.listImage ?? f.data.headerImage ?? f.data.profilePic, 'gridthumb')} label={f.data.name} tilt={(['l', 'r', 's'] as const)[i % 3]} delay={(i % 4) * 80} />)}
 			</div>
-		</header>
-		<div class="container qt-archive " id="qtArchive">
-			<div id="masonrycontainer" class="row qt-masonry masonrycontainer">
-				{friends.map((f, i) => <FriendItem friend={f} first={i === 0} />)}
-			</div>
-			<LoadMore id="qtChartLoadmore" />
-		</div>
-	</div>
-</Legacy>
+			<p class="more" data-reveal><a class="btn ghost" href="/friends/">All Friends</a></p>
+		</div></section>
+	</main>
+</Redesign>

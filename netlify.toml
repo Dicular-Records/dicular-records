@@ -33,3 +33,11 @@
   from = "/dicular-rec-news/page/*"
   to = "/dicular-rec-news/"
   status = 301
+[[redirects]]
+  from = "/category/:term/page/*"
+  to = "/category/:term/"
+  status = 301
+[[redirects]]
+  from = "/author/dicular-admin/page/*"
+  to = "/author/dicular-admin/"
+  status = 301

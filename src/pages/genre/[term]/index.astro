@@ -1,35 +1,27 @@
 ---
-// Genre-Archiv für Releases (taxonomy-genre.php). Wie im Original trägt der Rahmen die Klassen des ersten Releases.
-import Legacy from '../../../layouts/Legacy.astro';
-import FeaturedImage from '../../../components/FeaturedImage.astro';
-import ReleaseListItem from '../../../components/ReleaseListItem.astro';
-import LoadMore from '../../../components/LoadMore.astro';
+// Redesign: Genre-Archiv — Releases des Genres als schräge Karten
+import Redesign from '../../../layouts/Redesign.astro';
+import RPageHead from '../../../components/RPageHead.astro';
+import RCard from '../../../components/RCard.astro';
 import { releasesSorted } from '../../../lib/content';
+import { thumb } from '../../../lib/media';
 import taxonomies from '../../../data/taxonomies.json';
-import site from '../../../data/site.json';
 
-export async function getStaticPaths() {
+export function getStaticPaths() {
   return Object.keys(taxonomies.genre).map((term) => ({ params: { term } }));
 }
 const { term } = Astro.params as { term: string };
-const name = (taxonomies.genre as Record<string, string>)[term];
+const name = (taxonomies.genre as Record<string, string>)[term].replace(/-/g, ' ');
 const releases = (await releasesSorted()).filter((r) => r.data.genres.includes(term));
-const first = releases[0]?.data;
-const firstClasses = first ? ` post-${first.wpId} release type-release status-publish has-post-thumbnail hentry${first.genres.map((g) => ` genre-${g}`).join('')}` : '';
 ---
-<Legacy critical="genre" title={name} image={first?.cover} template="archive" bodyClass={`archive tax-genre term-${term} term-${(taxonomies.ids.genre as Record<string, number>)[term]}`}>
-	<article class={`qt-content qt-fade-to-paper qt-animatedheader${firstClasses}`} id={first ? `page${first.wpId}` : undefined}>
-		<FeaturedImage src={site.defaultHeader} variant="archive" />
-		<header class="qt-header">
-			<div class="container">
-				<h1 class="qt-titdeco-eq text-center center">{name} Releases</h1>
-			</div>
-		</header>
-		<main class="container" role="main">
-			<div class="row" id="itemslist">
-				{releases.map((r, i) => <ReleaseListItem release={r} first={i === 0} />)}
-			</div>
-			<LoadMore id="qtArtistsLoadmore" />
-		</main>
-	</article>
-</Legacy>
+<Redesign title={name} description={`${name} releases on Dicular Records`} image={releases[0]?.data.cover}>
+	<main>
+		<RPageHead title={name} kicker="Genre" intro={`${releases.length} ${releases.length === 1 ? 'release' : 'releases'}`} image={releases[0]?.data.cover} />
+		<section class="block"><div class="wrap">
+			{releases.length === 0 ? <p class="page-intro" data-reveal>No releases yet.</p> : (
+				<div class="cards">{releases.map((r, i) => <RCard href={`/release/${r.id}/`} src={thumb(r.data.cover, 'gridthumb')} label={r.data.title} tilt={i % 2 ? 'r' : 'l'} delay={(i % 4) * 80} />)}</div>
+			)}
+			<p class="more" data-reveal><a class="btn ghost" href="/releases/">All Releases</a></p>
+		</div></section>
+	</main>
+</Redesign>

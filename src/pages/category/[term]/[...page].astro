@@ -1,18 +1,24 @@
 ---
-// Kategorie-Archiv (/category/<term>/, 10 pro Seite)
-import PostArchive from '../../../components/PostArchive.astro';
+// Redesign: Kategorie-Archiv — alle Beiträge der Kategorie auf einer Seite (alte /page/N/ → 301 auf die erste Seite)
+import Redesign from '../../../layouts/Redesign.astro';
+import RPageHead from '../../../components/RPageHead.astro';
+import RNewsGrid from '../../../components/RNewsGrid.astro';
 import { newsSorted } from '../../../lib/content';
-import { wpPaginate } from '../../../lib/paginate';
 import taxonomies from '../../../data/taxonomies.json';
 
-export async function getStaticPaths() {
-  const news = await newsSorted();
-  return Object.keys(taxonomies.category).flatMap((term) =>
-    wpPaginate(news.filter((n) => n.data.categories.includes(term)), 10, `/category/${term}/`, {})
-      .map((p) => ({ params: { term, page: p.params.page }, props: p.props })));
+export function getStaticPaths() {
+  return Object.keys(taxonomies.category).map((term) => ({ params: { term, page: undefined } }));
 }
-const { term } = Astro.params;
-const { pageInfo } = Astro.props;
+const { term } = Astro.params as { term: string };
+const name = (taxonomies.category as Record<string, string>)[term];
+const items = (await newsSorted()).filter((n) => n.data.categories.includes(term));
 ---
-<PostArchive kind="category" slug={term!} termId={(taxonomies.ids.category as Record<string, number>)[term!]}
-	heading={(taxonomies.category as Record<string, string>)[term!]} pageInfo={pageInfo} />
+<Redesign title={name} description={`News in the category ${name}`}>
+	<main>
+		<RPageHead title={name} kicker="Category" intro={`${items.length} ${items.length === 1 ? 'post' : 'posts'}`} image={items[0]?.data.image} />
+		<section class="block"><div class="wrap">
+			<RNewsGrid items={items} />
+			<p class="more" data-reveal><a class="btn ghost" href="/dicular-rec-news/">All News</a></p>
+		</div></section>
+	</main>
+</Redesign>

@@ -19,6 +19,8 @@ const r = release.data;
 const related = (await relatedReleases(release)).filter((x) => x.id !== release.id).slice(0, 8);
 const artists = r.artists.length ? await getEntries(r.artists) : [];
 const genreName = (g: string) => (taxonomies.genre as Record<string, string>)[g] ?? g;
+// nur Genres mit eigenem Archiv werden verlinkt
+const genreHref = (g: string) => ((taxonomies.genre as Record<string, string>)[g] ? `/genre/${g}/` : undefined);
 const words = r.genres.length ? r.genres.flatMap((g) => genreName(g).split('-')) : ['Progressive', 'Trance', 'House', 'Techno'];
 const videos = r.tracks.filter((t) => youtubeId(t.video)).map((t) => ({ id: youtubeId(t.video)!, title: t.videoLabel || t.title || r.title }));
 const hasBody = (release.body ?? '').replace(/<[^>]+>|&nbsp;|\s/g, '').length > 0;
@@ -39,7 +41,7 @@ const description = plainText(`${r.catalog ? `${r.catalog} · ` : ''}${r.title} 
 					{(artists.length > 0 || r.genres.length > 0) && (
 						<p class="chips">
 							{artists.map((a) => <a class="chip" href={`/artist/${a.id}/`}>{artistName(a.data.name).name}</a>)}
-							{r.genres.map((g) => <span class="chip ghost">{genreName(g)}</span>)}
+							{r.genres.map((g) => genreHref(g) ? <a class="chip ghost" href={genreHref(g)}>{genreName(g)}</a> : <span class="chip ghost">{genreName(g)}</span>)}
 						</p>
 					)}
 					<RTracks release={release} buy />

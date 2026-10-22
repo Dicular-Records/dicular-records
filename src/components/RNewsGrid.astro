@@ -1,0 +1,24 @@
+---
+// Redesign: Raster aus News-Karten (Bild schräg, Datum, Titel, Anriss) — für Archive (Kategorie, Tag, Autor)
+import type { CollectionEntry } from 'astro:content';
+import { plainText } from '../lib/content';
+import { thumb } from '../lib/media';
+import { fmtDate } from '../lib/redesign';
+interface Props { items: CollectionEntry<'news'>[]; empty?: string }
+const { items, empty = 'No posts yet.' } = Astro.props;
+const title = (t: string) => t.replace(/#{2,}/g, '').replace(/\s{2,}/g, ' ').trim();
+---
+{items.length === 0 ? <p class="page-intro" data-reveal>{empty}</p> : (
+	<div class="news-grid">
+		{items.map((n, i) => (
+			<a href={`/${n.id}/`} class="news-card" data-reveal style={`--d:${(i % 3) * 80}ms`}>
+				<span class={`card ${i % 2 ? 'tilt-r' : 'tilt-l'}`}>
+					{n.data.image ? <img src={thumb(n.data.image, 'gridthumb')} alt="" width="500" height="500" loading="lazy" /> : <span class="card-empty" aria-hidden="true"></span>}
+				</span>
+				<time>{fmtDate(n.data.date)}</time>
+				<strong>{title(n.data.title)}</strong>
+				<em>{plainText((n.data.excerpt ?? n.body ?? '').replace(/\*\*|##/g, ''), 130)}</em>
+			</a>
+		))}
+	</div>
+)}

@@ -13,7 +13,7 @@ interface Props { entry: CollectionEntry<'news'> }
 const { entry } = Astro.props;
 const n = entry.data;
 const related = (await relatedNews(entry)).filter((x) => x.id !== entry.id).slice(0, 3);
-const cats = n.categories.filter((c) => c !== 'uncategorized').map((c) => (taxonomies.category as Record<string, string>)[c] ?? c);
+const cats = n.categories.filter((c) => c !== 'uncategorized').map((c) => ({ slug: c, name: (taxonomies.category as Record<string, string>)[c] ?? c }));
 // Titel aus WordPress tragen teils Dekor wie "### News Flash ###" → für die Anzeige glätten
 const title = n.title.replace(/#{2,}/g, '').replace(/\s{2,}/g, ' ').trim();
 ---
@@ -27,7 +27,7 @@ const title = n.title.replace(/#{2,}/g, '').replace(/\s{2,}/g, ' ').trim();
 					<p class="crumb"><a href="/dicular-rec-news/">News</a></p>
 					<p class="kicker">{fmtDate(n.date)}</p>
 					<h1 class="headline">{title}</h1>
-					{cats.length > 0 && <p class="chips">{cats.map((c) => <span class="chip ghost">{c}</span>)}</p>}
+					{cats.length > 0 && <p class="chips">{cats.map((c) => <a class="chip ghost" href={`/category/${c.slug}/`}>{c.name}</a>)}</p>}
 				</div>
 			</div>
 		</section>

@@ -66,29 +66,12 @@
     items.forEach(function (el) { io.observe(el); });
   } else items.forEach(function (el) { el.classList.add('in'); });
 
-  // ------------------------------------------------ Nur Entwurf: Seiten, die es im neuen Design noch nicht gibt.
-  // Klick zeigt einen Hinweis statt die alte 1:1-Seite zu öffnen (dort optional erreichbar).
-  var NOT_YET = ['/category/', '/tag/', '/genre/', '/membertype/', '/author/'];
-  var note = document.createElement('div');
-  note.className = 'soon'; note.hidden = true; note.setAttribute('role', 'status');
-  note.innerHTML = '<strong>Diese Seite folgt im neuen Design.</strong><span>Noch nicht umgestellt sind die Archive nach Kategorie, Genre, Member-Typ und Autor.</span>'
-    + '<div><a class="btn ghost" data-old target="_blank" rel="noopener">Altes Design ansehen</a><button class="btn" type="button">OK</button></div>';
-  body.appendChild(note);
-  var noteTimer;
-  note.querySelector('button').addEventListener('click', function () { note.hidden = true; });
+  // ------------------------------------------------ Nur Entwurf: Die neue Startseite liegt noch unter /entwurf/ (unter / liegt die 1:1-Fassung)
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href]');
-    if (!a || a.target === '_blank' || a.closest('.soon') || a.classList.contains('dicular-embed-load')) return;
+    if (!a || a.target === '_blank') return;
     var url = new URL(a.href, location.href);
-    if (url.origin !== location.origin) return;
-    if (url.pathname === '/') { e.preventDefault(); location.href = '/entwurf/' + url.search; return; }
-    if (/\.[a-z0-9]{2,5}$/i.test(url.pathname)) return; // Dateien (Bilder, MP3)
-    if (url.hash && url.pathname === location.pathname) return; // Sprungmarke auf derselben Seite
-    if (!NOT_YET.some(function (p) { return url.pathname.indexOf(p) === 0; })) return;
-    e.preventDefault();
-    note.querySelector('[data-old]').href = url.origin + url.pathname;
-    note.hidden = false;
-    clearTimeout(noteTimer); noteTimer = setTimeout(function () { note.hidden = true; }, 6000);
+    if (url.origin === location.origin && url.pathname === '/') { e.preventDefault(); location.href = '/entwurf/' + url.search; }
   });
 
   // ------------------------------------------------ Zwei-Klick-Player (YouTube, SoundCloud): erst der Klick lädt den fremden Inhalt

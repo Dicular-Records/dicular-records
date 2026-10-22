@@ -25,7 +25,7 @@ const pic = f.profilePic ?? f.listImage ?? f.headerImage;
 				<div class="latest-info" data-reveal>
 					<p class="crumb"><a href="/friends/">Friends</a></p>
 					<h1 class="artist-name chrome-text">{f.name}</h1>
-					{f.memberTypes.length > 0 && <p class="chips">{f.memberTypes.map((t) => <span class="chip ghost">{memberTypeName(t)}</span>)}</p>}
+					{f.memberTypes.length > 0 && <p class="chips">{f.memberTypes.map((t) => <a class="chip ghost" href={`/membertype/${t}/`}>{memberTypeName(t)}</a>)}</p>}
 					{f.socials.length > 0 && <p class="chips">{f.socials.map((s) => <a class="chip" href={s.url} target="_blank" rel="noopener">{s.icon.replace(/^qticon-/, '')}</a>)}</p>}
 				</div>
 			</div>

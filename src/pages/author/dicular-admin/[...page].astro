@@ -1,13 +1,18 @@
 ---
-// Autoren-Archiv (alle Beiträge stammen vom WordPress-Benutzer "admin")
-import PostArchive from '../../../components/PostArchive.astro';
+// Redesign: Autoren-Archiv — alle Beiträge stammen vom WordPress-Benutzer „admin“ (= das Label)
+import Redesign from '../../../layouts/Redesign.astro';
+import RPageHead from '../../../components/RPageHead.astro';
+import RNewsGrid from '../../../components/RNewsGrid.astro';
 import { newsSorted } from '../../../lib/content';
-import { wpPaginate } from '../../../lib/paginate';
 
-export async function getStaticPaths() {
-  return wpPaginate(await newsSorted(), 10, '/author/dicular-admin/');
+export function getStaticPaths() {
+  return [{ params: { page: undefined } }];
 }
-const { pageInfo } = Astro.props;
-const heading = 'Author: <span class="vcard"><a class="url fn n" href="/author/dicular-admin/" title="admin" rel="me">admin</a></span>';
+const items = await newsSorted();
 ---
-<PostArchive kind="author" slug="dicular-admin" termId={1} heading={heading} pageInfo={pageInfo} />
+<Redesign title="Dicular Records" description="All posts by Dicular Records">
+	<main>
+		<RPageHead title="Dicular Records" kicker="Author" intro={`${items.length} posts`} image={items[0]?.data.image} />
+		<section class="block"><div class="wrap"><RNewsGrid items={items} /></div></section>
+	</main>
+</Redesign>
