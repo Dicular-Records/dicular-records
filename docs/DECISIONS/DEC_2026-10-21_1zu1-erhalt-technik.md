@@ -121,3 +121,7 @@ Ladegewicht vorher → nachher (lokal, unkomprimiert; `scripts/page-weight.mjs`)
 | # | Entscheidung | Begründung |
 |---|---|---|
 | 45 | Der Redesign-Zweig ist als **Vorschau unter https://dicular.provolution.org/** erreichbar: Netlify-Projekt `dicular-redesign` im Team „Provolution“ (Yoka), hochgeladen per Netlify-Kommandozeile, `noindex`. Livebetrieb bleibt auf Plesk (Nr. 29). | Wunsch Yoka: Subdomain von provolution.org statt Plesk für die Vorschau. Netlifys Git-Verbindung für private Repositories einer Organisation kostet Pro (20 $/Monat). Yoka hat Weg A gewählt: Upload von Hand, kostenlos. Netlify hat Lesezugriff auf die GitHub-Organisation (von Yoka freigegeben). |
+
+| # | Entscheidung | Begründung |
+|---|---|---|
+| 46 | Instagram-Link in der Fußzeile auf **instagram.com/dicular_records_official/** korrigiert (beide Fassungen). Damit weicht die 1:1-Fassung hier bewusst von der Live-Seite ab. | Hinweis Yoka (2026-10-22): Live verlinkt auf ein falsches Profil (`dicular_records`). |
