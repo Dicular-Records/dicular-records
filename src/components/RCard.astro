@@ -1,0 +1,24 @@
+---
+// Redesign: schräge Bildkarte mit Namensbalken (Vorbild roofrecords.de), gerade beim Darüberfahren.
+interface Props {
+  href: string;
+  src?: string;
+  label: string;
+  /** Schräglage: l = links, r = rechts (Balken rechtsbündig), s = leicht */
+  tilt?: 'l' | 'r' | 's';
+  /** Hochformat 4:5 (Artist-Fotos) statt quadratisch */
+  portrait?: boolean;
+  /** Verzögerung beim Einblenden (ms) */
+  delay?: number;
+  width?: number;
+  height?: number;
+  eager?: boolean;
+  class?: string;
+}
+const { href, src, label, tilt = 'l', portrait = false, delay = 0, width = 500, height = 500, eager = false, class: extra = '' } = Astro.props;
+---
+<a href={href} class={`card tilt-${tilt}${portrait ? ' portrait' : ''} ${extra}`} data-reveal style={`--d:${delay}ms`}>
+	{src ? <img src={src} alt={label} width={width} height={height} loading={eager ? undefined : 'lazy'} fetchpriority={eager ? 'high' : undefined} />
+		: <span class="card-empty" aria-hidden="true"></span>}
+	<span class="namebar">{label}</span>
+</a>

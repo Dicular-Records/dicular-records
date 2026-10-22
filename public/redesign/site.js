@@ -1,6 +1,7 @@
-/* Redesign-Entwurf Startseite: Varianten-Umschalter, Intro, Kopfleiste, Einblenden, Player/Radio */
+/* Redesign: Varianten-Umschalter, Intro (Startseite), Kopfleiste, Einblenden, Zwei-Klick-Player, Player-Leiste/Radio */
 (function () {
-  var body = document.body;
+  var body = document.body, $ = function (id) { return document.getElementById(id); };
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ------------------------------------------------ Varianten (Logo-Drehung, Abgrenzung): URL ?logo=record&sep=b, sonst zuletzt gewählt
   var store = { get: function (k) { try { return localStorage.getItem('entwurf-' + k); } catch (e) { return null; } },
@@ -13,10 +14,18 @@
     document.querySelectorAll('[data-set]').forEach(function (b) { b.setAttribute('aria-pressed', String(state[b.dataset.set] === b.dataset.val)); });
     var u = new URL(location.href); u.searchParams.set('logo', state.logo); u.searchParams.set('sep', state.sep); history.replaceState(null, '', u);
   }
+  // Varianten beim Wechsel auf andere Seiten des Entwurfs mitnehmen
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a || a.target === '_blank') return;
+    var u = new URL(a.href, location.href);
+    if (u.origin === location.origin && !/\.[a-z0-9]{2,5}$/i.test(u.pathname)) { u.searchParams.set('logo', state.logo); u.searchParams.set('sep', state.sep); a.href = u.href; }
+  }, true);
+  var introLogo = $('introLogo');
   function replayIntro() {
+    if (!introLogo) return;
     body.classList.remove('intro-done');
-    var l = document.getElementById('introLogo');
-    l.style.animation = 'none'; void l.offsetWidth; l.style.animation = '';
+    introLogo.style.animation = 'none'; void introLogo.offsetWidth; introLogo.style.animation = '';
     document.querySelectorAll('.intro-title, .intro-bar').forEach(function (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; });
   }
   document.querySelectorAll('[data-set]').forEach(function (b) {
@@ -25,24 +34,28 @@
       if (b.dataset.set === 'logo') { scrollTo({ top: 0 }); replayIntro(); }
     });
   });
-  document.querySelector('[data-replay]').addEventListener('click', function () { scrollTo({ top: 0 }); replayIntro(); });
+  var replay = document.querySelector('[data-replay]');
+  if (replay) replay.addEventListener('click', function () { scrollTo({ top: 0 }); replayIntro(); });
   apply();
   // auf schmalen Bildschirmen eingeklappt starten
-  if (innerWidth < 900) document.getElementById('switcher').removeAttribute('open');
+  if (innerWidth < 900) $('switcher').removeAttribute('open');
 
-  // ------------------------------------------------ Intro fertig → Glanz, Lichtlauf übers Menü
-  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.getElementById('introLogo').addEventListener('animationend', function (e) { if (e.target.id === 'introLogo') body.classList.add('intro-done'); });
-  if (reduce) body.classList.add('intro-done');
+  // ------------------------------------------------ Intro (nur Startseite) fertig → Glanz, Lichtlauf übers Menü
+  if (introLogo) {
+    introLogo.addEventListener('animationend', function (e) { if (e.target === introLogo) body.classList.add('intro-done'); });
+    if (reduce) body.classList.add('intro-done');
+  }
 
-  // ------------------------------------------------ Kopfleiste: ab Ende des Intros Hintergrund/Abgrenzung
-  var intro = document.getElementById('intro');
-  function onScroll() { body.classList.toggle('scrolled', scrollY > intro.offsetHeight - 90); }
-  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  // ------------------------------------------------ Kopfleiste: Startseite ab Ende des Intros, Unterseiten immer „gescrollt“
+  var intro = $('intro');
+  if (intro) {
+    var onScroll = function () { body.classList.toggle('scrolled', scrollY > intro.offsetHeight - 90); };
+    addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  }
 
   // Menü am Handy
-  var toggle = document.querySelector('.menu-toggle'), nav = document.getElementById('nav');
-  toggle.addEventListener('click', function () { var open = nav.classList.toggle('open'); toggle.setAttribute('aria-expanded', String(open)); });
+  var menuBtn = document.querySelector('.menu-toggle'), nav = $('nav');
+  menuBtn.addEventListener('click', function () { var open = nav.classList.toggle('open'); menuBtn.setAttribute('aria-expanded', String(open)); });
 
   // ------------------------------------------------ Einblenden beim Scrollen (einmalig)
   var items = document.querySelectorAll('[data-reveal]');
@@ -53,35 +66,53 @@
     items.forEach(function (el) { io.observe(el); });
   } else items.forEach(function (el) { el.classList.add('in'); });
 
-  // ------------------------------------------------ Nur Entwurf: Unterseiten gibt es im neuen Design noch nicht.
-  // Klick auf einen internen Link zeigt einen Hinweis statt die alte 1:1-Seite zu öffnen (dort optional erreichbar).
+  // ------------------------------------------------ Nur Entwurf: Seiten, die es im neuen Design noch nicht gibt.
+  // Klick zeigt einen Hinweis statt die alte 1:1-Seite zu öffnen (dort optional erreichbar).
+  var READY = ['/entwurf/', '/release/', '/artist/'];
   var note = document.createElement('div');
   note.className = 'soon'; note.hidden = true; note.setAttribute('role', 'status');
-  note.innerHTML = '<strong>Diese Seite folgt im neuen Design.</strong><span>Bisher ist nur die Startseite neu gestaltet.</span>'
+  note.innerHTML = '<strong>Diese Seite folgt im neuen Design.</strong><span>Neu gestaltet sind bisher Startseite, Release- und Artist-Seiten.</span>'
     + '<div><a class="btn ghost" data-old target="_blank" rel="noopener">Altes Design ansehen</a><button class="btn" type="button">OK</button></div>';
-  document.body.appendChild(note);
+  body.appendChild(note);
   var noteTimer;
   note.querySelector('button').addEventListener('click', function () { note.hidden = true; });
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href]');
-    if (!a || a.target === '_blank' || a.closest('.soon')) return;
+    if (!a || a.target === '_blank' || a.closest('.soon') || a.classList.contains('dicular-embed-load')) return;
     var url = new URL(a.href, location.href);
-    if (url.origin === location.origin && url.pathname === '/') { e.preventDefault(); scrollTo({ top: 0, behavior: 'smooth' }); return; }
-    if (url.origin !== location.origin || url.pathname.indexOf('/entwurf/') === 0 || url.hash && url.pathname === location.pathname) return;
+    if (url.origin !== location.origin) return;
+    if (url.pathname === '/') { e.preventDefault(); location.href = '/entwurf/' + url.search; return; }
+    if (/\.[a-z0-9]{2,5}$/i.test(url.pathname)) return; // Dateien (Bilder, MP3)
+    if (url.hash && url.pathname === location.pathname) return; // Sprungmarke auf derselben Seite
+    if (READY.some(function (p) { return url.pathname.indexOf(p) === 0; })) return;
     e.preventDefault();
-    note.querySelector('[data-old]').href = url.href;
+    note.querySelector('[data-old]').href = url.origin + url.pathname;
     note.hidden = false;
     clearTimeout(noteTimer); noteTimer = setTimeout(function () { note.hidden = true; }, 6000);
   });
 
+  // ------------------------------------------------ Zwei-Klick-Player (YouTube, SoundCloud): erst der Klick lädt den fremden Inhalt
+  document.addEventListener('click', function (e) {
+    var load = e.target.closest && e.target.closest('.dicular-embed-load');
+    if (!load) return;
+    e.preventDefault();
+    var box = load.closest('.dicular-embed'), h = box.getAttribute('data-embed-height');
+    var frame = document.createElement('iframe');
+    frame.src = box.getAttribute('data-embed-src');
+    frame.allow = 'autoplay; encrypted-media; fullscreen'; frame.allowFullscreen = true;
+    if (h) frame.height = h;
+    box.innerHTML = ''; box.classList.add('loaded'); box.appendChild(frame);
+    if (!player.paused) player.pause(); // eigene Musik anhalten
+  });
+
   // ------------------------------------------------ Player: eine Warteschlange für Release-Tracks oder Dicular Radio,
   // gesteuert über die Knöpfe auf der Seite und die Player-Leiste (zurück / abspielen / vor / spulen)
-  var player = document.getElementById('player');
-  var radioBtn = document.getElementById('radioBtn'), radioNow = document.getElementById('radioNow');
-  var bar = document.getElementById('playerbar'), seek = document.getElementById('pbSeek');
-  var trackBtns = [].slice.call(document.querySelectorAll('.play'));
-  var releaseQueue = trackBtns.map(function (b) { return { title: b.dataset.title, artist: (b.parentNode.querySelector('em') || {}).textContent || '', src: b.dataset.src, btn: b }; });
-  var radioQueue = JSON.parse(radioBtn.dataset.playlist || '[]');
+  var player = $('player');
+  var radioBtn = $('radioBtn'), radioNow = $('radioNow');
+  var bar = $('playerbar'), seek = $('pbSeek');
+  var trackBtns = [].slice.call(document.querySelectorAll('button.play'));
+  var releaseQueue = trackBtns.map(function (b) { return { title: b.dataset.title, artist: b.dataset.artist || '', src: b.dataset.src, btn: b }; });
+  var radioQueue = radioBtn ? JSON.parse(radioBtn.dataset.playlist || '[]') : [];
   for (var i = radioQueue.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = radioQueue[i]; radioQueue[i] = radioQueue[j]; radioQueue[j] = t; }
   var queue = [], idx = 0, mode = null; // mode: 'release' | 'radio'
 
@@ -98,10 +129,10 @@
     var t = queue[idx];
     player.src = t.src; player.play().catch(function () {});
     bar.hidden = false;
-    document.getElementById('pbTitle').textContent = t.title;
-    document.getElementById('pbArtist').textContent = t.artist || '';
-    document.getElementById('pbSource').textContent = mode === 'radio' ? 'Dicular Radio' : 'Release · ' + (idx + 1) + '/' + queue.length;
-    if (mode === 'radio') radioNow.textContent = 'Läuft: ' + t.title + (t.artist ? ' – ' + t.artist : '');
+    $('pbTitle').textContent = t.title;
+    $('pbArtist').textContent = t.artist || '';
+    $('pbSource').textContent = mode === 'radio' ? 'Dicular Radio' : 'Release · ' + (idx + 1) + '/' + queue.length;
+    if (mode === 'radio' && radioNow) radioNow.textContent = 'Läuft: ' + t.title + (t.artist ? ' – ' + t.artist : '');
   }
   function playPause() { if (!queue.length) return; if (player.paused) player.play().catch(function () {}); else player.pause(); }
   function playFrom(m, q, n) {
@@ -109,24 +140,24 @@
     mode = m; queue = q; load(n);
   }
   trackBtns.forEach(function (b, n) { b.addEventListener('click', function () { playFrom('release', releaseQueue, n); }); });
-  radioBtn.addEventListener('click', function () { playFrom('radio', radioQueue, mode === 'radio' ? idx : 0); });
-  document.getElementById('pbToggle').addEventListener('click', playPause);
+  if (radioBtn) radioBtn.addEventListener('click', function () { playFrom('radio', radioQueue, mode === 'radio' ? idx : 0); });
+  $('pbToggle').addEventListener('click', playPause);
   // zurück: nach den ersten Sekunden an den Anfang des Tracks, sonst zum vorherigen
-  document.getElementById('pbPrev').addEventListener('click', function () { if (player.currentTime > 3) player.currentTime = 0; else load(idx - 1); });
-  document.getElementById('pbNext').addEventListener('click', function () { load(idx + 1); });
+  $('pbPrev').addEventListener('click', function () { if (player.currentTime > 3) player.currentTime = 0; else load(idx - 1); });
+  $('pbNext').addEventListener('click', function () { load(idx + 1); });
   player.addEventListener('ended', function () {
     if (mode === 'release' && idx === queue.length - 1) { mark(); return; } // Release zu Ende → anhalten
     load(idx + 1);
   });
   ['play', 'pause'].forEach(function (ev) { player.addEventListener(ev, mark); });
-  player.addEventListener('pause', function () { if (mode === 'radio') radioNow.textContent = 'Pausiert'; });
+  player.addEventListener('pause', function () { if (mode === 'radio' && radioNow) radioNow.textContent = 'Pausiert'; });
 
   // Fortschritt und Spulen
   var fmt = function (s) { s = Math.floor(s || 0); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); };
   var dragging = false;
   player.addEventListener('timeupdate', function () {
-    document.getElementById('pbCur').textContent = fmt(player.currentTime);
-    document.getElementById('pbDur').textContent = fmt(player.duration);
+    $('pbCur').textContent = fmt(player.currentTime);
+    $('pbDur').textContent = fmt(player.duration);
     if (!dragging && player.duration) seek.value = Math.round(player.currentTime / player.duration * 1000);
   });
   seek.addEventListener('input', function () { dragging = true; });

@@ -47,6 +47,15 @@ Lokal: Startkonfiguration `redesign-dev` → http://localhost:4322/entwurf/
 
 **https://dicular.provolution.org/** (leitet auf /entwurf/ um, noindex). Netlify-Projekt `dicular-redesign` im Team „Provolution“, Upload per Kommandozeile, kein automatischer Build (Git-Verbindung für private Org-Repos wäre Netlify Pro, 20 $/Monat; Yoka: Weg A). Aktualisieren: `docs/RECIPES/vorschau-netlify.md`.
 
+## Unterseiten (2026-10-22)
+
+Gemeinsamer Rahmen `src/layouts/Redesign.astro` (Kopfleiste, Chrome-Menü, Fußzeile, Player-Leiste, Umschalter), Stil/Logik `public/redesign/site.css` + `site.js`, Bausteine `RCard` (schräge Karte), `RTracks` (Trackliste), `RBody` (Text; Markdown-Reste wie **fett**/*kursiv*/## werden im Redesign formatiert, 1:1-Fassung unverändert).
+
+- **Release-Seite** `/release/<slug>/`: Kopf mit schrägem Cover, Genre-Wörtern, Punktraster; Label/Datum, Artists + Genres als Chips, Tracks mit Kauf-Link je Track, Kauf-Buttons; Text; Videos per Zwei-Klick (youtube-nocookie); „More Releases“.
+- **Artist-Seite** `/artist/<slug>/`: schräges Foto mit Namensbalken, Name in Chrome, Rollen/Herkunft, Genre-Chips, Sprungmarken; Biografie, Releases des Artists (jetzt immer, nicht nur bei gesetztem Music-Titel), SoundCloud per Zwei-Klick, Booking, eigener Abschnitt, „More Artists“.
+- Noch altes Design (Klick zeigt Hinweis): Übersichten Releases/Artists/News/Gigs, Friends, Team, About, Contact, News-Beiträge, Events, Archive.
+- Geprüft: 46 Seiten (Start, 33 Releases, 12 Artists) × Desktop/Handy ohne JS-Fehler, ohne Fehlerseiten, ohne Fremdanfragen, ohne Querscrollen.
+
 ## DNA, die bleibt
 
 - Farben: Petrol `#00283a`, Akzent Blau `#2a5982`, Akzent Grün `#2cc894`, Text `#adadad`

@@ -1,109 +1,112 @@
 ---
-// Artist-Detailseite (single-artist.php): Bio, Music (Releases des Artists), Booking, freie Sektion, SoundCloud
+// Redesign: Artist-Seite. Kopf mit schrägem Foto + Namensbalken, Name in Chrome, Rollen/Herkunft, Sprungmarken;
+// darunter Biografie, Releases, SoundCloud (Zwei-Klick), Booking, eigener Abschnitt, weitere Artists.
 import { getCollection } from 'astro:content';
-import Legacy from '../../layouts/Legacy.astro';
-import Body from '../../components/Body.astro';
-import FeaturedImage from '../../components/FeaturedImage.astro';
-import RelatedCarousel from '../../components/RelatedCarousel.astro';
+import Redesign from '../../layouts/Redesign.astro';
+import RCard from '../../components/RCard.astro';
+import Body from '../../components/RBody.astro';
 import SoundCloud from '../../components/SoundCloud.astro';
 import { releasesSorted, relatedArtists, plainText } from '../../lib/content';
-import { thumb, fitSize } from '../../lib/media';
+import { thumb } from '../../lib/media';
 import { sanitizeArtistHtml as clean } from '../../lib/sanitize';
+import { artistName, cleanSubtitle } from '../../lib/redesign';
+import taxonomies from '../../data/taxonomies.json';
 
 export async function getStaticPaths() {
   return (await getCollection('artists')).map((artist) => ({ params: { slug: artist.id }, props: { artist } }));
 }
 const { artist } = Astro.props;
 const a = artist.data;
-const music = a.music ? (await releasesSorted()).filter((r) => r.data.artists.some((ref) => ref.id === artist.id)) : [];
-const related = await relatedArtists(artist);
-const [pw, ph] = await fitSize(a.photo, 1024, 1024);
-const genreClasses = a.genres.map((g) => ` artistgenre-${g}`).join('');
-const menu = [
+const { name, roles } = artistName(a.name);
+const origin = cleanSubtitle(a.subtitle);
+// Releases, an denen der Artist beteiligt ist (im Original nur bei gesetztem „Music“-Titel sichtbar)
+const music = (await releasesSorted()).filter((r) => r.data.artists.some((ref) => ref.id === artist.id));
+const musicTitle = a.music?.title || 'Releases';
+const related = (await relatedArtists(artist)).filter((x) => x.id !== artist.id).slice(0, 4);
+// Artist-Genres haben in WordPress keinen eigenen Anzeigenamen → Kürzel lesbar machen
+const genreName = (g: string) => (taxonomies.genre as Record<string, string>)[g] ?? g.replace(/-/g, ' ');
+const sections = [
   { id: 'bio', label: 'Biography' },
-  ...(music.length ? [{ id: 'music', label: a.music!.title }] : []),
+  ...(music.length ? [{ id: 'music', label: musicTitle }] : []),
   ...(a.soundcloud.length ? [{ id: 'soundcloud', label: 'SoundCloud' }] : []),
   ...(a.booking.length ? [{ id: 'booking', label: 'Booking' }] : []),
   ...(a.custom?.title ? [{ id: 'custom', label: a.custom.title }] : []),
 ];
 ---
-<Legacy critical="artist" title={a.name} image={a.photo} description={plainText(a.excerpt ?? artist.body)} bodyClass={`wp-singular artist-template-default single single-artist postid-${a.wpId}`}>
-	<article class={`qt-content qt-header-animation-container post-${a.wpId} artist type-artist status-publish${a.photo ? ' has-post-thumbnail' : ''} hentry${genreClasses}`} id={`page${a.wpId}`}>
-		<FeaturedImage src={a.background ?? a.photo} variant="artist" />
-		<h1 class="qt-header-animation-title qt-titdeco-eq center text-center">{a.name}</h1>
-		<div id="qwjquerycontent">
-			<a id="bio" class="qt-section-index"></a>
-			<div class="container qt-header-animation-content">
-				<div class="row">
-					<div class="col s12 m12 l8 offset-l4 qt-artist">
-						<h2 class="qt-title qt-titdeco">{a.name}</h2>
-						{a.subtitle && <h4 set:html={clean(` ${a.subtitle}  `)} />}
-						{a.photo && (
-							<a href={a.photo}>
-								<img width={pw} height={ph} src={a.photo} class="img-responsive wp-post-image" alt={a.name} decoding="async" fetchpriority="high" />
-							</a>
-						)}
-						<h3 class="qt-titdeco qt-section">Biography</h3>
-						<div class="qt-bio">
-							<Body entry={artist} />
-						</div>
-						{music.length > 0 && (
-							<Fragment>
-								<a id="music" class="qt-section-index"></a>
-								<h3 class="qt-titdeco qt-section">{a.music!.title}</h3>
-								<div class="qt-releases">
-									<div id="artistReleases" class="owl-carousel qt-owlcarousel" data-items="3" data-margin="30" data-loop="false" data-center="false" data-mouseDrag="false" data-touchDrag="true" data-pullDrag="false" data-freeDrag="false" data-stagePadding="0" data-nav="true" data-navRewind="false" data-autoplayHoverPause="true" data-dots="false" data-autoplay="false">
-										{music.map((r) => (
-											<div class="qt-owl-card">
-												<a href={`/release/${r.id}/`} class="qw-imgfx">
-													<img width="500" height="500" src={thumb(r.data.cover, 'gridthumb')} class="attachment-qantumthemes_gridthumb size-qantumthemes_gridthumb wp-post-image" alt={r.data.title} decoding="async" loading="lazy" />
-												</a>
-												<a href={`/release/${r.id}/`}>
-													<h4>{r.data.title}</h4>
-												</a>
-											</div>
-										))}
-									</div>
-								</div>
-								<i class="qt-swipe hide-on-large-only"></i>
-							</Fragment>
-						)}
-						{a.soundcloud.length > 0 && (
-							<Fragment>
-								<a id="soundcloud" class="qt-section-index"></a>
-								<h3 class="qt-titdeco qt-section">SoundCloud</h3>
-								{a.soundcloud.map((url) => <SoundCloud url={url} />)}
-							</Fragment>
-						)}
-						{a.booking.length > 0 && (
-							<div class="qt-booking-details">
-								<a id="booking" class="qt-section-index"></a>
-								<h3 class="qt-titdeco qt-section">Booking</h3>
-								<div class="qt-booking">
-									{a.booking.map((b, i) => (
-										<p class={i === 0 ? 'qw-top30' : undefined}>
-											<span class={`qw-detTit qw-negative ghost ghost-accentcolor${i === 0 ? ' ' : ''}`}>{b.label}</span>
-											<span class="qw-detail-value negative" set:html={clean(b.value)}></span>
-										</p>
-									))}
-								</div>
-							</div>
-						)}
-						{a.custom?.title && (
-							<Fragment>
-								<a id="custom" class="qt-section-index"></a>
-								<h3 class="qt-titdeco qt-section">{a.custom.title}</h3>
-								{a.custom.content && <Fragment set:html={clean(a.custom.content)} />}
-							</Fragment>
-						)}
-					</div>
+<Redesign title={name} description={plainText(a.excerpt ?? artist.body)} image={a.photo}>
+	<main>
+		<section class="latest artist-head" style={`--cover:url("${a.background ?? a.photo}")`}>
+			<div class="latest-bg" aria-hidden="true"></div>
+			<div class="wrap latest-grid">
+				<RCard href={a.photo ?? '#bio'} src={a.photo} label={name} portrait width={800} height={1000} eager class="latest-cover" />
+				<div class="latest-info" data-reveal>
+					<p class="crumb"><a href="/artists/">Artists</a></p>
+					{(roles || origin) && <p class="kicker">{[roles, origin].filter(Boolean).join(' · ')}</p>}
+					<h1 class="artist-name chrome-text">{name}</h1>
+					{a.genres.length > 0 && <p class="chips">{a.genres.map((g) => <span class="chip ghost">{genreName(g)}</span>)}</p>}
+					<nav class="jump" aria-label="Abschnitte">{sections.map((s) => <a href={`#${s.id}`}>{s.label}</a>)}</nav>
 				</div>
 			</div>
-			<ul class="qt-artist-internalmenu">
-				{menu.map((m) => <li><a href={`#${m.id}`} class="accentcolor btn waves-effect waves-light qwsmoothscroll">{m.label}</a></li>)}
-			</ul>
-		</div>
-	</article>
-	<RelatedCarousel heading="Artists" dataItems={4} size="medium-thumb" linkClass="cmblink qwjquerycontent"
-		items={related.map((r) => ({ href: `/artist/${r.id}/`, image: r.data.photo, title: r.data.name }))} />
-</Legacy>
+		</section>
+
+		<section class="block" id="bio">
+			<div class="wrap narrow">
+				<h2 class="section-title" data-reveal>Biography</h2>
+				<div class="prose" data-reveal><Body entry={artist} /></div>
+			</div>
+		</section>
+
+		{music.length > 0 && (
+			<section class="block" id="music">
+				<div class="wrap">
+					<h2 class="section-title" data-reveal>{musicTitle}</h2>
+					<div class="cards">
+						{music.map((r, i) => <RCard href={`/release/${r.id}/`} src={thumb(r.data.cover, 'gridthumb')} label={r.data.title} tilt={i % 2 ? 'r' : 'l'} delay={(i % 4) * 80} />)}
+					</div>
+				</div>
+			</section>
+		)}
+
+		{a.soundcloud.length > 0 && (
+			<section class="block" id="soundcloud">
+				<div class="wrap narrow">
+					<h2 class="section-title" data-reveal>SoundCloud</h2>
+					{a.soundcloud.map((url) => <SoundCloud url={url} />)}
+				</div>
+			</section>
+		)}
+
+		{(a.booking.length > 0 || a.custom?.title) && (
+			<section class="block">
+				<div class="wrap narrow">
+					{a.booking.length > 0 && (
+						<div id="booking" data-reveal>
+							<h2 class="section-title">Booking</h2>
+							<dl class="booking">
+								{a.booking.map((b) => <Fragment><dt>{b.label}</dt><dd set:html={clean(b.value)} /></Fragment>)}
+							</dl>
+						</div>
+					)}
+					{a.custom?.title && (
+						<div id="custom" data-reveal>
+							<h2 class="section-title">{a.custom.title}</h2>
+							{a.custom.content && <div class="prose" set:html={clean(a.custom.content)} />}
+						</div>
+					)}
+				</div>
+			</section>
+		)}
+
+		{related.length > 0 && (
+			<section class="block">
+				<div class="wrap">
+					<h2 class="section-title" data-reveal>More Artists</h2>
+					<div class="cards">
+						{related.map((x, i) => <RCard href={`/artist/${x.id}/`} src={x.data.photo} label={artistName(x.data.name).name} portrait tilt={(['l', 'r', 's'] as const)[i % 3]} delay={i * 80} />)}
+					</div>
+					<p class="more" data-reveal><a class="btn ghost" href="/artists/">Alle Artists</a></p>
+				</div>
+			</section>
+		)}
+	</main>
+</Redesign>

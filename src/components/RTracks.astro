@@ -1,0 +1,19 @@
+---
+// Redesign: Trackliste mit Abspielknöpfen (Player-Leiste in site.js), optional Kauf-Link je Track
+import type { CollectionEntry } from 'astro:content';
+import { audio } from '../lib/media';
+interface Props { release: CollectionEntry<'releases'>; buy?: boolean }
+const { release, buy = false } = Astro.props;
+const r = release.data;
+const tracks = r.tracks.map((t) => ({ ...t, title: t.title || r.title, src: audio(t.mp3) }));
+---
+<ol class="tracks">
+	{tracks.map((t) => (
+		<li>
+			{t.src ? <button class="play" data-src={t.src} data-title={t.title} data-artist={t.artist} aria-label={`${t.title} abspielen`}><i></i></button>
+				: <span class="play none" aria-hidden="true"></span>}
+			<span class="track-name"><strong>{t.title}</strong>{t.artist && <em>{t.artist}</em>}</span>
+			{buy && t.buyUrl && <a class="track-buy" href={t.buyUrl} target="_blank" rel="noopener" aria-label={`${t.title} kaufen`}>Buy</a>}
+		</li>
+	))}
+</ol>

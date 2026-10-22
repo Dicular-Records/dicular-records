@@ -1,0 +1,14 @@
+---
+// Redesign: Fließtext wie Body.astro, zusätzlich Markdown-Reste in HTML-Texten als Formatierung (lib/redesign → inlineMarkdown)
+import { render, type CollectionEntry } from 'astro:content';
+import { sanitizeArtistHtml } from '../lib/sanitize';
+import { inlineMarkdown } from '../lib/redesign';
+interface Props { entry: CollectionEntry<'releases' | 'artists' | 'news' | 'events' | 'friends' | 'pages'> }
+const { entry } = Astro.props;
+const isHtml = entry.data.format === 'html';
+// Artist-Texte kommen aus dem Self-Service → bereinigen (nach der Umwandlung, damit auch sie geprüft ist)
+const raw = isHtml ? inlineMarkdown(entry.body ?? '') : '';
+const html = isHtml ? (entry.collection === 'artists' ? sanitizeArtistHtml(raw) : raw) : '';
+const { Content } = isHtml ? { Content: null } : await render(entry);
+---
+{isHtml ? <Fragment set:html={html} /> : Content && <Content />}

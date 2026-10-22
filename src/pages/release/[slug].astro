@@ -1,21 +1,83 @@
 ---
-// Release-Detailseite (single-release.php)
-import { getCollection } from 'astro:content';
-import Legacy from '../../layouts/Legacy.astro';
-import ReleaseBlock from '../../components/ReleaseBlock.astro';
-import RelatedCarousel from '../../components/RelatedCarousel.astro';
+// Redesign: Release-Seite. Kopf wie „Neuestes Release“ der Startseite (Cover schräg, Genre-Wörter, Punktraster),
+// darunter Text, Videos (Zwei-Klick), Artists des Releases und weitere Releases.
+import { getCollection, getEntries } from 'astro:content';
+import Redesign from '../../layouts/Redesign.astro';
+import RCard from '../../components/RCard.astro';
+import RTracks from '../../components/RTracks.astro';
+import Body from '../../components/RBody.astro';
 import { relatedReleases, plainText } from '../../lib/content';
+import { thumb } from '../../lib/media';
+import { artistName, fmtDate, youtubeId } from '../../lib/redesign';
+import taxonomies from '../../data/taxonomies.json';
 
 export async function getStaticPaths() {
   return (await getCollection('releases')).map((release) => ({ params: { slug: release.id }, props: { release } }));
 }
 const { release } = Astro.props;
-const related = await relatedReleases(release);
+const r = release.data;
+const related = (await relatedReleases(release)).filter((x) => x.id !== release.id).slice(0, 8);
+const artists = r.artists.length ? await getEntries(r.artists) : [];
+const genreName = (g: string) => (taxonomies.genre as Record<string, string>)[g] ?? g;
+const words = r.genres.length ? r.genres.flatMap((g) => genreName(g).split('-')) : ['Progressive', 'Trance', 'House', 'Techno'];
+const videos = r.tracks.filter((t) => youtubeId(t.video)).map((t) => ({ id: youtubeId(t.video)!, title: t.videoLabel || t.title || r.title }));
+const hasBody = (release.body ?? '').replace(/<[^>]+>|&nbsp;|\s/g, '').length > 0;
+const description = plainText(`${r.catalog ? `${r.catalog} · ` : ''}${r.title} – ${r.label}. ${release.body ?? ''}`);
 ---
-<Legacy critical="release" title={release.data.title} image={release.data.cover} description={plainText(`${release.data.catalog ? `${release.data.catalog} · ` : ''}${release.data.title} – ${release.data.label}. ${release.data.tracks.map((t) => [t.artist, t.title].filter(Boolean).join(' – ')).filter(Boolean).join(' / ')} ${release.body ?? ''}`)} bodyClass={`wp-singular release-template-default single single-release postid-${release.data.wpId}`}>
-	<div id="qwjquerycontent">
-		<ReleaseBlock release={release} />
-	</div>
-	<RelatedCarousel heading="Releases" dataItems={4} nav="1" size="gridthumb" linkClass="cmblink "
-		items={related.map((r) => ({ href: `/release/${r.id}/`, image: r.data.cover, title: r.data.title }))} />
-</Legacy>
+<Redesign title={r.title} description={description} image={r.cover}>
+	<main>
+		<section class="latest release-head" style={`--cover:url("${r.cover}")`}>
+			<div class="latest-bg" aria-hidden="true"></div>
+			<div class="words" aria-hidden="true">{words.slice(0, 4).map((w, i) => <span style={`--r:${[-6, 3, -2, 5][i]}deg`}>{w}</span>)}</div>
+			<div class="wrap latest-grid">
+				<RCard href={r.cover} src={r.cover} width={900} height={900} eager class="latest-cover"
+					label={[r.catalog, r.label].filter(Boolean).join(' · ')} />
+				<div class="latest-info" data-reveal>
+					<p class="crumb"><a href="/releases/">Releases</a></p>
+					<p class="kicker">{r.label}{r.date && ` · ${fmtDate(r.date)}`}</p>
+					<h1 class="headline">{r.title}</h1>
+					{(artists.length > 0 || r.genres.length > 0) && (
+						<p class="chips">
+							{artists.map((a) => <a class="chip" href={`/artist/${a.id}/`}>{artistName(a.data.name).name}</a>)}
+							{r.genres.map((g) => <span class="chip ghost">{genreName(g)}</span>)}
+						</p>
+					)}
+					<RTracks release={release} buy />
+					{r.buyLinks.length > 0 && (
+						<div class="actions">{r.buyLinks.map((b, i) => <a class={`btn${i ? ' ghost' : ''}`} href={b.url} target="_blank" rel="noopener">{b.label || 'Buy'}</a>)}</div>
+					)}
+				</div>
+			</div>
+		</section>
+
+		{(hasBody || videos.length > 0) && (
+			<section class="block">
+				<div class="wrap narrow">
+					{hasBody && (
+						<div class="prose" data-reveal><Body entry={release} /></div>
+					)}
+					{videos.map((v) => (
+						<div class="dicular-embed dicular-embed-video" data-embed-src={`https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0`} data-reveal>
+							<div>
+								<a href={`https://www.youtube.com/watch?v=${v.id}`} class="btn dicular-embed-load" target="_blank" rel="noopener">▶ {v.title}</a>
+								<p>Loads YouTube. Data is then sent to YouTube — see our <a href="/privacy-policy/">privacy policy</a>.</p>
+							</div>
+						</div>
+					))}
+				</div>
+			</section>
+		)}
+
+		{related.length > 0 && (
+			<section class="block">
+				<div class="wrap">
+					<h2 class="section-title" data-reveal>More Releases</h2>
+					<div class="cards">
+						{related.map((x, i) => <RCard href={`/release/${x.id}/`} src={thumb(x.data.cover, 'gridthumb')} label={x.data.title} tilt={i % 2 ? 'r' : 'l'} delay={(i % 4) * 80} />)}
+					</div>
+					<p class="more" data-reveal><a class="btn ghost" href="/releases/">Alle Releases</a></p>
+				</div>
+			</section>
+		)}
+	</main>
+</Redesign>

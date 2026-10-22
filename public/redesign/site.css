@@ -173,6 +173,55 @@ a { color: inherit; }
 [data-reveal] { opacity: 0; translate: 0 -28px; transition: opacity .9s ease, translate .9s var(--ease); transition-delay: var(--d, 0ms); }
 [data-reveal].in { opacity: 1; translate: 0 0; }
 
+/* ---------------------------------------------------------------- Unterseiten (Release, Artist) */
+.chrome-nav a[aria-current="page"]::after { left: 0; right: 0; }
+.chrome-text { margin: 0; }
+.crumb { margin: 0 0 18px; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; }
+.crumb a { text-decoration: none; opacity: .75; }
+.crumb a::before { content: "← "; }
+.crumb a:hover { opacity: 1; color: var(--light); }
+.release-head, .artist-head { padding-top: clamp(120px, 14vw, 180px); }
+.release-head h1.headline { font-size: clamp(32px, 4.4vw, 58px); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
+.chip { padding: 4px 12px; background: var(--blue); color: #fff; font-weight: 600; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; transition: background .2s; }
+a.chip:hover { background: #33709f; }
+.chip.ghost { background: transparent; box-shadow: inset 0 0 0 1px rgba(223, 231, 236, .35); color: var(--light); }
+.track-name { flex: 1; min-width: 0; }
+.track-buy { flex: none; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; padding: 4px 10px; box-shadow: inset 0 0 0 1px var(--blue); }
+.track-buy:hover { background: var(--blue); color: #fff; }
+.play.none { border-color: rgba(173, 173, 173, .25); }
+.wrap.narrow { width: min(820px, 100% - 32px); }
+.prose { color: var(--text); }
+.prose p, .prose div[dir] { margin: 0 0 1em; }
+.prose strong, .prose b { color: var(--light); font-weight: 500; }
+.prose a { color: var(--green); }
+.prose img { height: auto; margin: 1.2em 0; box-shadow: 0 12px 30px rgba(0, 0, 0, .45); transform: rotate(-1.5deg); }
+.prose ul { padding-left: 1.2em; }
+.prose blockquote { margin: 1.2em 0; padding-left: 1em; border-left: 4px solid var(--blue); color: var(--light); }
+.artist-head .latest-grid { grid-template-columns: minmax(0, 4fr) minmax(0, 6fr); }
+.artist-name { font-weight: 600; text-transform: uppercase; font-size: clamp(38px, 5.6vw, 82px); line-height: 1; letter-spacing: .04em; margin: 4px 0 22px; }
+.jump { display: flex; flex-wrap: wrap; gap: 10px; }
+.jump a { padding: 8px 16px; font-weight: 600; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; color: var(--light); box-shadow: inset 0 0 0 2px var(--blue); transition: background .2s; }
+.jump a:hover { background: var(--blue); }
+.booking { display: grid; grid-template-columns: max-content 1fr; gap: 10px 24px; margin: 0; }
+.booking dt { color: var(--green); font-weight: 500; letter-spacing: .1em; text-transform: uppercase; font-size: 15px; }
+.booking dd { margin: 0; color: var(--light); overflow-wrap: anywhere; }
+.booking a { color: var(--light); }
+#custom { margin-top: clamp(50px, 7vw, 80px); }
+.card-empty { display: block; aspect-ratio: 1; background: radial-gradient(circle, var(--petrol-2), var(--deep)); }
+.portrait .card-empty { aspect-ratio: 4 / 5; }
+[id] { scroll-margin-top: 90px; }
+
+/* Zwei-Klick-Player (YouTube, SoundCloud) */
+.dicular-embed { position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px; margin: 0 0 24px;
+  background: radial-gradient(circle at 50% 40%, var(--petrol-2), var(--deep) 75%); box-shadow: inset 0 0 0 2px var(--blue); }
+.dicular-embed-video { aspect-ratio: 16 / 9; }
+.dicular-embed p { margin: 12px 0 0; font-size: 14px; }
+.dicular-embed p a { color: var(--green); }
+.dicular-embed.loaded { padding: 0; box-shadow: none; }
+.dicular-embed iframe { display: block; width: 100%; height: 100%; border: 0; }
+.dicular-embed[data-embed-height] iframe { height: auto; }
+
 /* ---------------------------------------------------------------- Player-Leiste */
 .playerbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(160px, 2fr) auto; align-items: center; gap: 18px;
   padding: 10px clamp(16px, 4vw, 48px); background: rgba(0, 24, 35, .9); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
@@ -222,7 +271,9 @@ a { color: inherit; }
 /* ---------------------------------------------------------------- Handy / Tablet */
 @media (max-width: 900px) {
   .cards, .cards.artists { grid-template-columns: repeat(2, 1fr); }
-  .latest-grid, .split-grid { grid-template-columns: 1fr; }
+  .latest-grid, .split-grid, .artist-head .latest-grid { grid-template-columns: 1fr; }
+  .artist-head .latest-cover { width: min(340px, 85%); justify-self: center; }
+  .booking { grid-template-columns: 1fr; gap: 2px; } .booking dd { margin-bottom: 12px; }
   .words { inset: 0; justify-content: flex-start; padding-top: 40px; }
   .menu-toggle { display: block; grid-column: 3; justify-self: end; font: 600 15px Dosis, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--light); background: none; border: 1px solid rgba(223, 231, 236, .4); padding: 6px 12px; }
   .top .nav { position: fixed; inset: 68px 0 auto; flex-direction: column; align-items: center; gap: 18px; padding: 24px; background: rgba(0, 20, 30, .96); display: none; }

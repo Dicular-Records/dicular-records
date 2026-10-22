@@ -1,10 +1,12 @@
 ---
-// Redesign-Entwurf Startseite (Zweig redesign). Eigenes, schlankes Markup statt Sonik-Theme-Rahmen.
-// DNA: Petrol/Blau/Grün, Dosis, rundes Metall-Logo. Vorbild Darstellung: roofrecords.de (schräge Karten, Namensbalken,
-// gestapelte Wörter, sanftes Einblenden). Umschalter für Logo-Drehung und Menü-Abgrenzung (Entscheidung mit Tomtron).
+// Redesign-Entwurf Startseite (Zweig redesign). DNA: Petrol/Blau/Grün, Dosis, rundes Metall-Logo.
+// Vorbild Darstellung: roofrecords.de (schräge Karten, Namensbalken, gestapelte Wörter, sanftes Einblenden).
+import Redesign from '../../layouts/Redesign.astro';
+import RCard from '../../components/RCard.astro';
+import RTracks from '../../components/RTracks.astro';
 import { releasesSorted, artistsSorted, eventsSorted, newsSorted, fmtShort, plainText } from '../../lib/content';
 import { thumb, audio } from '../../lib/media';
-import site from '../../data/site.json';
+import { artistName } from '../../lib/redesign';
 
 const releases = await releasesSorted();
 const latest = releases[0];
@@ -13,35 +15,13 @@ const artists = await artistsSorted();
 const events = (await eventsSorted()).reverse().slice(0, 4);
 const news = (await newsSorted()).slice(0, 3);
 const today = new Date();
-const shortName = (n: string) => n.split(' / ')[0].trim();
-const tracks = latest.data.tracks.filter((t) => t.mp3).map((t) => ({ title: t.title || latest.data.title, artist: t.artist, src: audio(t.mp3)! }));
 const radio = releases.flatMap((r) => r.data.tracks.filter((t) => t.mp3).map((t) => ({ title: t.title || r.data.title, artist: t.artist, src: audio(t.mp3)! })));
 const words = ['Progressive', 'Trance', 'House', 'Techno'];
-const menu = [['Releases', '/releases/'], ['News', '/dicular-rec-news/'], ['Artists', '/artists/'], ['Events', '/gigs/'], ['Friends', '/friends/'], ['Team', '/team/'], ['About Us', '/about/'], ['Contact', '/sample-page/']];
 const logo = '/wp-content/uploads/2022/01/Logo_Dicular-Rec-Metal-600x600-2.png';
 const day = (d: Date) => d.toLocaleDateString('en-GB', { day: '2-digit', timeZone: 'UTC' });
 const mon = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 ---
-<!doctype html>
-<html lang="en">
-<head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<meta name="robots" content="noindex" />
-	<title>Entwurf Startseite | {site.name}</title>
-	<link rel="icon" href={site.favicon} />
-	<link rel="stylesheet" href="/redesign/entwurf.css" />
-</head>
-<body class="logo-coin sep-a">
-	<!-- Kopfleiste: kleines Logo + Menü im Chrome-Look; Abgrenzung je nach Variante (sep-a/b/c) -->
-	<header class="top" id="top">
-		<a href="/" class="top-logo" aria-label="Dicular Records – Startseite"><img src={logo} alt="" width="40" height="40" /></a>
-		<button class="menu-toggle" aria-expanded="false" aria-controls="nav">Menu</button>
-		<nav class="nav chrome-nav" id="nav" aria-label="Hauptmenü">
-			{menu.map(([label, href], i) => <a href={href} style={`--i:${i}`}>{label}</a>)}
-		</nav>
-	</header>
-
+<Redesign title="Startseite" intro>
 	<!-- Intro: Logo wie im Filmvorspann -->
 	<section class="intro" id="intro">
 		<div class="intro-logo" id="introLogo">
@@ -59,19 +39,12 @@ const mon = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
 			<div class="latest-bg" aria-hidden="true"></div>
 			<div class="words" aria-hidden="true">{words.map((w, i) => <span style={`--r:${[-6, 3, -2, 5][i]}deg`}>{w}</span>)}</div>
 			<div class="wrap latest-grid">
-				<a href={`/release/${latest.id}/`} class="card tilt-l latest-cover" data-reveal>
-					<img src={latest.data.cover} alt={latest.data.title} width="900" height="900" />
-					<span class="namebar">{latest.data.catalog ? `${latest.data.catalog} · ` : ''}New Release</span>
-				</a>
+				<RCard href={`/release/${latest.id}/`} src={latest.data.cover} width={900} height={900} eager class="latest-cover"
+					label={`${latest.data.catalog ? `${latest.data.catalog} · ` : ''}New Release`} />
 				<div class="latest-info" data-reveal>
 					<p class="kicker">Out now on {latest.data.label}</p>
 					<h2 class="headline">{latest.data.title}</h2>
-					<ol class="tracks">
-						{tracks.map((t, i) => (
-							<li><button class="play" data-src={t.src} data-title={t.title} aria-label={`${t.title} abspielen`}><i></i></button>
-								<span><strong>{t.title}</strong>{t.artist && <em>{t.artist}</em>}</span></li>
-						))}
-					</ol>
+					<RTracks release={latest} />
 					<div class="actions">
 						<a class="btn" href={`/release/${latest.id}/`}>Zum Release</a>
 						{latest.data.buyLinks[0] && <a class="btn ghost" href={latest.data.buyLinks[0].url} target="_blank" rel="noopener">{latest.data.buyLinks[0].label || 'Buy'}</a>}
@@ -85,12 +58,7 @@ const mon = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
 			<div class="wrap">
 				<h2 class="section-title" data-reveal>Releases</h2>
 				<div class="cards">
-					{more.map((r, i) => (
-						<a href={`/release/${r.id}/`} class={`card ${i % 2 ? 'tilt-r' : 'tilt-l'}`} data-reveal style={`--d:${(i % 4) * 80}ms`}>
-							<img src={thumb(r.data.cover, 'gridthumb')} alt={r.data.title} width="500" height="500" loading="lazy" />
-							<span class="namebar">{r.data.title}</span>
-						</a>
-					))}
+					{more.map((r, i) => <RCard href={`/release/${r.id}/`} src={thumb(r.data.cover, 'gridthumb')} label={r.data.title} tilt={i % 2 ? 'r' : 'l'} delay={(i % 4) * 80} />)}
 				</div>
 				<p class="more" data-reveal><a class="btn ghost" href="/releases/">Alle Releases</a></p>
 			</div>
@@ -115,12 +83,7 @@ const mon = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
 			<div class="wrap">
 				<h2 class="section-title" data-reveal>Artists</h2>
 				<div class="cards artists">
-					{artists.map((a, i) => (
-						<a href={`/artist/${a.id}/`} class={`card portrait ${[' tilt-l', ' tilt-r', ' tilt-s'][i % 3]}`} data-reveal style={`--d:${(i % 4) * 80}ms`}>
-							<img src={a.data.photo} alt={shortName(a.data.name)} loading="lazy" />
-							<span class="namebar">{shortName(a.data.name)}</span>
-						</a>
-					))}
+					{artists.map((a, i) => <RCard href={`/artist/${a.id}/`} src={a.data.photo} label={artistName(a.data.name).name} portrait tilt={(['l', 'r', 's'] as const)[i % 3]} delay={(i % 4) * 80} />)}
 				</div>
 			</div>
 		</section>
@@ -154,35 +117,4 @@ const mon = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
 			</div>
 		</section>
 	</main>
-
-	<footer class="foot">
-		<img src={logo} alt="" width="64" height="64" />
-		<p class="social">{site.social.map((s) => <a href={s.href} target="_blank" rel="noopener">{s.icon.replace('qticon-', '')}</a>)}</p>
-		<p class="legal"><a href="/impressum/">Impressum</a> · <a href="/privacy-policy/">Privacy Policy</a></p>
-		<p class="copy">© {new Date().getFullYear()} Dicular Records</p>
-	</footer>
-
-	<audio id="player" preload="none"></audio>
-	<!-- Player-Leiste: erscheint, sobald etwas läuft (Release-Tracks oder Radio) -->
-	<div class="playerbar" id="playerbar" hidden>
-		<div class="pb-buttons">
-			<button class="pb-prev" id="pbPrev" aria-label="Vorheriger Track"><i></i></button>
-			<button class="pb-toggle" id="pbToggle" aria-label="Abspielen/Pause"><i></i></button>
-			<button class="pb-next" id="pbNext" aria-label="Nächster Track"><i></i></button>
-		</div>
-		<div class="pb-info"><strong id="pbTitle"></strong><em id="pbArtist"></em></div>
-		<div class="pb-time"><span id="pbCur">0:00</span><input type="range" id="pbSeek" min="0" max="1000" value="0" aria-label="Position im Track" /><span id="pbDur">0:00</span></div>
-		<span class="pb-source" id="pbSource"></span>
-	</div>
-
-	<!-- Umschalter nur im Entwurf: Varianten vergleichen (Yoka/Tomtron) -->
-	<details class="switcher" id="switcher" open aria-label="Entwurf-Varianten">
-		<summary>Entwurf</summary>
-		<div><span>Logo</span><button data-set="logo" data-val="coin">Münze</button><button data-set="logo" data-val="record">Schallplatte</button></div>
-		<div><span>Abgrenzung</span><button data-set="sep" data-val="a" title="Nur Raum, Milchglas beim Scrollen">A</button><button data-set="sep" data-val="b" title="Chrome-Lichtkante">B</button><button data-set="sep" data-val="c" title="Weicher Schatten">C</button></div>
-		<div><button data-replay>Intro nochmal</button></div>
-	</details>
-
-	<script is:inline src="/redesign/entwurf.js"></script>
-</body>
-</html>
+</Redesign>
