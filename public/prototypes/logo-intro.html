@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo-Intro – Prototyp</title>
+<style>
+  /* Prototyp Redesign: filmisches Einblenden des runden Logos + gelegentlicher Glanz. Farben/Schrift = Dicular-DNA. */
+  @font-face { font-family: Dosis; font-weight: 200; src: url(/wp-content/fonts/dosis/HhyJU5sn9vOmLxNkIwRSjTVNWLEJt7Ml2xMCbKsUPpjl.woff) format("woff"); }
+  @font-face { font-family: Dosis; font-weight: 600; src: url(/wp-content/fonts/dosis/HhyJU5sn9vOmLxNkIwRSjTVNWLEJ6bQl2xMCbKsUPpjl.woff) format("woff"); }
+  :root { --petrol: #00283a; --deep: #000c12; --blue: #2a5982; --text: #adadad; --logo: url(/wp-content/uploads/2022/01/Logo_Dicular-Rec-Metal-600x600-2.png); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--deep); color: var(--text); font-family: Dosis, sans-serif; overflow: hidden; }
+
+  .stage { position: relative; height: 100vh; display: grid; place-items: center; align-content: center; gap: 4vh;
+    background: radial-gradient(ellipse at 50% 45%, var(--petrol) 0%, #001a26 45%, var(--deep) 80%); perspective: 1400px; }
+  /* Lichtkegel von oben, wie ein Scheinwerfer im Kino */
+  .stage::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+    background: radial-gradient(ellipse 40% 55% at 50% 30%, rgba(160, 200, 230, .16), transparent 70%);
+    animation: spot 2.4s ease-out .3s forwards; }
+  @keyframes spot { to { opacity: 1; } }
+
+  .logo { position: relative; width: min(46vmin, 380px); aspect-ratio: 1; transform-style: preserve-3d; opacity: 0; }
+  .logo img { width: 100%; height: 100%; display: block; filter: drop-shadow(0 18px 40px rgba(0, 0, 0, .55)); }
+  /* Glanz: Lichtstreifen nur auf den Metallflächen (Maske = Logo selbst) */
+  .shine { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+    -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat;
+    background: linear-gradient(120deg, transparent 38%, rgba(255, 255, 255, .0) 42%, rgba(255, 255, 255, .85) 50%, rgba(255, 255, 255, 0) 58%, transparent 62%) no-repeat;
+    background-size: 300% 300%; background-position: 120% 120%; }
+
+  /* Variante Münze: dreht um die senkrechte Achse */
+  .coin .logo { animation: coinIn 2.8s cubic-bezier(.16, 1, .3, 1) .5s forwards; }
+  @keyframes coinIn {
+    0%   { opacity: 0; transform: translateZ(-600px) rotateY(-540deg) scale(.6); filter: blur(14px) brightness(.25); }
+    35%  { opacity: 1; }
+    100% { opacity: 1; transform: translateZ(0) rotateY(0) scale(1); filter: blur(0) brightness(1); }
+  }
+  /* Variante Schallplatte: dreht in der Fläche */
+  .record .logo { animation: recordIn 2.8s cubic-bezier(.16, 1, .3, 1) .5s forwards; }
+  @keyframes recordIn {
+    0%   { opacity: 0; transform: rotate(-420deg) scale(.55); filter: blur(14px) brightness(.25); }
+    35%  { opacity: 1; }
+    100% { opacity: 1; transform: rotate(0) scale(1); filter: blur(0) brightness(1); }
+  }
+  /* nach dem Einblenden: erster Glanz, dann alle 7 s wieder */
+  .done .shine { animation: sweep 7s ease-in-out infinite; }
+  @keyframes sweep {
+    0%, 70% { background-position: 120% 120%; }
+    92%, 100% { background-position: -20% -20%; }
+  }
+  /* kurzer Lichtblitz in dem Moment, in dem das Logo zum Stehen kommt */
+  .flash { position: absolute; inset: -20%; border-radius: 50%; pointer-events: none; opacity: 0;
+    background: radial-gradient(circle, rgba(200, 225, 245, .35), transparent 60%); }
+  .done .flash { animation: flash 1.2s ease-out; }
+  @keyframes flash { 0% { opacity: 0; transform: scale(.7); } 25% { opacity: 1; } 100% { opacity: 0; transform: scale(1.25); } }
+
+  /* Wortmarke wie ein Filmtitel: Buchstaben rücken zusammen */
+  .title { margin: 0; font-weight: 600; font-size: clamp(22px, 4.2vw, 46px); color: #dfe7ec; text-align: center;
+    letter-spacing: .9em; opacity: 0; text-transform: uppercase; padding-left: .9em;
+    animation: titleIn 2.2s cubic-bezier(.2, .8, .2, 1) 2.4s forwards; }
+  @keyframes titleIn { to { letter-spacing: .32em; padding-left: .32em; opacity: 1; } }
+  .bar { width: 0; height: 4px; background: var(--blue); margin: -2vh auto 0; animation: bar 1s ease-out 3.6s forwards; }
+  @keyframes bar { to { width: 120px; } }
+
+  .controls { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; z-index: 2; }
+  .controls button { font: 600 14px Dosis, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #fff;
+    background: rgba(42, 89, 130, .35); border: 1px solid var(--blue); padding: 8px 14px; cursor: pointer; }
+  .controls button[aria-pressed="true"] { background: var(--blue); }
+  .hint { position: fixed; top: 16px; left: 16px; font-size: 13px; opacity: .6; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .logo, .title, .bar { animation: none !important; opacity: 1; transform: none; filter: none; letter-spacing: .32em; width: 120px; }
+    .done .shine, .done .flash, .stage::before { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="hint">Prototyp Logo-Intro · Redesign Dicular Records</div>
+  <main class="stage coin" id="stage">
+    <div class="logo" id="logo">
+      <img src="/wp-content/uploads/2022/01/Logo_Dicular-Rec-Metal-600x600-2.png" alt="Dicular Records">
+      <div class="shine"></div>
+      <div class="flash"></div>
+    </div>
+    <h1 class="title">Dicular Records</h1>
+    <div class="bar"></div>
+  </main>
+  <div class="controls">
+    <button type="button" data-variant="coin" aria-pressed="true">Münze</button>
+    <button type="button" data-variant="record" aria-pressed="false">Schallplatte</button>
+    <button type="button" data-replay>Nochmal</button>
+  </div>
+<script>
+  // Variante wählen und Ablauf neu starten; nach dem Einblenden setzt "done" Glanz und Lichtblitz in Gang
+  const stage = document.getElementById('stage'), logo = document.getElementById('logo');
+  let variant = 'coin';
+  function play() {
+    stage.className = 'stage';
+    void stage.offsetWidth; // Animationen zurücksetzen
+    stage.className = 'stage ' + variant;
+  }
+  logo.addEventListener('animationend', (e) => { if (e.target === logo) stage.classList.add('done'); });
+  document.querySelectorAll('[data-variant]').forEach((b) => b.addEventListener('click', () => {
+    variant = b.dataset.variant;
+    document.querySelectorAll('[data-variant]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    play();
+  }));
+  document.querySelector('[data-replay]').addEventListener('click', play);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) stage.classList.add('done');
+</script>
+</body>
+</html>
