@@ -245,6 +245,18 @@ a.chip:hover { background: #33709f; }
 .gig-row:hover { padding-left: 12px; background: linear-gradient(90deg, rgba(42, 89, 130, .25), transparent); }
 .gig-row .date { padding: 10px 0; }
 .gig-row .date b { font-size: 34px; }
+/* Mixes: Zeile wie Gigs, rechts „Play“; nach dem Klick spannt der SoundCloud-Player über die ganze Zeile */
+.mix-list { list-style: none; margin: 0; padding: 0; }
+.mix-row { display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; gap: 22px; align-items: center; padding: 18px 0; border-bottom: 1px solid rgba(173, 173, 173, .15); transition: background .25s; }
+.mix-row:hover { background: linear-gradient(90deg, rgba(42, 89, 130, .2), transparent); }
+.mix-row .date b { font-size: 34px; }
+.mix-row .gig strong { font-size: 22px; }
+.mix-row .gig-day a { color: inherit; text-decoration: none; }
+.mix-row .gig-day a:hover { text-decoration: underline; }
+.dicular-embed.mix-embed { margin: 0; padding: 0; min-height: 0; background: none; box-shadow: none; }
+.dicular-embed.mix-embed.loaded { grid-column: 1 / -1; height: 166px; }
+.mix-note { margin: 18px 0 0; font-size: 14px; }
+.mix-note a { color: var(--green); }
 .gig-flyer img { width: 96px; height: 96px; object-fit: cover; transform: rotate(-3deg); box-shadow: 0 8px 20px rgba(0, 0, 0, .45); transition: transform .25s; }
 .gig-row:hover .gig-flyer img { transform: rotate(0); }
 .gig .gig-day { display: block; color: var(--green); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
@@ -335,6 +347,9 @@ a.chip:hover { background: #33709f; }
   .gig-row { grid-template-columns: 70px minmax(0, 1fr) auto; gap: 14px; }
   .gig-flyer { display: none; }
   .gig-row .gig strong { font-size: 18px; }
+  .mix-row { grid-template-columns: 70px minmax(0, 1fr); gap: 14px; }
+  .mix-row .gig strong { font-size: 18px; }
+  .dicular-embed.mix-embed { grid-column: 2; justify-content: flex-start; }
   .booking { grid-template-columns: 1fr; gap: 2px; } .booking dd { margin-bottom: 12px; }
   .words { inset: 0; justify-content: flex-start; padding-top: 40px; }
   .menu-toggle { display: block; grid-column: 3; justify-self: end; font: 600 15px Dosis, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--light); background: none; border: 1px solid rgba(223, 231, 236, .4); padding: 6px 12px; }

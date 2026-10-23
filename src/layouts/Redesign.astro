@@ -15,7 +15,7 @@ const { title, description = site.description, image = site.shareImage, intro = 
 const fullTitle = intro ? site.name : `${title} | ${site.name}`;
 const shareImage = new URL(image, Astro.site).href;
 const logo = '/wp-content/uploads/2022/01/Logo_Dicular-Rec-Metal-600x600-2.png';
-const menu = [['Releases', '/releases/'], ['Digital', '/dicular-digital/'], ['News', '/dicular-rec-news/'], ['Artists', '/artists/'], ['Events', '/gigs/'], ['Friends', '/friends/'], ['Team', '/team/'], ['About Us', '/about/'], ['Contact', '/sample-page/']];
+const menu = [['Releases', '/releases/'], ['Digital', '/dicular-digital/'], ['Mixes', '/mixes/'], ['News', '/dicular-rec-news/'], ['Artists', '/artists/'], ['Events', '/gigs/'], ['Friends', '/friends/'], ['Team', '/team/'], ['About Us', '/about/'], ['Contact', '/sample-page/']];
 const path = Astro.url.pathname;
 ---
 <!doctype html>

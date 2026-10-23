@@ -1,0 +1,39 @@
+---
+// Redesign: Liste von SoundCloud-Mixen — Datum, Titel, Artists, Ort/Länge, rechts „Play“.
+// Zwei-Klick: erst der Klick lädt den SoundCloud-Player in die Zeile (public/redesign/site.js).
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { artistName } from '../lib/redesign';
+
+interface Props {
+  mixes: CollectionEntry<'mixes'>[];
+  /** Artists mit Link anzeigen (auf der Artist-Seite nur die übrigen Beteiligten) */
+  exceptArtist?: string;
+}
+const { mixes, exceptArtist } = Astro.props;
+const names = new Map((await getCollection('artists')).map((a) => [a.id, artistName(a.data.name).name]));
+const day = (d: Date) => d.toLocaleDateString('en-GB', { day: '2-digit', timeZone: 'UTC' });
+const mon = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const len = (m?: number) => (m ? (m >= 60 ? `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')} min` : `${m} min`) : '');
+const src = (url: string) => `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%232a5982&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&visual=false`;
+---
+<ul class="mix-list">
+	{mixes.map((m, i) => {
+		const others = m.data.artists.filter((a) => a.id !== exceptArtist);
+		return (
+			<li class="mix-row" data-reveal style={`--d:${(i % 4) * 60}ms`}>
+				<span class="date"><b>{day(m.data.date)}</b>{mon(m.data.date)}</span>
+				<span class="gig">
+					{others.length > 0 && (
+						<em class="gig-day">{others.map((a, j) => <Fragment>{j > 0 && ' & '}<a href={`/artist/${a.id}/`}>{names.get(a.id) ?? a.id}</a></Fragment>)}</em>
+					)}
+					<strong>{m.data.title}</strong>
+					<em>{[m.data.location, len(m.data.duration)].filter(Boolean).join(' · ')}</em>
+				</span>
+				<div class="dicular-embed mix-embed" data-embed-src={src(m.data.url)} data-embed-height="166">
+					<a href={m.data.url} class="btn dicular-embed-load" target="_blank" rel="noopener" aria-label={`Play ${m.data.title} (loads SoundCloud)`}>▶ Play</a>
+				</div>
+			</li>
+		);
+	})}
+</ul>
+<p class="mix-note" data-reveal>Play loads the SoundCloud player. Data is then sent to SoundCloud, see our <a href="/privacy-policy/">privacy policy</a>.</p>

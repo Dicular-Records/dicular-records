@@ -151,4 +151,20 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { releases, artists, news, events, friends, pages };
+/** DJ-Mixe von der Dicular-SoundCloud-Seite (Seite /mixes/ und Abschnitt „Mixes“ auf den Artist-Seiten) */
+const mixes = defineCollection({
+  loader: md('mixes'),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    /** SoundCloud-Link des Mixes */
+    url: z.string().url(),
+    /** Länge in Minuten */
+    duration: z.number().optional(),
+    artists: z.array(reference('artists')).default([]),
+    /** Ort/Anlass, z. B. Club oder Radio */
+    location: z.string().optional(),
+  }),
+});
+
+export const collections = { releases, artists, news, events, friends, pages, mixes };

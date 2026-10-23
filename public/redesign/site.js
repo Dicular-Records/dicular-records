@@ -93,7 +93,7 @@
     var frame = document.createElement('iframe');
     frame.src = box.getAttribute('data-embed-src');
     frame.allow = 'autoplay; encrypted-media; fullscreen'; frame.allowFullscreen = true;
-    if (h) frame.height = h;
+    if (h) { frame.height = h; frame.style.height = h + 'px'; }
     box.innerHTML = ''; box.classList.add('loaded'); box.appendChild(frame);
     if (!player.paused) player.pause(); // eigene Musik anhalten
   });

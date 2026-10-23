@@ -1,11 +1,12 @@
 ---
 // Redesign: Artist-Seite. Kopf mit schrägem Foto + Namensbalken, Name in Chrome, Rollen/Herkunft, Sprungmarken;
-// darunter Biografie, Releases, SoundCloud (Zwei-Klick), Booking, eigener Abschnitt, weitere Artists.
+// darunter Biografie, Releases, Mixes, SoundCloud (Zwei-Klick), Booking, eigener Abschnitt, weitere Artists.
 import { getCollection } from 'astro:content';
 import Redesign from '../../layouts/Redesign.astro';
 import RCard from '../../components/RCard.astro';
 import Body from '../../components/RBody.astro';
 import SoundCloud from '../../components/SoundCloud.astro';
+import RMixes from '../../components/RMixes.astro';
 import { releasesSorted, relatedArtists, plainText } from '../../lib/content';
 import { thumb } from '../../lib/media';
 import { sanitizeArtistHtml as clean } from '../../lib/sanitize';
@@ -21,6 +22,8 @@ const { name, roles } = artistName(a.name);
 const origin = cleanSubtitle(a.subtitle);
 // Releases, an denen der Artist beteiligt ist (im Original nur bei gesetztem „Music“-Titel sichtbar)
 const music = (await releasesSorted()).filter((r) => r.data.artists.some((ref) => ref.id === artist.id));
+// Mixe von der Dicular-SoundCloud-Seite, an denen der Artist beteiligt ist (neueste zuerst)
+const mixes = (await getCollection('mixes')).filter((m) => m.data.artists.some((ref) => ref.id === artist.id)).sort((x, y) => +y.data.date - +x.data.date);
 const musicTitle = a.music?.title || 'Releases';
 const related = (await relatedArtists(artist)).filter((x) => x.id !== artist.id).slice(0, 4);
 // Artist-Genres haben in WordPress keinen eigenen Anzeigenamen → Kürzel lesbar machen
@@ -28,6 +31,7 @@ const genreName = (g: string) => (taxonomies.genre as Record<string, string>)[g]
 const sections = [
   { id: 'bio', label: 'Biography' },
   ...(music.length ? [{ id: 'music', label: musicTitle }] : []),
+  ...(mixes.length ? [{ id: 'mixes', label: 'Mixes' }] : []),
   ...(a.soundcloud.length ? [{ id: 'soundcloud', label: 'SoundCloud' }] : []),
   ...(a.booking.length ? [{ id: 'booking', label: 'Booking' }] : []),
   ...(a.custom?.title ? [{ id: 'custom', label: a.custom.title }] : []),
@@ -63,6 +67,16 @@ const sections = [
 					<div class="cards">
 						{music.map((r, i) => <RCard href={`/release/${r.id}/`} src={thumb(r.data.cover, 'gridthumb')} label={r.data.title} tilt={i % 2 ? 'r' : 'l'} delay={(i % 4) * 80} />)}
 					</div>
+				</div>
+			</section>
+		)}
+
+		{mixes.length > 0 && (
+			<section class="block" id="mixes">
+				<div class="wrap">
+					<h2 class="section-title" data-reveal>Mixes</h2>
+					<RMixes mixes={mixes} exceptArtist={artist.id} />
+					<p class="more" data-reveal><a class="btn ghost" href="/mixes/">All Mixes</a></p>
 				</div>
 			</section>
 		)}

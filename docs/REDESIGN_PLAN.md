@@ -83,6 +83,14 @@ Gemeinsamer Rahmen `src/layouts/Redesign.astro` (Kopfleiste, Chrome-Menü, Fußz
 - Login unter https://dicular.provolution.org/admin/ über die GitHub-OAuth-App „Dicular Records CMS“ der Organisation, Netlify als Login-Dienst (DEC Nr. 48). Decap schreibt in `redesign`. Rezept: `docs/RECIPES/decap-online.md`.
 - Login getestet (Yoka, 2026-10-23): klappt. Offen: Tomtron als Mitglied einladen (GitHub-Name fehlt noch).
 
+## Mixes (2026-10-23)
+
+- Neuer Menüpunkt **Mixes** → `/mixes/`: 19 DJ-Sets und Promo-Mixe von soundcloud.com/dicular-records (alle Uploads ab 75 Min.; die 30 Uploads mit 4–9 Min. sind Tracks und bleiben draußen). Zeile wie bei Gigs (Datum, Artist, Titel, Ort, Länge), rechts „Play“ lädt den SoundCloud-Player in die Zeile (Zwei-Klick).
+- Jeder Mix ist Artists zugeordnet und erscheint zusätzlich als Abschnitt „Mixes“ auf deren Artist-Seite. **Yokachina-Mixe bei Yoka und bei Kachina** (Wunsch Yoka, es gibt kein eigenes Yokachina-Profil). Sirikit b2b Oli Inkognito nur bei Oli (Sirikit hat kein Profil).
+- Inhalte in `src/content/mixes/`, pflegbar in Decap (Sammlung „Mixes“, Artists per Auswahl).
+- Nebenbei behoben: Zwei-Klick-Player waren 150 px statt 166 px hoch (`site.js`).
+- Geprüft: alle 108 Seiten der Sitemap × Desktop/Handy; einziger Befund die alte 1:1-Startseite `/` (fehlendes WordPress-Skript, betrifft das Redesign nicht, `/` leitet auf `/entwurf/`). Player in Chrome getestet.
+
 ## DNA, die bleibt
 
 - Farben: Petrol `#00283a`, Akzent Blau `#2a5982`, Akzent Grün `#2cc894`, Text `#adadad`

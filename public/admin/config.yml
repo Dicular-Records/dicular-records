@@ -129,6 +129,24 @@ collections:
       - { name: listOrder, widget: hidden, required: false }
       - { name: format, widget: hidden, required: false }
 
+  - name: mixes
+    label: Mixes
+    label_singular: Mix
+    description: "DJ-Sets und Promo-Mixe von SoundCloud. Erscheinen auf /mixes/ und bei den zugeordneten Artists."
+    folder: src/content/mixes
+    create: true
+    slug: '{{slug}}'
+    summary: '{{title}} ({{date}})'
+    preview_path: 'mixes/'
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Titel, widget: string }
+      - { name: date, label: Datum, widget: datetime, time_format: false, date_format: "DD.MM.YYYY", format: "YYYY-MM-DD" }
+      - { name: url, label: SoundCloud-Link, widget: string, pattern: ['^https://(www\.|on\.)?soundcloud\.com/', 'Bitte einen soundcloud.com-Link eintragen'] }
+      - { name: artists, label: Artists, widget: relation, collection: artists, value_field: '{{slug}}', search_fields: [name], display_fields: [name], multiple: true, hint: "Der Mix erscheint auf der Seite jedes gewählten Artists" }
+      - { name: duration, label: "Länge (Minuten)", widget: number, value_type: int, required: false }
+      - { name: location, label: "Ort / Anlass", widget: string, required: false, hint: "z. B. Club Z, Köln" }
+
   - name: news
     label: News
     label_singular: Beitrag
