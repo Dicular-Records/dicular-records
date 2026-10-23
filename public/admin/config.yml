@@ -6,7 +6,9 @@
 backend:
   name: github
   repo: Dicular-Records/dicular-records
-  branch: main
+  # Zweig redesign = Vorschau dicular.provolution.org (Login über Netlify mit der GitHub-OAuth-App der Organisation).
+  # Beim Livegang zurück auf main stellen.
+  branch: redesign
   commit_messages:
     create: 'Neu: {{collection}} „{{slug}}“'
     update: 'Geändert: {{collection}} „{{slug}}“'
@@ -17,7 +19,7 @@ publish_mode: editorial_workflow
 # Lokal testen ohne GitHub-Login: `npx decap-server` starten, dann /admin/ öffnen
 local_backend: true
 locale: de
-site_url: https://dicular-records.com
+site_url: https://dicular.provolution.org
 logo_url: /wp-content/uploads/2022/01/cropped-Logo_Dicular-Rec-Metal-600x600-2.png
 
 # Vorschau im Editor aus: die echte Seite zeigt der Vorschau-Link (Netlify) — 1:1 im Original-Design
