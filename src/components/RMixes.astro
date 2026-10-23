@@ -6,7 +6,7 @@ import { artistName } from '../lib/redesign';
 
 interface Props {
   mixes: CollectionEntry<'mixes'>[];
-  /** Artists mit Link anzeigen (auf der Artist-Seite nur die übrigen Beteiligten) */
+  /** dieser Artist wird in der Zeile nicht genannt (eigene Seite), nur die übrigen Beteiligten */
   exceptArtist?: string;
 }
 const { mixes, exceptArtist } = Astro.props;

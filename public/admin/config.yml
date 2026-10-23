@@ -132,12 +132,11 @@ collections:
   - name: mixes
     label: Mixes
     label_singular: Mix
-    description: "DJ-Sets und Promo-Mixe von SoundCloud. Erscheinen auf /mixes/ und bei den zugeordneten Artists."
+    description: "DJ-Sets und Promo-Mixe von SoundCloud. Erscheinen auf der Seite jedes zugeordneten Artists (Abschnitt „Mixes“)."
     folder: src/content/mixes
     create: true
     slug: '{{slug}}'
     summary: '{{title}} ({{date}})'
-    preview_path: 'mixes/'
     sortable_fields: [date, title]
     fields:
       - { name: title, label: Titel, widget: string }

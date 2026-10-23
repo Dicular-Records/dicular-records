@@ -151,7 +151,7 @@ const pages = defineCollection({
   }),
 });
 
-/** DJ-Mixe von der Dicular-SoundCloud-Seite (Seite /mixes/ und Abschnitt „Mixes“ auf den Artist-Seiten) */
+/** DJ-Mixe von der Dicular-SoundCloud-Seite (Abschnitt „Mixes“ auf den Artist-Seiten) */
 const mixes = defineCollection({
   loader: md('mixes'),
   schema: z.object({

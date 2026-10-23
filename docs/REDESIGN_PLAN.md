@@ -85,11 +85,12 @@ Gemeinsamer Rahmen `src/layouts/Redesign.astro` (Kopfleiste, Chrome-Menü, Fußz
 
 ## Mixes (2026-10-23)
 
-- Neuer Menüpunkt **Mixes** → `/mixes/`: 19 DJ-Sets und Promo-Mixe von soundcloud.com/dicular-records (alle Uploads ab 75 Min.; die 30 Uploads mit 4–9 Min. sind Tracks und bleiben draußen). Zeile wie bei Gigs (Datum, Artist, Titel, Ort, Länge), rechts „Play“ lädt den SoundCloud-Player in die Zeile (Zwei-Klick).
-- Jeder Mix ist Artists zugeordnet und erscheint zusätzlich als Abschnitt „Mixes“ auf deren Artist-Seite. **Yokachina-Mixe bei Yoka und bei Kachina** (Wunsch Yoka, es gibt kein eigenes Yokachina-Profil). Sirikit b2b Oli Inkognito nur bei Oli (Sirikit hat kein Profil).
+- 19 DJ-Sets und Promo-Mixe von soundcloud.com/dicular-records (alle Uploads ab 75 Min.; die 30 Uploads mit 4–9 Min. sind Tracks und bleiben draußen). Zeile wie bei Gigs (Datum, Titel, Ort, Länge, beteiligte Artists), rechts „Play“ lädt den SoundCloud-Player in die Zeile (Zwei-Klick).
+- **Kein eigener Menüpunkt, keine Seite /mixes/** (Yoka 2026-10-23: Tomtron möchte das nicht). Die Mixe stehen nur auf den Artist-Seiten.
+- Jeder Mix ist Artists zugeordnet und erscheint als Abschnitt „Mixes“ auf deren Artist-Seite (nach Biografie und Releases). **Yokachina-Mixe bei Yoka und bei Kachina** (Wunsch Yoka, es gibt kein eigenes Yokachina-Profil). Sirikit b2b Oli Inkognito nur bei Oli (Sirikit hat kein Profil).
 - Inhalte in `src/content/mixes/`, pflegbar in Decap (Sammlung „Mixes“, Artists per Auswahl).
 - Nebenbei behoben: Zwei-Klick-Player waren 150 px statt 166 px hoch (`site.js`).
-- Geprüft: alle 108 Seiten der Sitemap × Desktop/Handy; einziger Befund die alte 1:1-Startseite `/` (fehlendes WordPress-Skript, betrifft das Redesign nicht, `/` leitet auf `/entwurf/`). Player in Chrome getestet.
+- Geprüft: alle 107 Seiten der Sitemap × Desktop/Handy; einziger Befund die alte 1:1-Startseite `/` (fehlendes WordPress-Skript, betrifft das Redesign nicht, `/` leitet auf `/entwurf/`). Player in Chrome getestet.
 
 ## DNA, die bleibt
 
