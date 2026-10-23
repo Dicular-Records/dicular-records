@@ -81,7 +81,7 @@ Gemeinsamer Rahmen `src/layouts/Redesign.astro` (Kopfleiste, Chrome-Menü, Fußz
 
 - Repo öffentlich (DEC Nr. 47, Secret-Prüfung der ganzen Historie ohne Befund). Netlify ist jetzt mit dem Repo verbunden und baut den Zweig `redesign` automatisch (keine PR-Vorschauen, Guthaben knapp).
 - Login unter https://dicular.provolution.org/admin/ über die GitHub-OAuth-App „Dicular Records CMS“ der Organisation, Netlify als Login-Dienst (DEC Nr. 48). Decap schreibt in `redesign`. Rezept: `docs/RECIPES/decap-online.md`.
-- Offen: Login-Test durch Yoka, Tomtron als Mitglied einladen (GitHub-Name fehlt noch).
+- Login getestet (Yoka, 2026-10-23): klappt. Offen: Tomtron als Mitglied einladen (GitHub-Name fehlt noch).
 
 ## DNA, die bleibt
 
