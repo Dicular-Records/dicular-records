@@ -125,3 +125,7 @@ Ladegewicht vorher → nachher (lokal, unkomprimiert; `scripts/page-weight.mjs`)
 | # | Entscheidung | Begründung |
 |---|---|---|
 | 46 | Instagram-Link in der Fußzeile auf **instagram.com/dicular_records_official/** korrigiert (beide Fassungen). Damit weicht die 1:1-Fassung hier bewusst von der Live-Seite ab. | Hinweis Yoka (2026-10-22): Live verlinkt auf ein falsches Profil (`dicular_records`). |
+
+| # | Entscheidung | Begründung |
+|---|---|---|
+| 47 | Das Repository **darf öffentlich sein** (Yoka, 2026-10-23). Umstellung erst beim Rechte-Setup, vorher Prüfung auf Vertrauliches (Secrets, private Notizen). | GitHub erzwingt Schutzregeln (Branch-Schutz, CODEOWNERS-Freigaben) bei privaten Repos nur im kostenpflichtigen Team-Tarif, bei öffentlichen kostenlos. Die Inhalte sind ohnehin öffentlich auf der Website, und Zugangsdaten liegen nie im Repo. |
