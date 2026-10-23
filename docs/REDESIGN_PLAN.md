@@ -77,6 +77,12 @@ Gemeinsamer Rahmen `src/layouts/Redesign.astro` (Kopfleiste, Chrome-Menü, Fußz
 - Offen: Hörprobe/MP3, genaues Datum, Release-Links der Shops (dann `upcoming` aus), Original-Logodatei von Tomtron.
 - Geprüft: alle 106 Seiten der Sitemap × Desktop/Handy ohne Befund.
 
+## Decap online (2026-10-23)
+
+- Repo öffentlich (DEC Nr. 47, Secret-Prüfung der ganzen Historie ohne Befund). Netlify ist jetzt mit dem Repo verbunden und baut den Zweig `redesign` automatisch (keine PR-Vorschauen, Guthaben knapp).
+- Login unter https://dicular.provolution.org/admin/ über die GitHub-OAuth-App „Dicular Records CMS“ der Organisation, Netlify als Login-Dienst (DEC Nr. 48). Decap schreibt in `redesign`. Rezept: `docs/RECIPES/decap-online.md`.
+- Offen: Login-Test durch Yoka, Tomtron als Mitglied einladen (GitHub-Name fehlt noch).
+
 ## DNA, die bleibt
 
 - Farben: Petrol `#00283a`, Akzent Blau `#2a5982`, Akzent Grün `#2cc894`, Text `#adadad`

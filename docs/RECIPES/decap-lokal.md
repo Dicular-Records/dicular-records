@@ -14,4 +14,4 @@ In der Claude-App: Startkonfigurationen `redesign-dev` und `decap-redesign`.
 **Stolpersteine:**
 - Im Entwicklungsserver nur `/admin/index.html`, nicht `/admin/` (im fertigen Build geht beides).
 - Lokaler Betrieb schreibt ohne Rückfrage in die Dateien; die „Veröffentlichen“-Stufen (Entwurf → Prüfung → Bereit) gibt es erst mit Online-Login.
-- **Online-Zugang** (Tomtron, Artists): braucht den GitHub-Login über einen Login-Dienst (geplant: PHP-Skript auf dem Plesk-Server, DEC Nr. 30) — wird beim Rechte-Setup eingerichtet.
+- **Online-Zugang** (Tomtron, Artists): für die Vorschau eingerichtet, siehe `decap-online.md`. Beim Livegang auf Plesk: Login-Dienst per PHP (DEC Nr. 30).
