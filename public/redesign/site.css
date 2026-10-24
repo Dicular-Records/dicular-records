@@ -327,7 +327,7 @@ a.chip:hover { background: #33709f; }
 .playerbar:not([hidden]) ~ .switcher { bottom: 84px; }
 
 /* ---------------------------------------------------------------- Umschalter (nur Entwurf) */
-.switcher { position: fixed; right: 16px; bottom: 16px; z-index: 30; padding: 10px 12px; background: rgba(0, 15, 23, .88); border: 1px solid var(--blue);
+.switcher { position: fixed; left: 16px; bottom: 16px; z-index: 30; padding: 10px 12px; background: rgba(0, 15, 23, .88); border: 1px solid var(--blue);
   font-size: 13px; display: grid; gap: 6px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
 .switcher summary { cursor: pointer; color: var(--green); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
 .switcher[open] summary { margin-bottom: 4px; }
@@ -358,7 +358,7 @@ a.chip:hover { background: #33709f; }
   .top-logo { opacity: 1; transform: none; }
   .namebar { font-size: 14px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
   .radio-inner { flex-direction: column; text-align: center; }
-  .switcher { right: 12px; bottom: 12px; }
+  .switcher { left: 12px; bottom: 12px; }
   .playerbar { grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; }
   .pb-time { grid-column: 1 / -1; } .pb-source { display: none; }
   .playerbar:not([hidden]) ~ .switcher { bottom: 120px; }
