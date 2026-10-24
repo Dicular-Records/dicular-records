@@ -89,11 +89,11 @@ const mon = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
 			</div>
 		</section>
 
-		<!-- Gigs + News -->
+		<!-- Events + News -->
 		<section class="block split">
 			<div class="wrap split-grid">
 				<div data-reveal>
-					<h2 class="section-title">Gigs</h2>
+					<h2 class="section-title">Events</h2>
 					<ul class="gigs">
 						{events.map((e) => (
 							<li><a href={`/event/${e.id}/`}>

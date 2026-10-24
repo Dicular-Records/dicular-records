@@ -1,5 +1,5 @@
 ---
-// Redesign: Gigs/Events — kommende Termine zuerst (aufsteigend), danach vergangene (neueste zuerst).
+// Redesign: Events (Adresse bleibt /gigs/) — kommende Termine zuerst (aufsteigend), danach vergangene (neueste zuerst).
 import Redesign from '../../layouts/Redesign.astro';
 import RPageHead from '../../components/RPageHead.astro';
 import { eventsSorted, plainText } from '../../lib/content';
@@ -17,9 +17,9 @@ const groups = [
   { title: 'Past', items: past, empty: '' },
 ];
 ---
-<Redesign title="Gigs" description="Gigs and events by Dicular Records">
+<Redesign title="Events" description="Events and gigs by Dicular Records">
 	<main>
-		<RPageHead title="Gigs" kicker="Dicular Events" intro={upcoming.length ? `${upcoming.length} upcoming ${upcoming.length === 1 ? 'event' : 'events'}.` : 'Label nights, club shows and open airs.'} image={(upcoming[0] ?? past[0])?.data.image} />
+		<RPageHead title="Events" kicker="Dicular Records" intro={upcoming.length ? `${upcoming.length} upcoming ${upcoming.length === 1 ? 'event' : 'events'}.` : 'Label nights, club shows and open airs.'} image={(upcoming[0] ?? past[0])?.data.image} />
 		{groups.filter((g) => g.items.length || g.empty).map((g) => (
 			<section class="block">
 				<div class="wrap">
