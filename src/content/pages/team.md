@@ -1,4 +1,5 @@
 ---
+editable: true
 title: Team
 wpId: 3582
 template: default

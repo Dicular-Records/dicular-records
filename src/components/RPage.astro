@@ -15,7 +15,7 @@ const title = entry.id === 'my-charts-2' ? 'Dicular Digital' : p.title;
 ---
 <Redesign title={title} description={plainText(entry.body)} image={p.image}>
 	<main>
-		<RPageHead title={title} kicker={kicker[entry.id]} image={p.image ?? p.headerImage} />
+		<RPageHead title={title} kicker={p.kicker ?? kicker[entry.id]} image={p.image ?? p.headerImage} />
 		<section class="block">
 			<div class={`wrap narrow page-${entry.id}`}>
 				<div class="prose" data-reveal><RBody entry={entry} /></div>

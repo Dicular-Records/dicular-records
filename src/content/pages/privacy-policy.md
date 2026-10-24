@@ -1,4 +1,5 @@
 ---
+editable: true
 title: Privacy Policy
 wpId: 3
 template: default

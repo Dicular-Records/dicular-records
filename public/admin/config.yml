@@ -146,6 +146,47 @@ collections:
       - { name: duration, label: "Länge (Minuten)", widget: number, value_type: int, required: false }
       - { name: location, label: "Ort / Anlass", widget: string, required: false, hint: "z. B. Club Z, Köln" }
 
+  - name: pages
+    label: Seiten
+    label_singular: Seite
+    description: "Textseiten wie About, Team, Impressum, und neue eigene Seiten. Eine neue Seite erscheint unter /<name>/. Damit sie im Menü steht, danach unter „Menü“ eintragen."
+    folder: src/content/pages
+    create: true
+    delete: false
+    filter: { field: editable, value: true }
+    slug: '{{slug}}'
+    summary: '{{title}}  ·  /{{filename}}/'
+    preview_path: '{{slug}}/'
+    fields:
+      - { name: title, label: Titel, widget: string }
+      - { name: kicker, label: "Zeile über dem Titel", widget: string, required: false, hint: "optional, z. B. „Dicular Records“" }
+      - { name: image, label: Kopfbild, widget: image, required: false, hint: "optional, erscheint unscharf hinter dem Titel" }
+      - { name: body, label: Text, widget: htmlrich }
+      - { name: editable, widget: hidden, default: true }
+      - { name: template, widget: hidden, default: default }
+      - { name: format, widget: hidden, default: html }
+      - { name: wpId, widget: hidden, required: false }
+      - { name: headerImage, widget: hidden, required: false }
+      - { name: customCss, widget: hidden, required: false }
+
+  - name: settings
+    label: Menü
+    description: "Hauptmenü oben. Reihenfolge per Ziehen ändern."
+    files:
+      - name: menu
+        label: Hauptmenü
+        file: src/data/hauptmenue.json
+        fields:
+          - name: items
+            label: Menüpunkte
+            label_singular: Menüpunkt
+            widget: list
+            summary: '{{fields.label}}'
+            fields:
+              - { name: label, label: Beschriftung, widget: string }
+              - { name: page, label: "Seite (aus „Seiten“)", widget: relation, collection: pages, value_field: '{{slug}}', search_fields: [title], display_fields: [title], required: false, hint: "Entweder eine Seite wählen …" }
+              - { name: link, label: "… oder Adresse", widget: string, required: false, hint: "z. B. /releases/ oder https://… (wird nur genutzt, wenn keine Seite gewählt ist)" }
+
   - name: news
     label: News
     label_singular: Beitrag

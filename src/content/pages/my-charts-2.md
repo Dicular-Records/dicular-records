@@ -1,4 +1,5 @@
 ---
+editable: true
 title: DICULAR DIGITAL
 wpId: 3236
 template: default

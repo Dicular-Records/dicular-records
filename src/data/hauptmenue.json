@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "label": "Releases",
+      "link": "/releases/"
+    },
+    {
+      "label": "Digital",
+      "link": "/dicular-digital/"
+    },
+    {
+      "label": "News",
+      "link": "/dicular-rec-news/"
+    },
+    {
+      "label": "Artists",
+      "link": "/artists/"
+    },
+    {
+      "label": "Events",
+      "link": "/gigs/"
+    },
+    {
+      "label": "Friends",
+      "link": "/friends/"
+    },
+    {
+      "label": "Team",
+      "page": "team"
+    },
+    {
+      "label": "About Us",
+      "page": "about"
+    },
+    {
+      "label": "Contact",
+      "page": "sample-page"
+    }
+  ]
+}

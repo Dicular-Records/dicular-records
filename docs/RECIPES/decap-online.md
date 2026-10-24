@@ -15,6 +15,11 @@
 - `public/admin/config.yml`: `branch: redesign`, `site_url: https://dicular.provolution.org`. Decap nimmt als Login-Dienst automatisch `api.netlify.com`.
 - Netlify ist mit dem Repo verbunden (Zweig `redesign`, keine Vorschau-Builds für Pull Requests), um Build-Guthaben zu sparen.
 
+**Neue Seite mit Menüpunkt:**
+1. „Seiten“ → „+ Seite“: Titel, Text, optional Kopfbild → speichern und veröffentlichen. Die Seite liegt dann unter `/<name>/` (Name aus dem Titel).
+2. „Menü“ → „Hauptmenü“ → „Menüpunkt hinzufügen“: Beschriftung eintragen, bei „Seite“ die neue Seite wählen, an die gewünschte Stelle ziehen → veröffentlichen.
+Menüpunkte können statt einer Seite auch eine Adresse haben (z. B. `/releases/` oder einen externen Link).
+
 **Neue Person freischalten:** https://github.com/orgs/Dicular-Records/people → „Invite member“ → GitHub-Name eintragen → Rolle „Member“; danach im Repo Schreibrecht geben (Repo → Settings → Collaborators and teams).
 
 **Stolpersteine:**

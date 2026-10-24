@@ -1,4 +1,5 @@
 ---
+editable: true
 title: Contact
 wpId: 2
 template: default

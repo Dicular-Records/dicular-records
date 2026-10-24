@@ -1,4 +1,5 @@
 ---
+editable: true
 title: About Us
 wpId: 4177
 template: default

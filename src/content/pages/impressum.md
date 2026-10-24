@@ -1,4 +1,5 @@
 ---
+editable: true
 title: Impressum
 wpId: 3513
 template: page-composer

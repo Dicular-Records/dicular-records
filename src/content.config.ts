@@ -135,7 +135,11 @@ const pages = defineCollection({
   loader: md('pages'),
   schema: z.object({
     title: z.string(),
-    wpId: z.number(),
+    wpId: z.number().optional(),
+    /** Zeile über dem Titel (neue Seiten aus Decap) */
+    kicker: z.string().optional(),
+    /** in Decap unter „Seiten“ bearbeitbar */
+    editable: z.boolean().default(false),
     template: z.string().default('default'),
     /** Beitragsbild (WordPress "featured image") */
     image: z.string().optional(),
@@ -148,7 +152,7 @@ const pages = defineCollection({
     heroLogo: z.string().optional(),
     featuredRelease: reference('releases').optional(),
     format,
-  }),
+  }).transform(withId((d) => d.title)),
 });
 
 /** DJ-Mixe von der Dicular-SoundCloud-Seite (Abschnitt „Mixes“ auf den Artist-Seiten) */

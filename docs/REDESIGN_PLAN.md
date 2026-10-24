@@ -92,6 +92,13 @@ Gemeinsamer Rahmen `src/layouts/Redesign.astro` (Kopfleiste, Chrome-Menü, Fußz
 - Nebenbei behoben: Zwei-Klick-Player waren 150 px statt 166 px hoch (`site.js`).
 - Geprüft: alle 107 Seiten der Sitemap × Desktop/Handy; einziger Befund die alte 1:1-Startseite `/` (fehlendes WordPress-Skript, betrifft das Redesign nicht, `/` leitet auf `/entwurf/`). Player in Chrome getestet.
 
+## Seiten und Menü in Decap (2026-10-24)
+
+- **Menü** kommt aus `src/data/hauptmenue.json` (nur Redesign; `menu.json` bleibt für die 1:1-Fassung). Decap: Bereich „Menü“, Einträge mit Beschriftung und entweder Seite (Auswahl) oder Adresse, Reihenfolge per Ziehen.
+- **Seiten**: Decap-Bereich „Seiten“ zeigt About, Team, Contact, Impressum, Privacy Policy, Dicular Digital (Feld `editable: true`) und neue Seiten. Neue Seite erscheint unter `/<name>/` im Textseiten-Design (Titel, optionale Zeile darüber, Kopfbild, Text). Löschen in Decap aus (Impressum/Datenschutz schützen).
+- „Gigs“ heißt überall „Events“ (Adresse bleibt `/gigs/`).
+- Geprüft: Testseite + Menüpunkt gebaut und in Decap angezeigt, danach wieder entfernt; alle 107 Seiten × Desktop/Handy ohne neuen Befund.
+
 ## DNA, die bleibt
 
 - Farben: Petrol `#00283a`, Akzent Blau `#2a5982`, Akzent Grün `#2cc894`, Text `#adadad`
