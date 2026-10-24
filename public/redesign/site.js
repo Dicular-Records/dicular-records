@@ -49,7 +49,8 @@
   // ------------------------------------------------ Kopfleiste: Startseite ab Ende des Intros, Unterseiten immer „gescrollt“
   var intro = $('intro');
   if (intro) {
-    var onScroll = function () { body.classList.toggle('scrolled', scrollY > intro.offsetHeight - 90); };
+    // „glass“: sobald gescrollt wird, Milchglas unter dem Menü, damit das Intro-Logo darunter verschwindet
+    var onScroll = function () { body.classList.toggle('scrolled', scrollY > intro.offsetHeight - 90); body.classList.toggle('glass', scrollY > 8); };
     addEventListener('scroll', onScroll, { passive: true }); onScroll();
   }
 
