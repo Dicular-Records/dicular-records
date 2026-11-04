@@ -6,9 +6,9 @@
 backend:
   name: github
   repo: Dicular-Records/dicular-records
-  # Zweig redesign = Vorschau dicular.provolution.org (Login über Netlify mit der GitHub-OAuth-App der Organisation).
-  # Beim Livegang zurück auf main stellen.
-  branch: redesign
+  # Zweig redesign-v2 = zweite Fassung; V1 (Zweig redesign, Vorschau dicular.provolution.org) bleibt unberührt.
+  # Beim Livegang auf main stellen.
+  branch: redesign-v2
   commit_messages:
     create: 'Neu: {{collection}} „{{slug}}“'
     update: 'Geändert: {{collection}} „{{slug}}“'

@@ -3,6 +3,8 @@
 // Startseite mit Logo-Intro (intro), Unterseiten mit sofort sichtbarer Kopfleiste.
 import site from '../data/site.json';
 import menuData from '../data/hauptmenue.json';
+import { getCollection } from 'astro:content';
+import { coverColor } from '../lib/cover-color';
 
 interface Props {
   title: string;
@@ -11,8 +13,12 @@ interface Props {
   image?: string;
   /** Startseite: Logo-Intro statt fertiger Kopfleiste */
   intro?: boolean;
+  /** V2: Farbe der Seite (sonst die des neuesten erschienenen Releases) */
+  accent?: string;
 }
-const { title, description = site.description, image = site.shareImage, intro = false } = Astro.props;
+const { title, description = site.description, image = site.shareImage, intro = false, accent } = Astro.props;
+const newest = (await getCollection('releases')).filter((r) => !r.data.upcoming && r.data.date).sort((a, b) => +b.data.date! - +a.data.date!)[0];
+const pageColor = accent ?? await coverColor(newest?.data.cover);
 const fullTitle = intro ? site.name : `${title} | ${site.name}`;
 const shareImage = new URL(image, Astro.site).href;
 const logo = '/wp-content/uploads/2022/01/Logo_Dicular-Rec-Metal-600x600-2.png';
@@ -22,7 +28,7 @@ const menu = (menuData.items as { label: string; page?: string; link?: string }[
 const path = Astro.url.pathname;
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" style={`--c:${pageColor}`}>
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -35,8 +41,10 @@ const path = Astro.url.pathname;
 	<meta name="twitter:card" content="summary_large_image" />
 	<link rel="icon" href={site.favicon} />
 	<link rel="stylesheet" href="/redesign/site.css" />
+	<link rel="stylesheet" href="/v2/site.css" />
 </head>
 <body class={`logo-coin sep-a ${intro ? 'home' : 'sub scrolled intro-done'}`}>
+	<div id="atmos" aria-hidden="true"></div>
 	<header class="top" id="top">
 		<a href={intro ? '#intro' : '/entwurf/'} class="top-logo" aria-label="Dicular Records – Home"><img src={logo} alt="" width="40" height="40" /></a>
 		<button class="menu-toggle" aria-expanded="false" aria-controls="nav">Menu</button>
@@ -76,5 +84,6 @@ const path = Astro.url.pathname;
 	</details>
 
 	<script is:inline src="/redesign/site.js"></script>
+	<script is:inline src="/v2/site.js"></script>
 </body>
 </html>

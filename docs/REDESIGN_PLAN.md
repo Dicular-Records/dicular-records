@@ -99,6 +99,18 @@ Gemeinsamer Rahmen `src/layouts/Redesign.astro` (Kopfleiste, Chrome-Menü, Fußz
 - „Gigs“ heißt überall „Events“ (Adresse bleibt `/gigs/`).
 - Geprüft: Testseite + Menüpunkt gebaut und in Decap angezeigt, danach wieder entfernt; alle 107 Seiten × Desktop/Handy ohne neuen Befund.
 
+## V2 (ab 2026-11-04): Das Cover bestimmt die Farbe
+
+Yoka und Tomtron möchten mehr Abstand zum Ursprungsdesign, bei erhaltener Seele. **V1 bleibt unverändert** (Tag `redesign-v1`, Zweig `redesign`, https://dicular.provolution.org/). V2 ist ein Klon: Zweig `redesign-v2`, Ordner `Dicular-Records-Redesign-V2`, Vorschau https://v2--dicular-redesign.netlify.app/ (von Hand hochgeladen, Rezept unten).
+
+- Richtung: Empfehlung C auf Basis von A, von Yoka bestätigt. Fast schwarzer Grund, Chrome-Logo als Lichtquelle, die Cover färben die Seite.
+- `src/lib/cover-color.ts` berechnet beim Bauen die Akzentfarbe je Cover. `--c` färbt Knöpfe, Akzente und das Licht im Hintergrund; `public/v2/site.js` blendet beim Scrollen und beim Darüberfahren um. Standardfarbe aller Seiten: neuestes erschienenes Release; Release-Seiten: ihr eigenes Cover.
+- Schrift Archivo breit und fett (`public/v2/fonts`), statt Dosis. Keine schrägen Karten, keine blauen Balken.
+- Startseite neu: Logo-Intro, neuestes Release randlos, drei große Releases im Wechsel, Cover-Raster ohne Abstände, Radio, Artists als große Namen mit Foto beim Darüberfahren, Events + News.
+- Unterseiten: nur über `public/v2/site.css` umgefärbt, noch nicht neu aufgebaut. Nächster Schritt, wenn die Startseite gefällt.
+- Decap schreibt in V2 auf `redesign-v2`. Online-Login auf der V2-Adresse noch nicht getestet.
+- Hochladen: `npm run build`, dann `npx netlify-cli deploy --dir=dist --alias=v2 --site=9251de6c-30e3-4be7-9ce8-235074d2249e --no-build`. Nie `--prod`, das würde V1 ersetzen.
+
 ## DNA, die bleibt
 
 - Farben: Petrol `#00283a`, Akzent Blau `#2a5982`, Akzent Grün `#2cc894`, Text `#adadad`

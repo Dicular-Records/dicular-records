@@ -1,6 +1,7 @@
 ---
 // Redesign: Release-Seite. Kopf wie „Neuestes Release“ der Startseite (Cover schräg, Genre-Wörter, Punktraster),
 // darunter Text, Videos (Zwei-Klick), Artists des Releases und weitere Releases.
+import { coverColor } from '../../lib/cover-color';
 import { getCollection, getEntries } from 'astro:content';
 import Redesign from '../../layouts/Redesign.astro';
 import RCard from '../../components/RCard.astro';
@@ -32,7 +33,7 @@ const videos = r.tracks.filter((t) => youtubeId(t.video)).map((t) => ({ id: yout
 const hasBody = (release.body ?? '').replace(/<[^>]+>|&nbsp;|\s/g, '').length > 0;
 const description = plainText(`${r.catalog ? `${r.catalog} · ` : ''}${r.title} – ${r.label}. ${release.body ?? ''}`);
 ---
-<Redesign title={r.title} description={description} image={r.cover}>
+<Redesign title={r.title} description={description} image={r.cover} accent={await coverColor(r.cover)}>
 	<main>
 		<section class="latest release-head" style={`--cover:url("${r.cover}")`}>
 			<div class="latest-bg" aria-hidden="true"></div>
