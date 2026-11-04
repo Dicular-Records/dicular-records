@@ -27,6 +27,7 @@ const mon = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: '
 // Katalognummer steht schon in der Zeile darüber
 const cleanTitle = (t: string) => t.replace(/^DIC[\s_-]?\d+[\s_:-]*/i, '').replace(/\s+DIC\d+$/i, '').replace(/_/g, ' ');
 const size = (t: string) => (cleanTitle(t).length > 34 ? 'v2-title long' : 'v2-title');
+const fit = (t: string) => `--w:${Math.max(...cleanTitle(t).split(/\s+/).map((w) => w.length))}`;
 ---
 <Redesign title="Startseite" intro accent={latestColor}>
 	<!-- Intro: Logo wie im Filmvorspann -->
@@ -45,7 +46,7 @@ const size = (t: string) => (cleanTitle(t).length > 34 ? 'v2-title long' : 'v2-t
 			<a class="v2-hero-cover" href={`/release/${latest.id}/`}><img src={latest.data.cover} alt={latest.data.title} width="1000" height="1000" fetchpriority="high" /></a>
 			<div class="v2-hero-info" data-reveal>
 				<p class="kicker">{latest.data.catalog ? `${latest.data.catalog} · ` : ''}Out now on {latest.data.label}</p>
-				<h2 class={size(latest.data.title)}>{cleanTitle(latest.data.title)}</h2>
+				<h2 class={size(latest.data.title)} style={fit(latest.data.title)}>{cleanTitle(latest.data.title)}</h2>
 				<RTracks release={latest} />
 				<div class="actions">
 					<a class="btn" href={`/release/${latest.id}/`}>View Release</a>
@@ -61,7 +62,7 @@ const size = (t: string) => (cleanTitle(t).length > 34 ? 'v2-title long' : 'v2-t
 					<div class="v2-band-cover" data-reveal><img src={r.data.cover} alt="" width="900" height="900" loading="lazy" /></div>
 					<div class="v2-band-info" data-reveal>
 						<p class="kicker">{r.data.upcoming ? 'Coming soon' : r.data.catalog ?? r.data.label}</p>
-						<h2 class={size(r.data.title)}>{cleanTitle(r.data.title)}</h2>
+						<h2 class={size(r.data.title)} style={fit(r.data.title)}>{cleanTitle(r.data.title)}</h2>
 					</div>
 				</a>
 			))}

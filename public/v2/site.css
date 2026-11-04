@@ -70,8 +70,8 @@ a.chip:hover { background: var(--light); }
 .v2-hero-cover { display: block; position: relative; overflow: hidden; }
 .v2-hero-cover img { width: 100%; height: 100%; min-height: 50vw; object-fit: cover; }
 .v2-hero-info { display: flex; flex-direction: column; justify-content: center; padding: clamp(90px, 9vw, 130px) clamp(20px, 5vw, 80px) clamp(40px, 5vw, 80px); min-width: 0; }
-.v2-title { margin: 0 0 clamp(24px, 3vw, 40px); color: var(--light); font-stretch: var(--wide); font-weight: 800; letter-spacing: -.015em; line-height: .98; overflow-wrap: break-word; text-transform: uppercase; font-size: clamp(30px, 4.8vw, 84px); }
-.v2-title.long { font-size: clamp(24px, 3.1vw, 54px); line-height: 1.04; }
+.v2-title { margin: 0 0 clamp(24px, 3vw, 40px); color: var(--light); font-stretch: var(--wide); font-weight: 800; letter-spacing: -.015em; line-height: .98; overflow-wrap: break-word; text-transform: uppercase; font-size: min(clamp(30px, 4.8vw, 84px), calc(43vw / var(--w, 8))); } /* --w: längstes Wort, passt so immer in die Spalte */
+.v2-title.long { font-size: min(clamp(24px, 3.1vw, 54px), calc(43vw / var(--w, 8))); line-height: 1.04; }
 
 /* Weitere Releases: abwechselnd links und rechts, jedes färbt die Seite */
 .v2-band { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; gap: clamp(20px, 4vw, 70px); padding: clamp(50px, 7vw, 110px) 0; text-decoration: none; }
@@ -80,8 +80,8 @@ a.chip:hover { background: var(--light); }
 .v2-band:nth-child(even) .v2-band-info { text-align: right; padding: 0 0 0 clamp(20px, 5vw, 80px); }
 .v2-band-cover img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
 .v2-band-info { padding: 0 clamp(20px, 5vw, 80px) 0 0; min-width: 0; }
-.v2-band .v2-title { font-size: clamp(26px, 3.1vw, 58px); margin-bottom: 14px; transition: color .3s; }
-.v2-band .v2-title.long { font-size: clamp(22px, 2.3vw, 40px); }
+.v2-band .v2-title { font-size: min(clamp(26px, 3.1vw, 58px), calc(35vw / var(--w, 8))); margin-bottom: 14px; transition: color .3s; }
+.v2-band .v2-title.long { font-size: min(clamp(22px, 2.3vw, 40px), calc(35vw / var(--w, 8))); }
 .v2-band:hover .v2-title { color: var(--c); }
 
 /* Katalog: Cover randlos aneinander */
@@ -118,5 +118,7 @@ a.chip:hover { background: var(--light); }
   .v2-band:nth-child(even) .v2-band-info, .v2-band-info { text-align: left; padding: 0 20px; }
   .v2-grid { grid-template-columns: repeat(2, 1fr); }
   .intro-title { font-size: 16px; }
+  .v2-title, .v2-band .v2-title { font-size: min(clamp(30px, 8vw, 64px), calc((100vw - 40px) / var(--w, 8) / .95)); }
+  .v2-title.long, .v2-band .v2-title.long { font-size: min(clamp(24px, 6vw, 48px), calc((100vw - 40px) / var(--w, 8) / .95)); }
 }
 @media (prefers-reduced-motion: reduce) { :root { transition: none; } }
