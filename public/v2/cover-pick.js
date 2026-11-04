@@ -90,14 +90,15 @@
   // Menü-Ideen vergleichen; gilt auch auf den Unterseiten
   var menus = document.querySelectorAll('[data-menu]');
   function setMenu(m) {
-    ['b', 'c', 'd', 'e'].forEach(function (x) { root.classList.toggle('menu-' + x, x === m); });
+    ['b', 'c', 'd', 'e', 'f'].forEach(function (x) { root.classList.toggle('menu-' + x, x === m); });
     root.classList.toggle('menu-a', m === 'a' || m === 'e'); // E baut auf dem Ring auf
     menus.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.menu === m)); });
     document.getElementById('nav').classList.remove('open');
     store.set('v2-menu', m);
+    document.dispatchEvent(new Event('v2-menu'));
   }
   menus.forEach(function (b) { b.addEventListener('click', function (e) { e.preventDefault(); setMenu(b.dataset.menu); }); });
-  setMenu(['e', 'b', 'c', 'd', 'a'].filter(function (x) { return root.classList.contains('menu-' + x); })[0] || 'a');
+  setMenu(['e', 'f', 'b', 'c', 'd', 'a'].filter(function (x) { return root.classList.contains('menu-' + x); })[0] || 'a');
 
   var wanted = new URLSearchParams(location.search).get('aktuell') || store.get('v2-aktuell');
   show(wanted && byId[wanted] ? wanted : original);
