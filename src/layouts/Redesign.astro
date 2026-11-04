@@ -43,7 +43,7 @@ const path = Astro.url.pathname;
 	<link rel="stylesheet" href="/redesign/site.css" />
 	<link rel="stylesheet" href="/v2/site.css" />
 	<!-- Nur Entwurf: im Menü „Cover wählen“ gesetzte Farbe gilt auch auf Seiten ohne eigenes Cover -->
-	<script is:inline>try { var m = new URLSearchParams(location.search).get("menu") || localStorage.getItem("v2-menu") || "b"; document.documentElement.classList.add("menu-" + m); var c = localStorage.getItem("v2-aktuell-c"); if (c && !("ownAccent" in document.documentElement.dataset)) document.documentElement.style.setProperty("--c", c); } catch (e) {}</script>
+	<script is:inline>try { var m = new URLSearchParams(location.search).get("menu") || localStorage.getItem("v2-menu") || "a"; document.documentElement.classList.add("menu-" + m); if (m === "e") document.documentElement.classList.add("menu-a"); var c = localStorage.getItem("v2-aktuell-c"); if (c && !("ownAccent" in document.documentElement.dataset)) document.documentElement.style.setProperty("--c", c); } catch (e) {}</script>
 </head>
 <body class={`logo-coin sep-a ${intro ? 'home' : 'sub scrolled intro-done'}`}>
 	<div id="atmos" aria-hidden="true"><div id="rille"><div class="r-chrome"><i></i></div></div></div>

@@ -37,7 +37,7 @@ body { background: transparent; font: 400 17px/1.6 Archivo, sans-serif; }
 .v2-title, .v2-head .section-title { filter: drop-shadow(0 2px 14px rgba(0, 0, 0, .8)); }
 
 /* Nur Entwurf: Menü „Cover wählen“ und Umschalter für die Menü-Ideen, rechts über der Netlify-Plakette */
-.cover-pick { position: fixed; right: 16px; bottom: 72px; z-index: 40; width: max-content; max-width: min(360px, calc(100vw - 24px)); padding: 10px 12px; background: rgba(6, 7, 8, .92); border: 1px solid var(--c); font-size: 13px; }
+.cover-pick { position: fixed; right: 16px; bottom: 72px; z-index: 40; width: max-content; max-width: min(420px, calc(100vw - 24px)); padding: 10px 12px; background: rgba(6, 7, 8, .92); border: 1px solid var(--c); font-size: 13px; }
 .cover-pick summary { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; cursor: pointer; color: var(--c); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .cover-pick summary span { margin: 0 2px 0 6px; }
 .cover-pick summary span:first-child { margin-left: 0; }
@@ -162,26 +162,30 @@ a.chip:hover { background: var(--light); }
 
 @media (hover: none) { .v2-names img { opacity: 1; transform: rotate(-3deg); } }
 
-/* ================================================================ Menü-Ideen (html.menu-a … menu-d), am Handy immer Vollbild */
+/* ================================================================ Menü-Ideen (html.menu-a … menu-e), am Handy immer Vollbild */
 html[class*="menu-"] .top { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
 .nav a:focus-visible { outline: 2px solid var(--c); outline-offset: 3px; }
 
 @media (min-width: 901px) {
-  /* A: Ring. Logo-Viertel in der Ecke, die Links liegen auf den Rillen. Beim Scrollen klappt es zusammen, Darüberfahren öffnet es wieder. */
-  .menu-a .top { position: fixed; inset: 0 0 auto auto; display: block; width: 0; height: 0; padding: 0; --R: 330px; }
-  .menu-a .top-logo { position: fixed; top: -130px; right: -130px; width: 340px; height: 340px; opacity: 1; transform: none; z-index: 2; animation: spin 90s linear infinite; }
+  /* A: Ring. Eine Milchglas-Scheibe in der Ecke, die Links liegen immer sichtbar auf den Rillen, der Inhalt läuft darunter durch.
+     Das kleine Logo erscheint erst, wenn das große Intro-Logo weg ist (.scrolled), damit es nie doppelt zu sehen ist. */
+  .menu-a .top { position: fixed; inset: 0 0 auto auto; display: block; width: 0; height: 0; padding: 0; }
+  .menu-a .top-logo { position: fixed; top: -92px; right: -92px; width: 240px; height: 240px; z-index: 2; animation: spin 90s linear infinite; }
   .menu-a .top-logo img { width: 100%; height: 100%; }
   .menu-a .nav { position: fixed; top: 0; right: 0; width: 0; height: 0; display: block; }
-  .menu-a .nav::before { content: ""; position: fixed; top: calc(var(--R) * -1.5); right: calc(var(--R) * -1.5); width: calc(var(--R) * 3); height: calc(var(--R) * 3); border-radius: 50%; pointer-events: none; transition: opacity .4s, transform .6s var(--ease);
-    background: radial-gradient(closest-side, rgba(6, 7, 8, .88) 72%, transparent),
-      repeating-radial-gradient(circle, transparent 0 22px, color-mix(in srgb, var(--c) 30%, transparent) 22px 23px); }
-  /* gleicher Abstand nach unten, die Einrückung folgt dem Kreis (Radius 330) */
-  .menu-a .nav a { --y: calc(20 + var(--i) * min(32, calc(290 / (var(--n) - 1)))); position: fixed; top: calc(var(--y) * 1px); right: calc(sqrt(108900 - var(--y) * var(--y)) * 1px + 16px); white-space: nowrap; font-size: 15px; font-weight: 700; animation: none; transition: opacity .3s, transform .5s var(--ease), color .2s; }
+  .menu-a .nav::before { content: ""; position: fixed; top: -350px; right: -350px; width: 700px; height: 700px; border-radius: 50%; pointer-events: none;
+    background: repeating-radial-gradient(circle, transparent 0 21px, color-mix(in srgb, var(--c) 28%, transparent) 21px 22px), rgba(6, 7, 8, .58);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3); backdrop-filter: blur(14px) saturate(1.3);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--c) 45%, transparent), 0 14px 40px rgba(0, 0, 0, .45); }
+  /* gleicher Abstand nach unten, die Einrückung folgt dem Kreis (Radius 235) */
+  .menu-a .nav a { --y: calc(12 + var(--i) * min(25, calc(200 / (var(--n) - 1)))); position: fixed; top: calc(var(--y) * 1px); right: calc(sqrt(55225 - var(--y) * var(--y)) * 1px + 12px); white-space: nowrap; font-size: 13px; font-weight: 700; animation: none; }
   .menu-a .nav a::after { display: none; }
-  .menu-a.at-scroll .nav a { opacity: 0; pointer-events: none; transform: translate(40px, -40px) scale(.8); }
-  .menu-a.at-scroll .nav::before { opacity: 0; transform: scale(.5); }
-  .menu-a .top:has(.top-logo:hover, .nav a:hover, .nav a:focus-visible) .nav a { opacity: 1; pointer-events: auto; transform: none; }
-  .menu-a .top:has(.top-logo:hover, .nav a:hover, .nav a:focus-visible) .nav::before { opacity: 1; transform: none; }
+
+  /* E: Ring und Namensbalken zusammen (html.menu-a.menu-e) */
+  .menu-e .nav a { padding: 2px 9px; font-size: 12px; font-weight: 800; color: var(--ink); background: var(--c); -webkit-background-clip: border-box; background-clip: border-box; filter: none; box-shadow: 0 4px 10px rgba(0, 0, 0, .4); transition: background .2s, rotate .2s; }
+  .menu-e .nav a:nth-child(odd) { rotate: -2deg; }
+  .menu-e .nav a:nth-child(even) { rotate: 1.5deg; }
+  .menu-e .nav a:hover, .menu-e .nav a[aria-current="page"] { background: var(--light); rotate: 0deg; filter: none; animation: none; }
 
   /* B: Chrome-Schiene. Das Menü ist selbst ein Stück Metall wie das Logo, mit Reflex in Cover-Farbe. */
   .menu-b .top { padding: 0; grid-template-columns: 1fr; }

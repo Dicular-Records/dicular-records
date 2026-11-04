@@ -17,10 +17,6 @@
     el.addEventListener('focusout', function () { set(current); });
   });
 
-  // Menü-Idee A klappt beim Scrollen zusammen
-  var atScroll = function () { root.classList.toggle('at-scroll', scrollY > 40); };
-  addEventListener('scroll', atScroll, { passive: true }); atScroll();
-
   // Logo im Hintergrund: Der Mittelpunkt wandert beim Scrollen um das Bild, so zeigt jeder Abschnitt einen anderen Ausschnitt.
   // Die Form dreht sich, die Lichtschicht dreht sich gegenläufig und bleibt dadurch stehen: Die Ringe gleiten durchs Licht.
   var rille = document.getElementById('rille'), light = rille && rille.querySelector('i'), intro = document.getElementById('intro');

@@ -148,7 +148,7 @@ const fit = (t: string) => `--w:${Math.max(...cleanTitle(t).split(/\s+/).map((w)
 
 	<!-- Nur Entwurf: Cover zum Vergleichen auf „aktuell“ schalten -->
 	<details class="cover-pick" id="coverPick">
-		<summary><span>Cover</span><button type="button" id="coverPrev" aria-label="Vorheriges Cover">‹</button><button type="button" id="coverNext" aria-label="Nächstes Cover">›</button><span>Menü</span>{["a", "b", "c", "d"].map((m) => <button type="button" data-menu={m} aria-label={`Menü-Idee ${m.toUpperCase()}`}>{m.toUpperCase()}</button>)}</summary>
+		<summary><span>Cover</span><button type="button" id="coverPrev" aria-label="Vorheriges Cover">‹</button><button type="button" id="coverNext" aria-label="Nächstes Cover">›</button><span>Menü</span>{["a", "b", "c", "d", "e"].map((m) => <button type="button" data-menu={m} aria-label={`Menü-Idee ${m.toUpperCase()}`}>{m.toUpperCase()}</button>)}</summary>
 		<div class="cover-pick-grid" id="coverPickGrid"></div>
 		<button type="button" class="cover-pick-reset" id="coverPickReset">Zurück zum echten Stand</button>
 	</details>

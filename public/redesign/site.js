@@ -50,7 +50,7 @@
   var intro = $('intro');
   if (intro) {
     // „glass“: sobald gescrollt wird, Milchglas unter dem Menü, damit das Intro-Logo darunter verschwindet
-    var onScroll = function () { body.classList.toggle('scrolled', scrollY > intro.offsetHeight - 90); body.classList.toggle('glass', scrollY > 8); };
+    var onScroll = function () { body.classList.toggle('scrolled', scrollY >= intro.offsetHeight - 91); body.classList.toggle('glass', scrollY > 8); };
     addEventListener('scroll', onScroll, { passive: true }); onScroll();
   }
 
