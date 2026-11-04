@@ -218,6 +218,9 @@ html[class*="menu-"] .top { background: none; -webkit-backdrop-filter: none; bac
   .menu-d .nav a::after { display: none; }
 }
 
+/* Scroll-Hinweis nur ganz oben, er darf nicht unter das Menü rutschen */
+.glass .scroll-hint { opacity: 0 !important; pointer-events: none; }
+
 /* Teile des Synth-Panels sind nur bei Idee F sichtbar */
 .syn-knob, .syn-jack, .syn-left, .syn-sound, #synCable { display: none; }
 
