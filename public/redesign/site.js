@@ -104,8 +104,7 @@
   var player = $('player');
   var radioBtn = $('radioBtn'), radioNow = $('radioNow');
   var bar = $('playerbar'), seek = $('pbSeek');
-  var trackBtns = [].slice.call(document.querySelectorAll('button.play'));
-  var releaseQueue = trackBtns.map(function (b) { return { title: b.dataset.title, artist: b.dataset.artist || '', src: b.dataset.src, btn: b }; });
+  var trackBtns, releaseQueue;
   var radioQueue = radioBtn ? JSON.parse(radioBtn.dataset.playlist || '[]') : [];
   for (var i = radioQueue.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = radioQueue[i]; radioQueue[i] = radioQueue[j]; radioQueue[j] = t; }
   var queue = [], idx = 0, mode = null; // mode: 'release' | 'radio'
@@ -133,7 +132,14 @@
     if (mode === m && idx === n && player.src) { playPause(); return; }
     mode = m; queue = q; load(n);
   }
-  trackBtns.forEach(function (b, n) { b.addEventListener('click', function () { playFrom('release', releaseQueue, n); }); });
+  // auch nach dem Tausch der Trackliste aufrufbar („Cover wählen“ im Entwurf)
+  window.dicularBindTracks = function () {
+    trackBtns = [].slice.call(document.querySelectorAll('button.play'));
+    releaseQueue = trackBtns.map(function (b) { return { title: b.dataset.title, artist: b.dataset.artist || '', src: b.dataset.src, btn: b }; });
+    trackBtns.forEach(function (b, n) { b.addEventListener('click', function () { playFrom('release', releaseQueue, n); }); });
+    if (mode === 'release') mode = null; // neue Liste: der nächste Klick startet neu
+  };
+  window.dicularBindTracks();
   if (radioBtn) radioBtn.addEventListener('click', function () { playFrom('radio', radioQueue, mode === 'radio' ? idx : 0); });
   $('pbToggle').addEventListener('click', playPause);
   // zurück: nach den ersten Sekunden an den Anfang des Tracks, sonst zum vorherigen

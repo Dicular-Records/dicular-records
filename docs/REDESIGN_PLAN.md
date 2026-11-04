@@ -110,6 +110,7 @@ Yoka und Tomtron möchten mehr Abstand zum Ursprungsdesign, bei erhaltener Seele
 - Unterseiten: nur über `public/v2/site.css` umgefärbt, noch nicht neu aufgebaut. Nächster Schritt, wenn die Startseite gefällt.
 - **Logo-Hintergrund in Chrome** (Idee Yoka): die Logo-Form riesig und angeschnitten hinter allen Seiten (`public/v2/logo-form.svg`, nachgezeichnet mit `scripts/trace-logo.py`, später durch Tomtrons Originaldatei ersetzen). Die Form dreht sich, das Licht steht still, die Reflexe nehmen die Cover-Farbe an. Der Mittelpunkt wandert beim Scrollen, jeder Abschnitt zeigt einen anderen Ausschnitt. Lesetext liegt auf dunkler Fläche. Stärke: `OPACITY` in `public/v2/site.js`. Am Handy dreht es nur beim Scrollen, bei „Bewegung reduzieren“ steht es still.
 - Probe „Sawasdeekah aktuell“: https://v2-yoka--dicular-redesign.netlify.app/ (nur Vorschau, Inhalt im Repo bleibt Coming soon).
+- Menü **„Cover wählen“** (nur Entwurf, Wunsch Yoka, zum Vergleichen mit Tomtron): beliebiges Release als aktuell schalten, Pfeile zum Durchblättern; tauscht Hero, Farbe und Player, gilt auch auf Unterseiten ohne eigenes Cover, teilbar per `?aktuell=<release>`. Vor dem Livegang entfernen (`public/v2/cover-pick.js`, Block in `entwurf/index.astro`, Zeile im Kopf von `Redesign.astro`).
 - Decap schreibt in V2 auf `redesign-v2`. Online-Login auf der V2-Adresse noch nicht getestet.
 - Hochladen: `npm run build`, dann `npx netlify-cli deploy --dir=dist --alias=v2 --site=9251de6c-30e3-4be7-9ce8-235074d2249e --no-build`. Nie `--prod`, das würde V1 ersetzen.
 

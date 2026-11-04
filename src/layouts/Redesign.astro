@@ -28,7 +28,7 @@ const menu = (menuData.items as { label: string; page?: string; link?: string }[
 const path = Astro.url.pathname;
 ---
 <!doctype html>
-<html lang="en" style={`--c:${pageColor}`}>
+<html lang="en" style={`--c:${pageColor}`} data-own-accent={accent ? "" : undefined}>
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -42,6 +42,8 @@ const path = Astro.url.pathname;
 	<link rel="icon" href={site.favicon} />
 	<link rel="stylesheet" href="/redesign/site.css" />
 	<link rel="stylesheet" href="/v2/site.css" />
+	<!-- Nur Entwurf: im Menü „Cover wählen“ gesetzte Farbe gilt auch auf Seiten ohne eigenes Cover -->
+	<script is:inline>try { var c = localStorage.getItem("v2-aktuell-c"); if (c && !("ownAccent" in document.documentElement.dataset)) document.documentElement.style.setProperty("--c", c); } catch (e) {}</script>
 </head>
 <body class={`logo-coin sep-a ${intro ? 'home' : 'sub scrolled intro-done'}`}>
 	<div id="atmos" aria-hidden="true"><div id="rille"><div class="r-chrome"><i></i></div></div></div>

@@ -26,6 +26,15 @@ const day = (d: Date) => d.toLocaleDateString('en-GB', { day: '2-digit', timeZon
 const mon = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 // Katalognummer steht schon in der Zeile darüber
 const cleanTitle = (t: string) => t.replace(/^DIC[\s_-]?\d+[\s_:-]*/i, '').replace(/\s+DIC\d+$/i, '').replace(/_/g, ' ');
+// Nur Entwurf: alle Releases für das Menü „Cover wählen“, das echte aktuelle zuerst (public/v2/cover-pick.js)
+const coverData = await Promise.all([latest, ...rest].map(async (r) => ({
+  id: r.id, fullTitle: r.data.title, title: cleanTitle(r.data.title), long: cleanTitle(r.data.title).length > 34,
+  w: Math.max(...cleanTitle(r.data.title).split(/\s+/).map((x) => x.length)),
+  catalog: r.data.catalog, label: r.data.label, upcoming: r.data.upcoming, cover: r.data.cover,
+  thumb: thumb(r.data.cover, 'gridthumb'), small: thumb(r.data.cover, 'thumbnail'), c: await coverColor(r.data.cover),
+  tracks: r.data.tracks.map((t) => ({ title: t.title || r.data.title, artist: t.artist, src: audio(t.mp3) })),
+  buy: r.data.buyLinks[0]?.url ? { label: r.data.buyLinks[0].label || 'Buy', url: r.data.buyLinks[0].url } : undefined,
+})));
 const size = (t: string) => (cleanTitle(t).length > 34 ? 'v2-title long' : 'v2-title');
 const fit = (t: string) => `--w:${Math.max(...cleanTitle(t).split(/\s+/).map((w) => w.length))}`;
 ---
@@ -58,7 +67,7 @@ const fit = (t: string) => `--w:${Math.max(...cleanTitle(t).split(/\s+/).map((w)
 		<!-- Die nächsten Releases: groß, jedes färbt beim Scrollen die Seite -->
 		<section>
 			{bands.map(({ r, c }) => (
-				<a class="v2-band" href={`/release/${r.id}/`} data-c={c}>
+				<a class="v2-band" href={`/release/${r.id}/`} data-c={c} data-id={r.id}>
 					<div class="v2-band-cover" data-reveal><img src={r.data.cover} alt="" width="900" height="900" loading="lazy" /></div>
 					<div class="v2-band-info" data-reveal>
 						<p class="kicker">{r.data.upcoming ? 'Coming soon' : r.data.catalog ?? r.data.label}</p>
@@ -73,7 +82,7 @@ const fit = (t: string) => `--w:${Math.max(...cleanTitle(t).split(/\s+/).map((w)
 			<div class="v2-head"><h2 class="section-title chrome-text" data-reveal>Releases</h2></div>
 			<div class="v2-grid">
 				{tiles.map(({ r, c }) => (
-					<a class="v2-tile" href={`/release/${r.id}/`} data-c-hover={c}>
+					<a class="v2-tile" href={`/release/${r.id}/`} data-c-hover={c} data-id={r.id}>
 						<img src={thumb(r.data.cover, 'gridthumb')} alt={r.data.title} width="500" height="500" loading="lazy" />
 						<span>{r.data.title}</span>
 					</a>
@@ -136,4 +145,13 @@ const fit = (t: string) => `--w:${Math.max(...cleanTitle(t).split(/\s+/).map((w)
 			</div>
 		</section>
 	</main>
+
+	<!-- Nur Entwurf: Cover zum Vergleichen auf „aktuell“ schalten -->
+	<details class="cover-pick" id="coverPick">
+		<summary><span>Cover wählen</span><button type="button" id="coverPrev" aria-label="Vorheriges Cover">‹</button><button type="button" id="coverNext" aria-label="Nächstes Cover">›</button></summary>
+		<div class="cover-pick-grid" id="coverPickGrid"></div>
+		<button type="button" class="cover-pick-reset" id="coverPickReset">Zurück zum echten Stand</button>
+	</details>
+	<script type="application/json" id="coverData" set:html={JSON.stringify(coverData).replace(/</g, '\\u003c')}></script>
+	<script is:inline src="/v2/cover-pick.js"></script>
 </Redesign>

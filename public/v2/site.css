@@ -37,6 +37,21 @@ body { background: transparent; font: 400 17px/1.6 Archivo, sans-serif; }
 .v2-hero-info .tracks { background: none; }
 .v2-head .section-title, .v2-band .v2-title { filter: drop-shadow(0 2px 14px rgba(0, 0, 0, .75)); }
 
+/* Nur Entwurf: Menü „Cover wählen“, eingeklappt rechts über der Netlify-Plakette */
+.cover-pick { position: fixed; right: 16px; bottom: 72px; z-index: 30; width: max-content; max-width: min(340px, calc(100vw - 24px)); padding: 10px 12px; background: rgba(6, 7, 8, .9); border: 1px solid var(--c); font-size: 13px; }
+.cover-pick summary { display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--c); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.cover-pick summary span { margin-right: 6px; }
+.cover-pick summary button { width: 30px; height: 30px; font: 700 18px/1 Archivo, sans-serif; color: var(--light); background: none; border: 1px solid rgba(240, 242, 243, .4); cursor: pointer; }
+.cover-pick summary button:hover { background: var(--c); color: var(--ink); border-color: var(--c); }
+.cover-pick-grid { display: grid; grid-template-columns: repeat(6, 44px); gap: 6px; max-height: 45vh; overflow-y: auto; margin: 10px 0; }
+.cover-pick-grid button { width: 44px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; opacity: .75; transition: opacity .2s; }
+.cover-pick-grid button:hover, .cover-pick-grid button:focus-visible { opacity: 1; }
+.cover-pick-grid button[aria-pressed="true"] { opacity: 1; outline: 2px solid var(--c); outline-offset: 1px; }
+.cover-pick-grid img { width: 100%; height: 100%; object-fit: cover; }
+.cover-pick-reset { font: 600 12px Archivo, sans-serif; color: var(--light); background: none; border: 1px solid rgba(240, 242, 243, .4); padding: 6px 10px; cursor: pointer; }
+.cover-pick-reset:hover { background: var(--light); color: var(--ink); }
+.playerbar:not([hidden]) ~ .cover-pick { bottom: 140px; }
+
 /* Umschalter aus V1 entfällt */
 .switcher { display: none; }
 
@@ -133,6 +148,8 @@ a.chip:hover { background: var(--light); }
   .v2-band:nth-child(even) .v2-band-info, .v2-band-info { text-align: left; padding: 0 20px; }
   .v2-grid { grid-template-columns: repeat(2, 1fr); }
   .intro-title { font-size: 16px; }
+  .cover-pick { right: 12px; bottom: 64px; }
+  .playerbar:not([hidden]) ~ .cover-pick { bottom: 176px; }
   .v2-title, .v2-band .v2-title { font-size: min(clamp(30px, 8vw, 64px), calc((100vw - 40px) / var(--w, 8) / .95)); }
   .v2-title.long, .v2-band .v2-title.long { font-size: min(clamp(24px, 6vw, 48px), calc((100vw - 40px) / var(--w, 8) / .95)); }
 }

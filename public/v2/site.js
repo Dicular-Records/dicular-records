@@ -2,6 +2,7 @@
 (function () {
   var root = document.documentElement, current = getComputedStyle(root).getPropertyValue('--c');
   function set(c) { root.style.setProperty('--c', c); }
+  window.dicularAccent = function (c) { current = c; set(c); }; // für „Cover wählen“
   var areas = document.querySelectorAll('[data-c]');
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
