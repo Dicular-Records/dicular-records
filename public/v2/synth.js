@@ -44,7 +44,12 @@
     if (!running) { running = true; last = performance.now(); requestAnimationFrame(step); }
   }
   // Maße neu lesen (Fenstergröße, Panel eingefahren); Stecker springt ohne Schwingung auf die Buchse
-  function settle() { from = centre(out); var c = centre(target); tx = x = c.x; ty = y = c.y; vx = vy = 0; draw(); }
+  function settle() {
+    from = centre(out);
+    var c = centre(target); tx = c.x; ty = c.y;
+    if (running) return; // Stecker ist unterwegs: nur das Ziel nachführen
+    x = c.x; y = c.y; vx = vy = 0; draw();
+  }
 
   // Ton: nur nach Einschalten, kurzes Klicken beim Drehen eines Reglers
   var audio = null, soundOn = false;
@@ -82,7 +87,7 @@
     if (prev && !reduce) { x = parseFloat(prev); vx = 0; draw(); aim(target); }
   }
   addEventListener('resize', start);
-  top.addEventListener('transitionend', start);
+  top.addEventListener('transitionend', function (e) { if (e.target === top) start(); });
   document.addEventListener('v2-menu', start);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(start);
   start();
