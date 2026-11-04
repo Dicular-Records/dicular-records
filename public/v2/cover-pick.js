@@ -17,7 +17,8 @@
     hero.dataset.c = r.c; intro.dataset.c = r.c;
     var cover = hero.querySelector('.v2-hero-cover'), img = cover.querySelector('img');
     cover.href = '/release/' + r.id + '/'; img.src = r.cover; img.alt = r.fullTitle;
-    hero.querySelector('.kicker').textContent = (r.catalog ? r.catalog + ' · ' : '') + 'Out now on ' + r.label;
+    cover.querySelector('.namebar').textContent = (r.catalog ? r.catalog + ' · ' : '') + 'New Release';
+    hero.querySelector('.kicker').textContent = 'Out now on ' + r.label;
     titleInto(hero.querySelector('h2'), r);
     var tracks = hero.querySelector('.tracks'); tracks.textContent = '';
     r.tracks.forEach(function (t) {
@@ -37,15 +38,16 @@
     if (r.buy) { var buy = text('a', r.buy.label, actions); buy.className = 'btn ghost'; buy.href = r.buy.url; buy.target = '_blank'; buy.rel = 'noopener'; }
   }
   function fillBand(el, r) {
-    el.dataset.id = r.id; el.dataset.c = r.c; el.href = '/release/' + r.id + '/';
-    el.querySelector('img').src = r.cover;
-    el.querySelector('.kicker').textContent = r.upcoming ? 'Coming soon' : (r.catalog || r.label);
+    el.dataset.id = r.id; el.dataset.c = r.c;
+    el.querySelectorAll('a').forEach(function (x) { x.href = '/release/' + r.id + '/'; });
+    el.querySelector('img').src = r.cover; el.querySelector('img').alt = r.fullTitle;
+    el.querySelector('.namebar').textContent = r.upcoming ? 'Coming soon' : (r.catalog || r.label);
     titleInto(el.querySelector('h2'), r);
   }
   function fillTile(el, r) {
-    el.dataset.id = r.id; el.dataset.cHover = r.c; el.href = '/release/' + r.id + '/';
+    el.dataset.id = r.id; el.dataset.cHover = r.c; el.querySelector('a').href = '/release/' + r.id + '/';
     var img = el.querySelector('img'); img.src = r.thumb; img.alt = r.fullTitle;
-    el.querySelector('span').textContent = r.fullTitle;
+    el.querySelector('.namebar').textContent = r.fullTitle;
   }
 
   // Das gewählte Release kommt nach oben; steht es weiter unten, rückt dort das bisher oben gezeigte hin
@@ -84,6 +86,17 @@
     b.addEventListener('click', function () { show(r.id); pick.open = false; hero.scrollIntoView({ block: 'start' }); });
   });
   document.getElementById('coverPickReset').addEventListener('click', function () { show(original); });
+
+  // Menü-Ideen vergleichen; gilt auch auf den Unterseiten
+  var menus = document.querySelectorAll('[data-menu]');
+  function setMenu(m) {
+    ['a', 'b', 'c', 'd'].forEach(function (x) { root.classList.toggle('menu-' + x, x === m); });
+    menus.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.menu === m)); });
+    document.getElementById('nav').classList.remove('open');
+    store.set('v2-menu', m);
+  }
+  menus.forEach(function (b) { b.addEventListener('click', function (e) { e.preventDefault(); setMenu(b.dataset.menu); }); });
+  setMenu(['a', 'b', 'c', 'd'].filter(function (x) { return root.classList.contains('menu-' + x); })[0] || 'b');
 
   var wanted = new URLSearchParams(location.search).get('aktuell') || store.get('v2-aktuell');
   show(wanted && byId[wanted] ? wanted : original);

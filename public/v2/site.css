@@ -1,5 +1,6 @@
 /* Redesign V2: schwarzer Grund, Chrome-Logo als Lichtquelle, die Cover bestimmen die Farbe (--c).
-   Liegt über /redesign/site.css: die Variablen unten färben alle Seiten um, darunter folgt der neue Aufbau der Startseite. */
+   Liegt über /redesign/site.css: die Variablen unten färben alle Seiten um, darunter folgt der neue Aufbau.
+   Keine sichtbaren Linien und Rahmen, die Elemente liegen frei im Raum und überlappen sich (Wunsch Yoka). */
 @font-face { font-family: Archivo; font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; src: url(/v2/fonts/archivo-latin-standard-normal.woff2) format("woff2"); }
 
 /* --c lässt sich weich überblenden, wenn die Seite beim Scrollen die Farbe des nächsten Covers annimmt */
@@ -10,6 +11,7 @@
   --blue: var(--c); --green: var(--c);
   --text: #c4c9cd; --light: #f0f2f3; --ink: #060708;
   --wide: 125%;
+  --cm: color-mix(in srgb, var(--c) 70%, #fff);
   transition: --c 1.1s ease;
 }
 html { background: var(--deep); }
@@ -28,21 +30,19 @@ body { background: transparent; font: 400 17px/1.6 Archivo, sans-serif; }
 .r-chrome { position: absolute; inset: 0; overflow: hidden;
   -webkit-mask: url(/v2/logo-form.svg) center / contain no-repeat; mask: url(/v2/logo-form.svg) center / contain no-repeat; }
 .r-chrome i { position: absolute; inset: -22%; will-change: transform;
-  --cm: color-mix(in srgb, var(--c) 70%, #fff);
   background: conic-gradient(from 20deg, #14171a 0deg, #e8edf0 18deg, var(--cm) 34deg, #23282c 62deg, #8b969f 95deg, #f4f6f7 112deg, #3a4147 140deg, var(--c) 172deg, #101215 205deg, #cfd7dc 232deg, var(--cm) 250deg, #1a1d20 285deg, #9aa6ae 320deg, #14171a 360deg); }
 
-/* Lesetext liegt auf einer dunklen Fläche, damit er über dem Chrome lesbar bleibt */
-.split-grid > div, .prose, .radio-inner, .v2-hero-info, .gig-list, .tracks { background: rgba(6, 7, 8, .68); }
-.split-grid > div, .prose, .radio-inner { padding: clamp(18px, 2.5vw, 36px); }
-.v2-hero-info .tracks { background: none; }
-.v2-head .section-title, .v2-band .v2-title { filter: drop-shadow(0 2px 14px rgba(0, 0, 0, .75)); }
+/* Lesetext: dunkler Schatten ohne Kante statt einer Fläche, damit kein Rechteck sichtbar wird */
+.split-grid > div, .prose, .radio-inner, .gig-list { background: rgba(6, 7, 8, .62); box-shadow: 0 0 70px 50px rgba(6, 7, 8, .62); }
+.v2-title, .v2-head .section-title { filter: drop-shadow(0 2px 14px rgba(0, 0, 0, .8)); }
 
-/* Nur Entwurf: Menü „Cover wählen“, eingeklappt rechts über der Netlify-Plakette */
-.cover-pick { position: fixed; right: 16px; bottom: 72px; z-index: 30; width: max-content; max-width: min(340px, calc(100vw - 24px)); padding: 10px 12px; background: rgba(6, 7, 8, .9); border: 1px solid var(--c); font-size: 13px; }
-.cover-pick summary { display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--c); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
-.cover-pick summary span { margin-right: 6px; }
-.cover-pick summary button { width: 30px; height: 30px; font: 700 18px/1 Archivo, sans-serif; color: var(--light); background: none; border: 1px solid rgba(240, 242, 243, .4); cursor: pointer; }
-.cover-pick summary button:hover { background: var(--c); color: var(--ink); border-color: var(--c); }
+/* Nur Entwurf: Menü „Cover wählen“ und Umschalter für die Menü-Ideen, rechts über der Netlify-Plakette */
+.cover-pick { position: fixed; right: 16px; bottom: 72px; z-index: 40; width: max-content; max-width: min(360px, calc(100vw - 24px)); padding: 10px 12px; background: rgba(6, 7, 8, .92); border: 1px solid var(--c); font-size: 13px; }
+.cover-pick summary { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; cursor: pointer; color: var(--c); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.cover-pick summary span { margin: 0 2px 0 6px; }
+.cover-pick summary span:first-child { margin-left: 0; }
+.cover-pick summary button { width: 28px; height: 28px; padding: 0; font: 700 14px/1 Archivo, sans-serif; color: var(--light); background: none; border: 1px solid rgba(240, 242, 243, .4); cursor: pointer; }
+.cover-pick summary button:hover, .cover-pick summary button[aria-pressed="true"] { background: var(--c); color: var(--ink); border-color: var(--c); }
 .cover-pick-grid { display: grid; grid-template-columns: repeat(6, 44px); gap: 6px; max-height: 45vh; overflow-y: auto; margin: 10px 0; }
 .cover-pick-grid button { width: 44px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; opacity: .75; transition: opacity .2s; }
 .cover-pick-grid button:hover, .cover-pick-grid button:focus-visible { opacity: 1; }
@@ -79,78 +79,180 @@ a.chip:hover { background: var(--light); }
 .track-buy:hover { background: var(--c); color: var(--ink); }
 .playerbar { background: rgba(6, 7, 8, .88); }
 
-/* ---------------------------------------------------------------- Flächen und Karten */
+/* ---------------------------------------------------------------- Flächen, Linien weg; Karten wie in V1: schräg mit Namensbalken */
 .block:nth-of-type(odd), .radio, .intro, .foot, .no-image { background: transparent; }
-.foot { border-top: 1px solid rgba(240, 242, 243, .08); }
-.card, .tilt-l, .tilt-r, .tilt-s { --rot: 0deg; box-shadow: none; }
-.card:hover, .card:focus-visible { transform: none; box-shadow: none; }
-.card img { transition: filter .35s; }
-.namebar, .tilt-r .namebar { position: static; display: block; padding: 12px 0 0; background: none; box-shadow: none; color: var(--light); text-align: left; font-size: 14px; font-weight: 600; letter-spacing: .04em; text-transform: none; }
-.card:hover .namebar { color: var(--c); }
+.foot { border-top: 0; }
+.namebar { background: var(--c); color: var(--ink); font-weight: 700; font-size: 14px; letter-spacing: .06em; }
+.card { box-shadow: 0 24px 50px rgba(0, 0, 0, .6); }
 .latest-bg { filter: blur(60px) brightness(.32) saturate(1.4); }
 .latest-bg::after { display: none; }
 .words { display: none; }
 .date { background: none; border-left: 0; align-items: flex-start; padding: 0; }
+.tracks li, .gigs a, .gig-row { border-bottom: 0; }
 .gigs a:hover { background: none; }
-.gig-flyer img, .news-item img { transform: none; }
-.sep-a.scrolled .top, .sep-a.glass .top { background: rgba(6, 7, 8, .6); }
+.gig-flyer img { transform: rotate(-3deg); }
+.news-item img { transform: rotate(-2deg); }
+.sep-a.scrolled .top, .sep-a.glass .top { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
 
-/* ---------------------------------------------------------------- Startseite: neuestes Release, randlos */
-.v2-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 100svh; }
-.v2-hero-cover { display: block; position: relative; overflow: hidden; }
-.v2-hero-cover img { width: 100%; height: 100%; min-height: 50vw; object-fit: cover; }
-.v2-hero-info { display: flex; flex-direction: column; justify-content: center; padding: clamp(90px, 9vw, 130px) clamp(20px, 5vw, 80px) clamp(40px, 5vw, 80px); min-width: 0; }
-.v2-title { margin: 0 0 clamp(24px, 3vw, 40px); color: var(--light); font-stretch: var(--wide); font-weight: 800; letter-spacing: -.015em; line-height: .98; overflow-wrap: break-word; text-transform: uppercase; font-size: min(clamp(30px, 4.8vw, 84px), calc(43vw / var(--w, 8))); } /* --w: längstes Wort, passt so immer in die Spalte */
-.v2-title.long { font-size: min(clamp(24px, 3.1vw, 54px), calc(43vw / var(--w, 8))); line-height: 1.04; }
+/* ---------------------------------------------------------------- Startseite: neuestes Release, der Titel greift über das Cover */
+.v2-hero { position: relative; display: flex; align-items: center; min-height: 100svh; padding: clamp(110px, 10vw, 150px) 0 clamp(50px, 6vw, 90px) clamp(16px, 6vw, 100px); }
+.v2-hero-cover { flex: none; width: min(50vw, 74svh); }
+.v2-hero-cover .namebar { bottom: 8%; font-size: 17px; }
+.v2-hero-info { position: relative; z-index: 2; flex: 1; min-width: 0; padding: 0 clamp(16px, 5vw, 80px) 0 clamp(20px, 3vw, 50px); }
+.v2-hero-info h2 { margin-left: clamp(-120px, -8vw, -40px); }
+.v2-title { margin: 0 0 clamp(20px, 2.5vw, 36px); color: var(--light); font-stretch: var(--wide); font-weight: 800; letter-spacing: -.015em; line-height: .98; overflow-wrap: break-word; text-transform: uppercase; font-size: min(clamp(30px, 4.8vw, 84px), calc(46vw / var(--w, 8))); } /* --w: längstes Wort, passt so immer in die Spalte */
+.v2-title.long { font-size: min(clamp(24px, 3.1vw, 54px), calc(46vw / var(--w, 8))); line-height: 1.04; }
 
-/* Weitere Releases: abwechselnd links und rechts, jedes färbt die Seite */
-.v2-band { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; gap: clamp(20px, 4vw, 70px); padding: clamp(50px, 7vw, 110px) 0; text-decoration: none; }
-.v2-band:nth-child(even) { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
-.v2-band:nth-child(even) .v2-band-cover { order: 2; }
-.v2-band:nth-child(even) .v2-band-info { text-align: right; padding: 0 0 0 clamp(20px, 5vw, 80px); }
-.v2-band-cover img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
-.v2-band-info { padding: 0 clamp(20px, 5vw, 80px) 0 0; min-width: 0; }
-.v2-band .v2-title { font-size: min(clamp(26px, 3.1vw, 58px), calc(35vw / var(--w, 8))); margin-bottom: 14px; transition: color .3s; }
-.v2-band .v2-title.long { font-size: min(clamp(22px, 2.3vw, 40px), calc(35vw / var(--w, 8))); }
-.v2-band:hover .v2-title { color: var(--c); }
+/* Die nächsten Releases: frei versetzt, verschieden groß, jedes färbt die Seite */
+.v2-band { position: relative; display: flex; align-items: flex-end; }
+.v2-band .card { flex: none; }
+.v2-band-info { position: relative; z-index: 2; min-width: 0; display: block; text-decoration: none; padding-bottom: 4vw; }
+.v2-band .v2-title { font-size: min(clamp(26px, 3.4vw, 62px), calc(40vw / var(--w, 8))); margin-bottom: 10px; transition: color .3s; }
+.v2-band .v2-title.long { font-size: min(clamp(22px, 2.4vw, 42px), calc(40vw / var(--w, 8))); }
+.v2-band-info:hover .v2-title { color: var(--c); }
+.v2-band:nth-child(1) { margin: clamp(30px, 5vw, 80px) 0 0 16vw; }
+.v2-band:nth-child(1) .card { width: 42vw; }
+.v2-band:nth-child(1) .v2-band-info { margin-left: -5vw; }
+.v2-band:nth-child(2) { flex-direction: row-reverse; margin: -2vw 7vw 0 0; }
+.v2-band:nth-child(2) .card { width: 33vw; }
+.v2-band:nth-child(2) .v2-band-info { margin-right: -4vw; text-align: right; }
+.v2-band:nth-child(3) { margin: -3vw 0 0 5vw; }
+.v2-band:nth-child(3) .card { width: 38vw; }
+.v2-band:nth-child(3) .v2-band-info { margin-left: -4vw; padding-bottom: 8vw; }
 
-/* Katalog: Cover randlos aneinander */
-.v2-head { padding: clamp(60px, 8vw, 110px) clamp(20px, 5vw, 80px) clamp(28px, 4vw, 50px); }
-.v2-head .section-title { margin: 0; }
-.v2-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
-.v2-tile { position: relative; display: block; overflow: hidden; text-decoration: none; }
-.v2-tile img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; transition: transform .7s var(--ease), filter .4s; }
-.v2-tile span { position: absolute; inset: auto 0 0; padding: 40px 14px 12px; color: #fff; font-weight: 600; font-size: 14px; line-height: 1.25; background: linear-gradient(transparent, rgba(0, 0, 0, .85)); opacity: 0; transition: opacity .3s; }
-.v2-tile:hover img, .v2-tile:focus-visible img { transform: scale(1.04); }
-.v2-tile:hover span, .v2-tile:focus-visible span { opacity: 1; }
-.v2-more { padding: clamp(30px, 4vw, 50px) clamp(20px, 5vw, 80px) 0; }
+/* Katalog: Cover liegen wie hingeworfen, verschieden groß und überlappend */
+.v2-head { position: relative; z-index: 3; padding: clamp(60px, 8vw, 120px) clamp(20px, 5vw, 80px) 0; pointer-events: none; }
+.v2-head .section-title { margin: 0 0 -2vw; }
+.v2-head.right { text-align: right; }
+.v2-head.indent { padding-left: 16vw; }
+.v2-grid { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; padding: 0 3vw; }
+.v2-tile { position: relative; }
+.v2-tile:hover, .v2-tile:focus-within { z-index: 5; }
+.v2-tile:nth-child(1) { width: 25vw; margin: 3vw 0 0 0; }
+.v2-tile:nth-child(2) { width: 18vw; margin: 11vw 0 0 -2vw; }
+.v2-tile:nth-child(3) { width: 29vw; margin: 1vw 0 0 -1.5vw; }
+.v2-tile:nth-child(4) { width: 20vw; margin: 8vw 0 0 -2vw; }
+.v2-tile:nth-child(5) { width: 21vw; margin: 1vw 0 0 4vw; }
+.v2-tile:nth-child(6) { width: 27vw; margin: -3vw 0 0 -.5vw; }
+.v2-tile:nth-child(7) { width: 17vw; margin: 5vw 0 0 -1vw; }
+.v2-tile:nth-child(8) { width: 24vw; margin: -3vw 0 0 -.5vw; }
+.v2-tile .namebar { font-size: 12px; padding: 5px 10px; }
+.v2-more { padding: clamp(40px, 5vw, 70px) 0 0 22vw; }
 
 /* Radio */
+.radio-inner { width: fit-content; max-width: calc(100% - 32px); margin-left: 34vw; }
 .radio-disc i { background: var(--c); box-shadow: 0 0 0 6px color-mix(in srgb, var(--c) 25%, transparent); }
 .radio-disc i::before { border-color: transparent transparent transparent var(--ink); }
 .radio-disc.on i::before { border-color: var(--ink); }
 
-/* Artists: Namen statt Karten, das Foto erscheint beim Darüberfahren */
-.v2-names { list-style: none; margin: 0; padding: 0 clamp(20px, 5vw, 80px); border-top: 1px solid rgba(240, 242, 243, .12); }
-.v2-names li { border-bottom: 1px solid rgba(240, 242, 243, .12); }
-.v2-names a { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: clamp(10px, 1.2vw, 18px) 0; text-decoration: none; color: var(--light); font-stretch: var(--wide); font-weight: 800; font-size: clamp(24px, 5.2vw, 82px); line-height: 1.02; letter-spacing: -.015em; text-transform: uppercase; transition: color .25s, padding .4s var(--ease); }
-.v2-names a:hover, .v2-names a:focus-visible { color: var(--c); padding-left: clamp(8px, 2vw, 36px); }
-.v2-names img { flex: none; width: clamp(56px, 8vw, 128px); height: clamp(56px, 8vw, 128px); object-fit: cover; opacity: .0; transform: scale(.85); transition: opacity .3s, transform .5s var(--ease); }
-.v2-names a:hover img, .v2-names a:focus-visible img { opacity: 1; transform: none; }
+/* Artists: große Namen, frei versetzt, das Foto erscheint schräg daneben */
+.v2-names { list-style: none; margin: 0; padding: clamp(24px, 3vw, 50px) clamp(20px, 5vw, 80px) 0; }
+.v2-names li:nth-child(3n + 1) { padding-left: 0; }
+.v2-names li:nth-child(3n + 2) { padding-left: 17vw; }
+.v2-names li:nth-child(3n) { padding-left: 7vw; }
+.v2-names a { display: inline-flex; align-items: center; gap: clamp(14px, 2vw, 30px); padding: clamp(3px, .5vw, 8px) 0; text-decoration: none; color: var(--light); font-stretch: var(--wide); font-weight: 800; font-size: clamp(24px, 5.2vw, 82px); line-height: 1.02; letter-spacing: -.015em; text-transform: uppercase; filter: drop-shadow(0 2px 14px rgba(0, 0, 0, .8)); transition: color .25s; }
+.v2-names a:hover, .v2-names a:focus-visible { color: var(--c); }
+.v2-names img { flex: none; width: clamp(56px, 8vw, 128px); height: clamp(56px, 8vw, 128px); object-fit: cover; opacity: 0; transform: scale(.8) rotate(-8deg); transition: opacity .3s, transform .5s var(--ease); }
+.v2-names li:nth-child(even) img { transform: scale(.8) rotate(7deg); }
+.v2-names a:hover img, .v2-names a:focus-visible img { opacity: 1; transform: rotate(-3deg); }
+.v2-names li:nth-child(even) a:hover img, .v2-names li:nth-child(even) a:focus-visible img { transform: rotate(3deg); }
 
-@media (hover: none) { .v2-names img { opacity: 1; transform: none; } .v2-tile span { opacity: 1; } }
+/* Events + News: Spalten gegeneinander versetzt */
+.split-grid > div:last-child { margin-top: 9vw; }
+
+@media (hover: none) { .v2-names img { opacity: 1; transform: rotate(-3deg); } }
+
+/* ================================================================ Menü-Ideen (html.menu-a … menu-d), am Handy immer Vollbild */
+html[class*="menu-"] .top { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.nav a:focus-visible { outline: 2px solid var(--c); outline-offset: 3px; }
+
+@media (min-width: 901px) {
+  /* A: Ring. Logo-Viertel in der Ecke, die Links liegen auf den Rillen. Beim Scrollen klappt es zusammen, Darüberfahren öffnet es wieder. */
+  .menu-a .top { position: fixed; inset: 0 0 auto auto; display: block; width: 0; height: 0; padding: 0; --R: 330px; }
+  .menu-a .top-logo { position: fixed; top: -130px; right: -130px; width: 340px; height: 340px; opacity: 1; transform: none; z-index: 2; animation: spin 90s linear infinite; }
+  .menu-a .top-logo img { width: 100%; height: 100%; }
+  .menu-a .nav { position: fixed; top: 0; right: 0; width: 0; height: 0; display: block; }
+  .menu-a .nav::before { content: ""; position: fixed; top: calc(var(--R) * -1.5); right: calc(var(--R) * -1.5); width: calc(var(--R) * 3); height: calc(var(--R) * 3); border-radius: 50%; pointer-events: none; transition: opacity .4s, transform .6s var(--ease);
+    background: radial-gradient(closest-side, rgba(6, 7, 8, .88) 72%, transparent),
+      repeating-radial-gradient(circle, transparent 0 22px, color-mix(in srgb, var(--c) 30%, transparent) 22px 23px); }
+  /* gleicher Abstand nach unten, die Einrückung folgt dem Kreis (Radius 330) */
+  .menu-a .nav a { --y: calc(20 + var(--i) * min(32, calc(290 / (var(--n) - 1)))); position: fixed; top: calc(var(--y) * 1px); right: calc(sqrt(108900 - var(--y) * var(--y)) * 1px + 16px); white-space: nowrap; font-size: 15px; font-weight: 700; animation: none; transition: opacity .3s, transform .5s var(--ease), color .2s; }
+  .menu-a .nav a::after { display: none; }
+  .menu-a.at-scroll .nav a { opacity: 0; pointer-events: none; transform: translate(40px, -40px) scale(.8); }
+  .menu-a.at-scroll .nav::before { opacity: 0; transform: scale(.5); }
+  .menu-a .top:has(.top-logo:hover, .nav a:hover, .nav a:focus-visible) .nav a { opacity: 1; pointer-events: auto; transform: none; }
+  .menu-a .top:has(.top-logo:hover, .nav a:hover, .nav a:focus-visible) .nav::before { opacity: 1; transform: none; }
+
+  /* B: Chrome-Schiene. Das Menü ist selbst ein Stück Metall wie das Logo, mit Reflex in Cover-Farbe. */
+  .menu-b .top { padding: 0; grid-template-columns: 1fr; }
+  .menu-b .nav { grid-column: 1; grid-row: 1; justify-content: center; align-items: center; gap: clamp(14px, 2.2vw, 32px); padding: 11px 16px 11px 110px; box-shadow: 0 10px 28px rgba(0, 0, 0, .6), inset 0 1px 0 rgba(255, 255, 255, .8);
+    background: linear-gradient(100deg, transparent 12%, var(--cm) 30%, transparent 46%, transparent 62%, var(--c) 76%, transparent 90%), linear-gradient(180deg, #ffffff 0%, #e4ebf0 28%, #9aa9b5 47%, #5d6c79 52%, #c9d3da 66%, #f3f6f8 82%, #8796a2 100%); background-blend-mode: multiply; }
+  .menu-b .nav a { color: var(--ink); background: none; -webkit-background-clip: border-box; background-clip: border-box; filter: none; font-weight: 800; text-shadow: 0 1px 0 rgba(255, 255, 255, .55); animation: none; }
+  .menu-b .nav a:hover, .menu-b .nav a[aria-current="page"] { filter: none; animation: none; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, .7); }
+  .menu-b .nav a::after { display: none; }
+  .menu-b .top-logo { position: absolute; left: clamp(16px, 3vw, 44px); top: 4px; width: 78px; height: 78px; opacity: 1; transform: none; z-index: 2; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, .65)); }
+  .menu-b .top-logo img { width: 100%; height: 100%; }
+
+  /* C: Vollbild. Nur Logo und ein Knopf; der Klick öffnet die Links groß wie die Artist-Namen. */
+  .menu-c .top { grid-template-columns: 1fr auto; }
+  .menu-c .top-logo { opacity: 1; transform: none; width: 56px; height: 56px; }
+  .menu-c .top-logo img { width: 100%; height: 100%; }
+  .menu-c .menu-toggle { display: block; grid-column: 2; font: 800 14px Archivo, sans-serif; font-stretch: var(--wide); letter-spacing: .12em; text-transform: uppercase; color: var(--ink); background: var(--c); border: 0; padding: 12px 20px; cursor: pointer; position: relative; z-index: 2; transform: rotate(-2deg); transition: transform .2s; }
+  .menu-c .menu-toggle:hover { transform: none; }
+  .menu-c .top .nav { display: none; }
+  .menu-c .top .nav.open { display: flex; }
+
+  /* D: Namensbalken. Die Links sehen aus wie die Balken auf den Covern, leicht schräg. */
+  .menu-d .top { grid-template-columns: auto 1fr; padding-top: 18px; }
+  .menu-d .top-logo { opacity: 1; transform: none; width: 56px; height: 56px; }
+  .menu-d .top-logo img { width: 100%; height: 100%; }
+  .menu-d .nav { grid-column: 2; justify-content: flex-start; gap: 0; }
+  .menu-d .nav a { padding: 8px 14px; margin: 0 -1px; color: var(--ink); background: var(--c); -webkit-background-clip: border-box; background-clip: border-box; filter: none; font-weight: 800; box-shadow: 0 6px 14px rgba(0, 0, 0, .4); animation: none; transition: transform .2s, background .2s; }
+  .menu-d .nav a:nth-child(odd) { transform: rotate(-2.2deg); }
+  .menu-d .nav a:nth-child(even) { transform: rotate(1.6deg) translateY(4px); }
+  .menu-d .nav a:hover, .menu-d .nav a[aria-current="page"] { background: var(--light); transform: none; filter: none; animation: none; z-index: 2; }
+  .menu-d .nav a::after { display: none; }
+}
+
+/* Vollbild-Menü: Idee C am Desktop, am Handy bei allen Ideen */
+.top .nav.open { position: fixed; inset: 0; z-index: 1; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: flex-start; gap: clamp(2px, .6vw, 10px); padding: 80px clamp(24px, 8vw, 140px); background: rgba(6, 7, 8, .94); overflow-y: auto; opacity: 1; transform: none; }
+.top .nav.open a { color: var(--light); background: none; -webkit-background-clip: border-box; background-clip: border-box; filter: none; animation: none; font-stretch: var(--wide); font-weight: 800; font-size: clamp(30px, min(6vw, 8.5vh), 92px); line-height: 1.04; letter-spacing: -.015em; }
+.top .nav.open a:nth-child(3n + 2) { margin-left: 12vw; }
+.top .nav.open a:nth-child(3n) { margin-left: 5vw; }
+.top .nav.open a:hover, .top .nav.open a[aria-current="page"] { color: var(--c); }
+.top .nav.open a::after { display: none; }
+
+/* ================================================================ Handy */
 @media (max-width: 900px) {
-  .v2-hero { grid-template-columns: 1fr; min-height: 0; }
-  .v2-hero-cover img { min-height: 0; aspect-ratio: 1; height: auto; }
-  .v2-hero-info { padding-top: 32px; }
-  .v2-band, .v2-band:nth-child(even) { grid-template-columns: 1fr; }
-  .v2-band:nth-child(even) .v2-band-cover { order: 0; }
-  .v2-band:nth-child(even) .v2-band-info, .v2-band-info { text-align: left; padding: 0 20px; }
-  .v2-grid { grid-template-columns: repeat(2, 1fr); }
   .intro-title { font-size: 16px; }
   .cover-pick { right: 12px; bottom: 64px; }
   .playerbar:not([hidden]) ~ .cover-pick { bottom: 176px; }
+  .menu-toggle { position: relative; z-index: 2; font-family: Archivo, sans-serif; font-weight: 800; color: var(--ink); background: var(--c); border: 0; transform: rotate(-2deg); }
+  .top-logo { position: relative; z-index: 2; }
+  .top .nav.open a { font-size: clamp(24px, 8vw, 44px); }
+
+  .v2-hero { flex-direction: column; align-items: flex-start; min-height: 0; padding: 90px 0 40px; }
+  .v2-hero-cover { width: 84vw; margin-left: 5vw; }
+  .v2-hero-info { width: 100%; padding: 26px 20px 0; }
+  .v2-hero-info h2 { margin-left: 0; }
   .v2-title, .v2-band .v2-title { font-size: min(clamp(30px, 8vw, 64px), calc((100vw - 40px) / var(--w, 8) / .95)); }
   .v2-title.long, .v2-band .v2-title.long { font-size: min(clamp(24px, 6vw, 48px), calc((100vw - 40px) / var(--w, 8) / .95)); }
+  .v2-band, .v2-band:nth-child(n) { flex-direction: column; align-items: flex-start; margin: 0; padding-top: 36px; }
+  .v2-band:nth-child(1) .card { width: 72vw; margin-left: 20vw; }
+  .v2-band:nth-child(2) .card { width: 62vw; margin-left: 7vw; }
+  .v2-band:nth-child(3) .card { width: 76vw; margin-left: 15vw; }
+  .v2-band:nth-child(n) .v2-band-info { margin: 18px 0 0; padding: 0 20px; text-align: left; }
+  .v2-head.indent { padding-left: 20px; }
+  .v2-grid { padding: 16px 2vw 0; }
+  .v2-tile:nth-child(odd) { width: 50vw; margin: 0 0 0 -1vw; }
+  .v2-tile:nth-child(even) { width: 44vw; margin: 11vw 0 0 -1vw; }
+  .v2-tile:nth-child(n + 3) { margin-top: -5vw; }
+  .v2-tile:nth-child(even):nth-child(n + 3) { margin-top: 4vw; }
+  .v2-tile .namebar { font-size: 11px; padding: 4px 8px; }
+  .v2-more { padding-left: 20px; }
+  .radio-inner { margin-left: 16px; }
+  .v2-names li:nth-child(3n + 2) { padding-left: 11vw; }
+  .v2-names li:nth-child(3n) { padding-left: 4vw; }
+  .split-grid > div:last-child { margin-top: 0; }
 }
-@media (prefers-reduced-motion: reduce) { :root { transition: none; } }
+@media (prefers-reduced-motion: reduce) { :root { transition: none; } .menu-a .top-logo { animation: none; } }

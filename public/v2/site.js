@@ -13,9 +13,13 @@
   document.querySelectorAll('[data-c-hover]').forEach(function (el) {
     el.addEventListener('mouseenter', function () { set(el.dataset.cHover); });
     el.addEventListener('mouseleave', function () { set(current); });
-    el.addEventListener('focus', function () { set(el.dataset.cHover); });
-    el.addEventListener('blur', function () { set(current); });
+    el.addEventListener('focusin', function () { set(el.dataset.cHover); });
+    el.addEventListener('focusout', function () { set(current); });
   });
+
+  // Menü-Idee A klappt beim Scrollen zusammen
+  var atScroll = function () { root.classList.toggle('at-scroll', scrollY > 40); };
+  addEventListener('scroll', atScroll, { passive: true }); atScroll();
 
   // Logo im Hintergrund: Der Mittelpunkt wandert beim Scrollen um das Bild, so zeigt jeder Abschnitt einen anderen Ausschnitt.
   // Die Form dreht sich, die Lichtschicht dreht sich gegenläufig und bleibt dadurch stehen: Die Ringe gleiten durchs Licht.

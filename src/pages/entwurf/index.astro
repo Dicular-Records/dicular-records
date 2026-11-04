@@ -2,6 +2,7 @@
 // Redesign V2, Startseite: schwarzer Grund, Chrome-Logo als Lichtquelle, die Cover bestimmen die Farbe der Seite.
 // Abschnitte mit data-c färben die Seite um, sobald sie in der Bildmitte liegen (public/v2/site.js).
 import Redesign from '../../layouts/Redesign.astro';
+import RCard from '../../components/RCard.astro';
 import RTracks from '../../components/RTracks.astro';
 import { releasesSorted, artistsSorted, eventsSorted, newsSorted, fmtShort, plainText } from '../../lib/content';
 import { thumb, audio } from '../../lib/media';
@@ -50,11 +51,12 @@ const fit = (t: string) => `--w:${Math.max(...cleanTitle(t).split(/\s+/).map((w)
 	</section>
 
 	<main>
-		<!-- Neuestes Release: Cover randlos, großer Titel -->
+		<!-- Neuestes Release: Cover schräg mit Namensbalken wie in V1, der Titel greift darüber -->
 		<section class="v2-hero" id="latest" data-c={latestColor}>
-			<a class="v2-hero-cover" href={`/release/${latest.id}/`}><img src={latest.data.cover} alt={latest.data.title} width="1000" height="1000" fetchpriority="high" /></a>
+			<RCard href={`/release/${latest.id}/`} src={latest.data.cover} width={900} height={900} eager class="v2-hero-cover"
+				label={`${latest.data.catalog ? `${latest.data.catalog} · ` : ''}New Release`} />
 			<div class="v2-hero-info" data-reveal>
-				<p class="kicker">{latest.data.catalog ? `${latest.data.catalog} · ` : ''}Out now on {latest.data.label}</p>
+				<p class="kicker">Out now on {latest.data.label}</p>
 				<h2 class={size(latest.data.title)} style={fit(latest.data.title)}>{cleanTitle(latest.data.title)}</h2>
 				<RTracks release={latest} />
 				<div class="actions">
@@ -64,28 +66,26 @@ const fit = (t: string) => `--w:${Math.max(...cleanTitle(t).split(/\s+/).map((w)
 			</div>
 		</section>
 
-		<!-- Die nächsten Releases: groß, jedes färbt beim Scrollen die Seite -->
+		<!-- Die nächsten Releases: frei versetzt, jedes färbt beim Scrollen die Seite -->
 		<section>
-			{bands.map(({ r, c }) => (
-				<a class="v2-band" href={`/release/${r.id}/`} data-c={c} data-id={r.id}>
-					<div class="v2-band-cover" data-reveal><img src={r.data.cover} alt="" width="900" height="900" loading="lazy" /></div>
-					<div class="v2-band-info" data-reveal>
-						<p class="kicker">{r.data.upcoming ? 'Coming soon' : r.data.catalog ?? r.data.label}</p>
+			{bands.map(({ r, c }, i) => (
+				<div class="v2-band" data-c={c} data-id={r.id}>
+					<RCard href={`/release/${r.id}/`} src={r.data.cover} width={900} height={900} label={r.data.upcoming ? 'Coming soon' : (r.data.catalog ?? r.data.label)} tilt={i % 2 ? 'r' : 'l'} />
+					<a class="v2-band-info" href={`/release/${r.id}/`} data-reveal>
 						<h2 class={size(r.data.title)} style={fit(r.data.title)}>{cleanTitle(r.data.title)}</h2>
-					</div>
-				</a>
+					</a>
+				</div>
 			))}
 		</section>
 
-		<!-- Katalog -->
+		<!-- Katalog: Cover wie hingeworfen -->
 		<section>
-			<div class="v2-head"><h2 class="section-title chrome-text" data-reveal>Releases</h2></div>
+			<div class="v2-head indent"><h2 class="section-title chrome-text" data-reveal>Releases</h2></div>
 			<div class="v2-grid">
-				{tiles.map(({ r, c }) => (
-					<a class="v2-tile" href={`/release/${r.id}/`} data-c-hover={c} data-id={r.id}>
-						<img src={thumb(r.data.cover, 'gridthumb')} alt={r.data.title} width="500" height="500" loading="lazy" />
-						<span>{r.data.title}</span>
-					</a>
+				{tiles.map(({ r, c }, i) => (
+					<div class="v2-tile" data-c-hover={c} data-id={r.id}>
+						<RCard href={`/release/${r.id}/`} src={thumb(r.data.cover, 'gridthumb')} label={r.data.title} tilt={(['l', 'r', 's'] as const)[i % 3]} delay={(i % 4) * 80} />
+					</div>
 				))}
 			</div>
 			<p class="v2-more" data-reveal><a class="btn ghost" href="/releases/">All Releases</a></p>
@@ -107,7 +107,7 @@ const fit = (t: string) => `--w:${Math.max(...cleanTitle(t).split(/\s+/).map((w)
 
 		<!-- Artists: Namen statt Karten -->
 		<section>
-			<div class="v2-head"><h2 class="section-title chrome-text" data-reveal>Artists</h2></div>
+			<div class="v2-head right"><h2 class="section-title chrome-text" data-reveal>Artists</h2></div>
 			<ul class="v2-names">
 				{artists.map((a) => {
 					const name = artistName(a.data.name).name;
@@ -148,7 +148,7 @@ const fit = (t: string) => `--w:${Math.max(...cleanTitle(t).split(/\s+/).map((w)
 
 	<!-- Nur Entwurf: Cover zum Vergleichen auf „aktuell“ schalten -->
 	<details class="cover-pick" id="coverPick">
-		<summary><span>Cover wählen</span><button type="button" id="coverPrev" aria-label="Vorheriges Cover">‹</button><button type="button" id="coverNext" aria-label="Nächstes Cover">›</button></summary>
+		<summary><span>Cover</span><button type="button" id="coverPrev" aria-label="Vorheriges Cover">‹</button><button type="button" id="coverNext" aria-label="Nächstes Cover">›</button><span>Menü</span>{["a", "b", "c", "d"].map((m) => <button type="button" data-menu={m} aria-label={`Menü-Idee ${m.toUpperCase()}`}>{m.toUpperCase()}</button>)}</summary>
 		<div class="cover-pick-grid" id="coverPickGrid"></div>
 		<button type="button" class="cover-pick-reset" id="coverPickReset">Zurück zum echten Stand</button>
 	</details>
