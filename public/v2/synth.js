@@ -1,55 +1,105 @@
-/* Menü-Idee F, Synth-Panel: Ein Patch-Kabel steckt in der Buchse der aktuellen Seite. Beim Darüberfahren zeigt der Stecker auf den
-   Menüpunkt, beim Seitenwechsel wandert er von der alten Buchse zur neuen und das Kabel schwingt nach. Ton nur nach Einschalten. */
+/* Menü-Idee F, Synth-Panel: Ein Signal läuft sichtbar von „Out“ über die Buchsen bis zur aktuellen Seite. Fährt man über einen
+   Menüpunkt, läuft die Signalfront dorthin und die Regler auf dem Weg leuchten auf. Läuft Musik, schlägt das Signal stärker aus.
+   Ton nur nach Einschalten. */
 (function () {
   var root = document.documentElement, top = document.getElementById('top');
   var out = document.getElementById('synOut'), home = document.getElementById('synHome'), soundBtn = document.getElementById('synSound');
+  var player = document.getElementById('player');
   if (!top || !out || !home) return;
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var store = window.sessionStorage;
-  var NS = 'http://www.w3.org/2000/svg';
-  var svg = document.createElementNS(NS, 'svg'); svg.id = 'synCable'; svg.setAttribute('aria-hidden', 'true');
-  function shape(tag, cls, parent) { var el = document.createElementNS(NS, tag); el.setAttribute('class', cls); parent.appendChild(el); return el; }
-  var shade = shape('path', 'syn-cable-shade', svg), line = shape('path', 'syn-cable-line', svg);
-  var plugA = shape('rect', 'syn-plug', svg), plugB = shape('rect', 'syn-plug', svg);
-  [plugA, plugB].forEach(function (p) { p.setAttribute('width', 10); p.setAttribute('height', 20); p.setAttribute('rx', 2); });
-  document.body.appendChild(svg);
+  var canvas = document.createElement('canvas'); canvas.id = 'synSignal'; canvas.setAttribute('aria-hidden', 'true');
+  top.appendChild(canvas);
+  var ctx = canvas.getContext('2d');
 
+  var links = [].slice.call(document.querySelectorAll('.nav a'));
   var currentLink = document.querySelector('.nav a[aria-current="page"]');
-  function jackOf(el) { return el ? el.querySelector('.syn-jack') : home; }
-  function centre(el) { var r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
-  var target = jackOf(currentLink);
-  var from = { x: 0, y: 0 }, x = 0, y = 0, tx = 0, ty = 0, vx = 0, vy = 0, last = 0, running = false;
+  var nodes = [], x0 = 0, y0 = 0, xEnd = 0, front = 0, goal = 0, goalLink = currentLink, colour = '#c4ced6', frames = 0;
+  var SPEED = 1500, BEAT = 0.48; // Pixel pro Sekunde; ein Schlag bei 125 BPM
 
-  function draw() {
-    var dx = Math.abs(x - from.x), wobble = Math.min(70, (Math.abs(vx) + Math.abs(vy)) * 0.05);
-    var sag = Math.min(190, 46 + dx * 0.13) + wobble;
-    var swing = reduce ? 0 : Math.max(-46, Math.min(46, vx * -0.03));
-    var d = 'M' + from.x + ' ' + from.y + 'C' + from.x + ' ' + (from.y + sag) + ' ' + (x + swing) + ' ' + (y + sag) + ' ' + x + ' ' + y;
-    shade.setAttribute('d', d); line.setAttribute('d', d);
-    plugA.setAttribute('x', from.x - 5); plugA.setAttribute('y', from.y - 3);
-    plugB.setAttribute('x', x - 5); plugB.setAttribute('y', y - 3);
+  function active() { return root.classList.contains('menu-f') && innerWidth > 900; }
+  function jackX(el) { var r = el.getBoundingClientRect(); return r.left + r.width / 2; }
+  function goalFor(link) { return link ? jackX(link.querySelector('.syn-jack')) : jackX(home); }
+
+  function measure() {
+    var box = top.getBoundingClientRect(), r = out.getBoundingClientRect(), ratio = Math.min(2, devicePixelRatio || 1);
+    canvas.width = Math.round(box.width * ratio); canvas.height = Math.round(box.height * ratio);
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    x0 = r.left + r.width / 2; y0 = r.top + r.height / 2 - box.top;
+    nodes = links.map(function (a) { return { a: a, x: jackX(a.querySelector('.syn-jack')) }; });
+    xEnd = nodes.length ? nodes[nodes.length - 1].x : box.width;
+    goal = goalFor(goalLink);
   }
-  function step(now) {
-    var dt = Math.min(0.033, (now - last) / 1000 || 0.016); last = now;
-    vx += (90 * (tx - x) - 11 * vx) * dt; vy += (90 * (ty - y) - 11 * vy) * dt;
-    x += vx * dt; y += vy * dt;
-    draw();
-    if (Math.abs(tx - x) + Math.abs(ty - y) < 0.3 && Math.abs(vx) + Math.abs(vy) < 2) { x = tx; y = ty; vx = vy = 0; draw(); running = false; return; }
-    requestAnimationFrame(step);
+
+  function wave(x, t, amp) {
+    var edge = Math.min(1, (x - x0) / 46) * Math.min(1, (front - x) / 46 + 0.25); // läuft am Anfang und an der Front weich aus
+    var breathe = 0.72 + 0.28 * Math.sin(x * 0.005 - t * 1.4);
+    return y0 + amp * edge * breathe * (0.62 * Math.sin(x * 0.046 - t * 6.2) + 0.38 * Math.sin(x * 0.113 - t * 9.7));
   }
-  function aim(el) {
-    target = el;
-    var c = centre(el); tx = c.x; ty = c.y;
-    if (reduce) { x = tx; y = ty; draw(); return; }
-    if (!running) { running = true; last = performance.now(); requestAnimationFrame(step); }
+
+  function draw(t) {
+    var w = canvas.width, h = canvas.height;
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, w, h); ctx.restore();
+    // Leiterbahn: ruhig und matt bis zur letzten Buchse
+    ctx.globalAlpha = 0.22; ctx.lineWidth = 1; ctx.strokeStyle = colour; ctx.shadowBlur = 0;
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(xEnd, y0);
+    // aufgedruckte Pfeile zeigen die Laufrichtung zwischen den Buchsen
+    nodes.forEach(function (n, i) {
+      var from = i ? nodes[i - 1].x : x0, mid = (from + n.x) / 2;
+      ctx.moveTo(mid - 3, y0 - 3); ctx.lineTo(mid + 1, y0); ctx.lineTo(mid - 3, y0 + 3);
+    });
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+    if (front <= x0 + 1) return;
+    // Mit Musik schlägt das Signal im Takt stärker aus
+    var playing = player && !player.paused;
+    var kick = playing ? Math.exp(-((t % BEAT) / BEAT) * 5) : 0;
+    var amp = (playing ? 7 : 4.5) * (1 + 0.5 * kick);
+    ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.strokeStyle = colour; ctx.shadowColor = colour; ctx.shadowBlur = 9;
+    ctx.beginPath();
+    for (var x = x0; x <= front; x += 3) { var y = wave(x, t, amp); if (x === x0) ctx.moveTo(x, y); else ctx.lineTo(x, y); }
+    ctx.stroke();
+    // Impulse laufen durch das Signal zur Front
+    var span = front - x0, count = Math.max(1, Math.round(span / 240));
+    ctx.fillStyle = '#ffffff'; ctx.shadowBlur = 12;
+    for (var i = 0; i < count; i++) {
+      var px = x0 + ((t * 230 + (i / count) * span) % span);
+      ctx.beginPath(); ctx.arc(px, wave(px, t, amp), 2, 0, Math.PI * 2); ctx.fill();
+    }
+    // Front
+    ctx.fillStyle = colour; ctx.shadowBlur = 16;
+    ctx.beginPath(); ctx.arc(front, y0, 3.5 + kick, 0, Math.PI * 2); ctx.fill();
+    ctx.shadowBlur = 0;
   }
-  // Maße neu lesen (Fenstergröße, Panel eingefahren); Stecker springt ohne Schwingung auf die Buchse
-  function settle() {
-    from = centre(out);
-    var c = centre(target); tx = c.x; ty = c.y;
-    if (running) return; // Stecker ist unterwegs: nur das Ziel nachführen
-    x = c.x; y = c.y; vx = vy = 0; draw();
+
+  function light() {
+    var there = Math.abs(front - goal) < 3;
+    nodes.forEach(function (n) {
+      n.a.classList.toggle('sig-lit', n.x <= front + 2);
+      n.a.classList.toggle('sig-on', there && n.a === goalLink);
+    });
+    home.classList.toggle('sig-on', there && !goalLink);
   }
+
+  var last = 0, running = false;
+  function frame(now) {
+    if (!active() || document.hidden) { running = false; return; }
+    var dt = Math.min(0.05, (now - last) / 1000 || 0.016); last = now;
+    var d = goal - front, stepBy = SPEED * dt;
+    front = Math.abs(d) <= stepBy ? goal : front + (d > 0 ? stepBy : -stepBy);
+    if (frames++ % 12 === 0) colour = getComputedStyle(root).getPropertyValue('--c').trim() || colour;
+    draw(now / 1000); light();
+    requestAnimationFrame(frame);
+  }
+  function run() {
+    if (!active()) return;
+    measure();
+    if (reduce) { // keine Bewegung: Signal liegt still an
+      colour = getComputedStyle(root).getPropertyValue('--c').trim() || colour;
+      front = goal; draw(0); light(); return;
+    }
+    if (!running) { running = true; last = performance.now(); requestAnimationFrame(frame); }
+  }
+  function aim(link) { goalLink = link; if (active()) { goal = goalFor(link); if (reduce) run(); } }
 
   // Ton: nur nach Einschalten, kurzes Klicken beim Drehen eines Reglers
   var audio = null, soundOn = false;
@@ -66,29 +116,20 @@
     if (soundOn) { audio = audio || new (window.AudioContext || window.webkitAudioContext)(); audio.resume(); tick(); }
   });
 
-  document.querySelectorAll('.nav a').forEach(function (a) {
-    function enter() { if (root.classList.contains('menu-f')) { aim(jackOf(a)); tick(); } }
-    function leave() { if (root.classList.contains('menu-f')) aim(jackOf(currentLink)); }
+  links.forEach(function (a) {
+    function enter() { aim(a); tick(); }
+    function leave() { aim(currentLink); }
     a.addEventListener('mouseenter', enter); a.addEventListener('focus', enter);
     a.addEventListener('mouseleave', leave); a.addEventListener('blur', leave);
-    a.addEventListener('click', function () { try { store.setItem('v2-plug', String(centre(jackOf(currentLink)).x)); } catch (e) {} }); // die Buchse, von der es losgeht
   });
-  top.addEventListener('mouseleave', function () { if (root.classList.contains('menu-f')) aim(jackOf(currentLink)); });
 
-  var started = false;
-  function start() {
-    if (!root.classList.contains('menu-f') || innerWidth <= 900) return;
-    settle();
-    if (started) return;
-    started = true;
-    // Seitenwechsel: von der alten Buchse zur neuen wandern
-    var prev = null;
-    try { prev = store.getItem('v2-plug'); store.removeItem('v2-plug'); } catch (e) {}
-    if (prev && !reduce) { x = parseFloat(prev); vx = 0; draw(); aim(target); }
-  }
+  // Die Front startet bei „Out“ und läuft beim Laden zur aktuellen Seite
+  front = 0;
+  function start() { if (front === 0) { measure(); front = x0; } run(); }
   addEventListener('resize', start);
   top.addEventListener('transitionend', function (e) { if (e.target === top) start(); });
   document.addEventListener('v2-menu', start);
+  document.addEventListener('visibilitychange', start);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(start);
   start();
 })();

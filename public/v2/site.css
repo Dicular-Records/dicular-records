@@ -222,17 +222,20 @@ html[class*="menu-"] .top { background: none; -webkit-backdrop-filter: none; bac
 .glass .scroll-hint { opacity: 0 !important; pointer-events: none; }
 
 /* Teile des Synth-Panels sind nur bei Idee F sichtbar */
-.syn-knob, .syn-jack, .syn-left, .syn-sound, #synCable { display: none; }
+.syn-dial, .syn-knob, .syn-jack, .syn-left, .syn-sound, #synSignal { display: none; }
 
 @media (min-width: 901px) {
   /* F: Synth-Panel. Frontplatte mit Chrome-Reglern und Buchsen, Patch-Kabel in Cover-Farbe (synth.js) */
-  html.menu-f .top { display: flex; align-items: stretch; gap: clamp(10px, 1.6vw, 24px); padding: 8px clamp(14px, 2vw, 30px) 9px; transition: transform .8s var(--ease);
+  html.menu-f body[class] .top { display: flex; align-items: stretch; gap: clamp(10px, 1.6vw, 24px); padding: 8px clamp(58px, 5vw, 76px) 9px clamp(14px, 2vw, 30px); transition: transform .8s var(--ease);
     background:
       radial-gradient(circle at 9px 9px, #8b969f 0 2.5px, #23282c 2.6px 3.6px, transparent 3.7px),
       radial-gradient(circle at calc(100% - 9px) 9px, #8b969f 0 2.5px, #23282c 2.6px 3.6px, transparent 3.7px),
       radial-gradient(circle at 9px calc(100% - 9px), #8b969f 0 2.5px, #23282c 2.6px 3.6px, transparent 3.7px),
       radial-gradient(circle at calc(100% - 9px) calc(100% - 9px), #8b969f 0 2.5px, #23282c 2.6px 3.6px, transparent 3.7px),
-      linear-gradient(180deg, #24282c 0%, #15181b 12%, #0e1012 100%);
+      repeating-linear-gradient(90deg, transparent 0 7px, rgba(0, 0, 0, .55) 7px 11px) calc(100% - 22px) 22px / 44px 54px no-repeat,
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, .022) 0 1px, transparent 1px 3px, rgba(0, 0, 0, .05) 3px 4px, transparent 4px 7px),
+      repeating-linear-gradient(180deg, rgba(255, 255, 255, .016) 0 1px, transparent 1px 2px),
+      linear-gradient(180deg, #2a2f33 0%, #191c1f 12%, #0f1113 100%);
     box-shadow: 0 1px 0 rgba(255, 255, 255, .1) inset, 0 -2px 0 var(--c) inset, 0 14px 34px rgba(0, 0, 0, .6); }
   /* das Panel fährt nach dem Logo-Intro ein */
   html.menu-f body.home:not(.intro-done):not(.scrolled) .top { transform: translateY(-110%); }
@@ -241,11 +244,25 @@ html[class*="menu-"] .top { background: none; -webkit-backdrop-filter: none; bac
   html.menu-f .syn-left { display: flex; flex: none; align-items: flex-end; gap: 12px; }
   .syn-name { align-self: center; margin-right: 4px; font-size: 10px; font-weight: 600; letter-spacing: .22em; line-height: 1.3; text-transform: uppercase; color: #aab4bc; }
   .syn-name b { display: block; font-stretch: var(--wide); font-size: 17px; font-weight: 800; letter-spacing: .04em; color: var(--light); }
+  .syn-name small { display: block; margin-top: 2px; font-size: 8px; letter-spacing: .2em; color: #7c8791; }
   .syn-socket { display: flex; flex-direction: column-reverse; align-items: center; gap: 4px; font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #aab4bc; }
-  html.menu-f .nav { flex: 1; display: flex; flex-wrap: nowrap; justify-content: space-evenly; align-items: stretch; gap: 2px; min-width: 0; }
-  html.menu-f .nav a { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px; min-width: 0; padding: 0 2px; background: none; -webkit-background-clip: border-box; background-clip: border-box; color: #e8edf0; filter: none; animation: none; font-size: 10px; font-weight: 700; letter-spacing: .09em; white-space: nowrap; }
+  html.menu-f .nav { flex: 1; display: flex; flex-wrap: nowrap; align-items: stretch; gap: 0; min-width: 0; }
+  html.menu-f .nav a { position: relative; flex: 1 1 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px; min-width: 0; padding: 15px 2px 0; background: none; -webkit-background-clip: border-box; background-clip: border-box; color: #e8edf0; filter: none; animation: none; font-size: 10px; font-weight: 700; letter-spacing: .09em; white-space: nowrap; }
   html.menu-f .nav a:hover, html.menu-f .nav a:focus-visible, html.menu-f .nav a[aria-current="page"] { color: var(--c); filter: none; animation: none; }
-  html.menu-f .nav a::after { display: none; }
+  /* Aufdruck: Linie über jedem Modul, Bezeichnung am Modul-Anfang (immer drei Regler), Fuge zum Nachbarmodul */
+  html.menu-f .nav a::after { display: block; content: ""; position: absolute; left: 7px; right: 0; top: 11px; bottom: auto; height: 1px; background: rgba(240, 242, 243, .28); transition: none; }
+  html.menu-f .nav a:hover::after, html.menu-f .nav a:focus-visible::after { left: 7px; right: 0; }
+  html.menu-f .nav a:nth-child(3n)::after { right: 7px; }
+  html.menu-f .nav a::before { position: absolute; left: 7px; top: -1px; font-size: 8px; font-weight: 700; letter-spacing: .22em; color: #8b969f; }
+  html.menu-f .nav a:nth-child(3n + 1)::before { content: "Oscillator"; }
+  html.menu-f .nav a:nth-child(6n + 4)::before { content: "Filter"; }
+  html.menu-f .nav a:nth-child(6n + 7)::before { content: "Amplifier"; }
+  html.menu-f .nav a:nth-child(3n + 1):not(:first-child) { box-shadow: -1px 0 0 rgba(0, 0, 0, .75), inset 1px 0 0 rgba(255, 255, 255, .07); }
+  html.menu-f .syn-dial { display: block; position: relative; flex: none; width: 34px; height: 34px; margin: 4px 0 3px; }
+  /* Skala bleibt stehen, nur der Regler dreht sich */
+  html.menu-f .syn-dial::before { content: ""; position: absolute; inset: -7px; border-radius: 50%; background: repeating-conic-gradient(from -135deg, rgba(240, 242, 243, .6) 0 2deg, transparent 2deg 27deg);
+    -webkit-mask: radial-gradient(circle, transparent 0 20.5px, #000 21px 24px, transparent 24.5px), conic-gradient(from -137deg, #000 0 274deg, transparent 274deg); -webkit-mask-composite: source-in;
+    mask: radial-gradient(circle, transparent 0 20.5px, #000 21px 24px, transparent 24.5px), conic-gradient(from -137deg, #000 0 274deg, transparent 274deg); mask-composite: intersect; }
   html.menu-f .nav .syn-knob { display: block; position: relative; flex: none; width: 34px; height: 34px; border-radius: 50%; transform: rotate(calc(var(--i) * 67deg - 140deg)); transition: transform .45s var(--ease);
     background: conic-gradient(from 30deg, #f4f6f7, #7c8791 22%, #e4ebf0 42%, #59646e 62%, #cfd7dc 82%, #f4f6f7);
     box-shadow: 0 0 0 2px #050607, 0 0 0 3px #3a4147, 0 5px 8px rgba(0, 0, 0, .7), inset 0 0 3px rgba(0, 0, 0, .55); }
@@ -259,12 +276,15 @@ html[class*="menu-"] .top { background: none; -webkit-backdrop-filter: none; bac
   .syn-sound[aria-pressed="true"] { color: var(--c); }
   .syn-sound[aria-pressed="true"] i { background: var(--c); box-shadow: 0 0 9px var(--c); }
 
-  /* Patch-Kabel über allem, fängt keine Klicks */
-  html.menu-f #synCable { display: block; position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; z-index: 21; pointer-events: none; overflow: visible; transition: opacity .6s; }
-  html.menu-f body.home:not(.intro-done):not(.scrolled) #synCable { opacity: 0; }
-  .syn-cable-shade { fill: none; stroke: rgba(0, 0, 0, .55); stroke-width: 7; stroke-linecap: round; }
-  .syn-cable-line { fill: none; stroke: var(--c); stroke-width: 4; stroke-linecap: round; }
-  .syn-plug { fill: #cfd7dc; stroke: #2a2f33; stroke-width: 1; }
+  /* Signal: läuft auf dem Panel durch die Buchsen, fängt keine Klicks (synth.js).
+     Regler auf dem Weg leuchten auf, sobald das Signal sie erreicht */
+  html.menu-f #synSignal { display: block; position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  html.menu-f .nav a.sig-lit .syn-knob { box-shadow: 0 0 0 2px #050607, 0 0 0 3px var(--c), 0 0 16px color-mix(in srgb, var(--c) 65%, transparent), inset 0 0 3px rgba(0, 0, 0, .55); }
+  html.menu-f .nav a .syn-knob { transition: transform .45s var(--ease), box-shadow .25s; }
+  html.menu-f .nav a.sig-on { color: var(--c); }
+  html.menu-f .nav a.sig-on .syn-knob { box-shadow: 0 0 0 2px #050607, 0 0 0 3px var(--c), 0 0 26px var(--c), inset 0 0 3px rgba(0, 0, 0, .55); }
+  html.menu-f .nav a.sig-on .syn-knob i { background: var(--c); }
+  html.menu-f .syn-jack.sig-on, html.menu-f .nav a.sig-on .syn-jack { box-shadow: 0 0 10px 2px var(--c); }
 }
 
 /* Vollbild-Menü: Idee C am Desktop, am Handy bei allen Ideen */

@@ -52,13 +52,13 @@ const path = Astro.url.pathname;
 		<button class="menu-toggle" aria-expanded="false" aria-controls="nav">Menu</button>
 		<!-- Menü-Idee F: Beschriftung und Buchsen links auf dem Panel, Schalter für den Ton -->
 		<div class="syn-left" aria-hidden="true">
-			<span class="syn-name">Dicular<b>DR-1</b></span>
+			<span class="syn-name">Dicular<b>DR-1</b><small>Signal Path</small></span>
 			<span class="syn-socket"><span class="syn-jack" id="synOut"></span>Out</span>
 			<span class="syn-socket"><span class="syn-jack" id="synHome"></span>Home</span>
 		</div>
 		<button type="button" class="syn-sound" id="synSound" aria-pressed="false" aria-label="Klick-Ton an oder aus"><i></i>Sound</button>
 		<nav class="nav chrome-nav" id="nav" aria-label="Main menu" style={`--n:${menu.length}`}>
-			{menu.map(([label, href], i) => <a href={href} style={`--i:${i}`} aria-current={path.startsWith(href) ? 'page' : undefined}><span class="syn-knob" aria-hidden="true"><i></i></span><span class="syn-label">{label}</span><span class="syn-jack" aria-hidden="true"></span></a>)}
+			{menu.map(([label, href], i) => <a href={href} style={`--i:${i}`} aria-current={path.startsWith(href) ? 'page' : undefined}><span class="syn-dial" aria-hidden="true"><span class="syn-knob"><i></i></span></span><span class="syn-label">{label}</span><span class="syn-jack" aria-hidden="true"></span></a>)}
 		</nav>
 	</header>
 
