@@ -1,16 +1,19 @@
 ---
-// Redesign: Artist-Seite. Kopf mit schrägem Foto + Namensbalken, Name in Chrome, Rollen/Herkunft, Sprungmarken;
-// darunter Biografie, Releases, Mixes, SoundCloud (Zwei-Klick), Booking, eigener Abschnitt, weitere Artists.
+// V2: Artist-Seite. Foto schräg mit Namensbalken, der Name greift darüber, die Seite trägt die Farbe des neuesten Releases.
+// Darunter Biografie, Releases wie hingeworfen, Mixes, SoundCloud (Zwei-Klick), Booking, eigener Abschnitt, weitere Artists.
 import { getCollection } from 'astro:content';
 import Redesign from '../../layouts/Redesign.astro';
 import RCard from '../../components/RCard.astro';
 import Body from '../../components/RBody.astro';
 import SoundCloud from '../../components/SoundCloud.astro';
 import RMixes from '../../components/RMixes.astro';
+import V2Scatter from '../../components/V2Scatter.astro';
 import { releasesSorted, relatedArtists, plainText } from '../../lib/content';
 import { thumb } from '../../lib/media';
 import { sanitizeArtistHtml as clean } from '../../lib/sanitize';
 import { artistName, cleanSubtitle } from '../../lib/redesign';
+import { coverColor } from '../../lib/cover-color';
+import { artistColor, titleFit, titleClass } from '../../lib/v2';
 import taxonomies from '../../data/taxonomies.json';
 
 export async function getStaticPaths() {
@@ -20,8 +23,9 @@ const { artist } = Astro.props;
 const a = artist.data;
 const { name, roles } = artistName(a.name);
 const origin = cleanSubtitle(a.subtitle);
+const releases = await releasesSorted();
 // Releases, an denen der Artist beteiligt ist (im Original nur bei gesetztem „Music“-Titel sichtbar)
-const music = (await releasesSorted()).filter((r) => r.data.artists.some((ref) => ref.id === artist.id));
+const music = releases.filter((r) => r.data.artists.some((ref) => ref.id === artist.id));
 // Mixe von der Dicular-SoundCloud-Seite, an denen der Artist beteiligt ist (neueste zuerst)
 const mixes = (await getCollection('mixes')).filter((m) => m.data.artists.some((ref) => ref.id === artist.id)).sort((x, y) => +y.data.date - +x.data.date);
 const musicTitle = a.music?.title || 'Releases';
@@ -36,89 +40,74 @@ const sections = [
   ...(a.booking.length ? [{ id: 'booking', label: 'Booking' }] : []),
   ...(a.custom?.title ? [{ id: 'custom', label: a.custom.title }] : []),
 ];
+const musicTiles = await Promise.all(music.map(async (r) => ({ href: `/release/${r.id}/`, src: thumb(r.data.cover, 'gridthumb'), label: r.data.title, c: await coverColor(r.data.cover) })));
+const relatedTiles = await Promise.all(related.map(async (x) => ({ href: `/artist/${x.id}/`, src: x.data.photo, label: artistName(x.data.name).name, c: await artistColor(x, releases) })));
 ---
-<Redesign title={name} description={plainText(a.excerpt ?? artist.body)} image={a.photo}>
+<Redesign title={name} description={plainText(a.excerpt ?? artist.body)} image={a.photo} accent={await artistColor(artist, releases)}>
 	<main>
-		<section class="latest artist-head" style={`--cover:url("${a.background ?? a.photo}")`}>
-			<div class="latest-bg" aria-hidden="true"></div>
-			<div class="wrap latest-grid">
-				<RCard href={a.photo ?? '#bio'} src={a.photo} label={name} portrait width={800} height={1000} eager class="latest-cover" />
-				<div class="latest-info" data-reveal>
-					<p class="crumb"><a href="/artists/">Artists</a></p>
-					{(roles || origin) && <p class="kicker">{[roles, origin].filter(Boolean).join(' · ')}</p>}
-					<h1 class="artist-name chrome-text">{name}</h1>
-					{a.genres.length > 0 && <p class="chips">{a.genres.map((g) => <span class="chip ghost">{genreName(g)}</span>)}</p>}
-					<nav class="jump" aria-label="Sections">{sections.map((s) => <a href={`#${s.id}`}>{s.label}</a>)}</nav>
-				</div>
+		<section class="v2-hero sub">
+			<RCard href={a.photo ?? '#bio'} src={a.photo} label={name} portrait width={800} height={1000} eager class="v2-hero-cover" />
+			<div class="v2-hero-info" data-reveal>
+				<p class="crumb"><a href="/artists/">Artists</a></p>
+				{(roles || origin) && <p class="kicker">{[roles, origin].filter(Boolean).join(' · ')}</p>}
+				<h1 class={titleClass(name)} style={titleFit(name)}>{name}</h1>
+				{a.genres.length > 0 && <p class="chips">{a.genres.map((g) => <span class="chip ghost">{genreName(g)}</span>)}</p>}
+				<nav class="jump" aria-label="Sections">{sections.map((s) => <a href={`#${s.id}`}>{s.label}</a>)}</nav>
 			</div>
 		</section>
 
 		<section class="block" id="bio">
-			<div class="wrap narrow">
-				<h2 class="section-title" data-reveal>Biography</h2>
-				<div class="prose" data-reveal><Body entry={artist} /></div>
-			</div>
+			<div class="v2-head"><h2 class="section-title chrome-text" data-reveal>Biography</h2></div>
+			<div class="v2-text"><div class="prose" data-reveal><Body entry={artist} /></div></div>
 		</section>
 
 		{music.length > 0 && (
-			<section class="block" id="music">
-				<div class="wrap">
-					<h2 class="section-title" data-reveal>{musicTitle}</h2>
-					<div class="cards">
-						{music.map((r, i) => <RCard href={`/release/${r.id}/`} src={thumb(r.data.cover, 'gridthumb')} label={r.data.title} tilt={i % 2 ? 'r' : 'l'} delay={(i % 4) * 80} />)}
-					</div>
-				</div>
+			<section class="v2-sec" id="music">
+				<div class="v2-head right"><h2 class="section-title chrome-text" data-reveal>{musicTitle}</h2></div>
+				<V2Scatter items={musicTiles} />
 			</section>
 		)}
 
 		{mixes.length > 0 && (
-			<section class="block" id="mixes">
-				<div class="wrap">
-					<h2 class="section-title" data-reveal>Mixes</h2>
-					<RMixes mixes={mixes} exceptArtist={artist.id} />
-				</div>
+			<section class="v2-sec" id="mixes">
+				<div class="v2-head indent"><h2 class="section-title chrome-text" data-reveal>Mixes</h2></div>
+				<div class="v2-rows"><RMixes mixes={mixes} exceptArtist={artist.id} /></div>
 			</section>
 		)}
 
 		{a.soundcloud.length > 0 && (
-			<section class="block" id="soundcloud">
-				<div class="wrap narrow">
-					<h2 class="section-title" data-reveal>SoundCloud</h2>
-					{a.soundcloud.map((url) => <SoundCloud url={url} />)}
-				</div>
+			<section class="v2-sec" id="soundcloud">
+				<div class="v2-head"><h2 class="section-title chrome-text" data-reveal>SoundCloud</h2></div>
+				<div class="v2-text">{a.soundcloud.map((url) => <SoundCloud url={url} />)}</div>
 			</section>
 		)}
 
 		{(a.booking.length > 0 || a.custom?.title) && (
-			<section class="block">
-				<div class="wrap narrow">
-					{a.booking.length > 0 && (
-						<div id="booking" data-reveal>
-							<h2 class="section-title">Booking</h2>
-							<dl class="booking">
+			<section class="v2-sec">
+				{a.booking.length > 0 && (
+					<div id="booking">
+						<div class="v2-head right"><h2 class="section-title chrome-text" data-reveal>Booking</h2></div>
+						<div class="v2-text">
+							<dl class="booking" data-reveal>
 								{a.booking.map((b) => <Fragment><dt>{b.label}</dt><dd set:html={clean(b.value)} /></Fragment>)}
 							</dl>
 						</div>
-					)}
-					{a.custom?.title && (
-						<div id="custom" data-reveal>
-							<h2 class="section-title">{a.custom.title}</h2>
-							{a.custom.content && <div class="prose" set:html={clean(a.custom.content)} />}
-						</div>
-					)}
-				</div>
+					</div>
+				)}
+				{a.custom?.title && (
+					<div id="custom">
+						<div class="v2-head"><h2 class="section-title chrome-text" data-reveal>{a.custom.title}</h2></div>
+						{a.custom.content && <div class="v2-text"><div class="prose" data-reveal set:html={clean(a.custom.content)} /></div>}
+					</div>
+				)}
 			</section>
 		)}
 
-		{related.length > 0 && (
-			<section class="block">
-				<div class="wrap">
-					<h2 class="section-title" data-reveal>More Artists</h2>
-					<div class="cards">
-						{related.map((x, i) => <RCard href={`/artist/${x.id}/`} src={x.data.photo} label={artistName(x.data.name).name} portrait tilt={(['l', 'r', 's'] as const)[i % 3]} delay={i * 80} />)}
-					</div>
-					<p class="more" data-reveal><a class="btn ghost" href="/artists/">All Artists</a></p>
-				</div>
+		{relatedTiles.length > 0 && (
+			<section class="v2-sec">
+				<div class="v2-head indent"><h2 class="section-title chrome-text" data-reveal>More Artists</h2></div>
+				<V2Scatter items={relatedTiles} portrait phase={4} />
+				<p class="v2-more" data-reveal><a class="btn ghost" href="/artists/">All Artists</a></p>
 			</section>
 		)}
 	</main>

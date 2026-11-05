@@ -1,13 +1,14 @@
 ---
-// Redesign: Kopf der Übersichtsseiten — großer Chrome-Titel, Unterzeile, Hintergrund (unscharfes Bild + Punktraster)
+// V2: Kopf der Übersichts- und Textseiten. Riesiger Chrome-Titel, dahinter ragt ein schräges Bild vom rechten Rand herein.
 interface Props { title: string; kicker?: string; intro?: string; image?: string }
 const { title, kicker, intro, image } = Astro.props;
+const w = Math.max(...title.split(/\s+/).map((x) => x.length));
 ---
-<section class="latest page-head" style={image ? `--cover:url("${image}")` : undefined}>
-	{image && <div class="latest-bg" aria-hidden="true"></div>}
-	<div class="wrap">
+<section class="v2-page-head">
+	{image && <img class="v2-page-img" src={image} alt="" width="900" height="900" fetchpriority="high" />}
+	<div class="v2-page-text">
 		{kicker && <p class="kicker" data-reveal>{kicker}</p>}
-		<h1 class="page-title chrome-text" data-reveal>{title}</h1>
+		<h1 class="page-title chrome-text" style={`--w:${w}`} data-reveal>{title}</h1>
 		{intro && <p class="page-intro" data-reveal>{intro}</p>}
 		<slot />
 	</div>

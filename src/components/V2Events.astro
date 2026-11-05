@@ -1,0 +1,28 @@
+---
+// V2: Termine ohne Linien, großes Datum, schräger Flyer, Zeilen frei versetzt. Der Flyer färbt beim Darüberfahren die Seite.
+import type { CollectionEntry } from 'astro:content';
+import { plainText } from '../lib/content';
+import { thumb } from '../lib/media';
+import { coverColor } from '../lib/cover-color';
+interface Props { items: CollectionEntry<'events'>[] }
+const { items } = Astro.props;
+const today = new Date(new Date().toISOString().slice(0, 10));
+const colors = await Promise.all(items.map((e) => coverColor(e.data.image)));
+const fmt = (o: Intl.DateTimeFormatOptions, d: Date) => d.toLocaleDateString('en-GB', { ...o, timeZone: 'UTC' });
+---
+<ul class="v2-events">
+	{items.map((e, i) => (
+		<li data-reveal style={`--d:${(i % 4) * 60}ms`}>
+			<a href={`/event/${e.id}/`} class="gig-row" data-c-hover={colors[i]}>
+				<span class="date"><b>{fmt({ day: '2-digit' }, e.data.date)}</b>{fmt({ month: 'short', year: 'numeric' }, e.data.date)}</span>
+				<span class="gig-flyer">{e.data.image && <img src={thumb(e.data.image, 'thumbnail')} alt="" width="150" height="150" loading="lazy" />}</span>
+				<span class="gig">
+					<em class="gig-day">{fmt({ weekday: 'long' }, e.data.date)}</em>
+					<strong>{e.data.title}</strong>
+					<em>{[e.data.location, e.data.street, e.data.city, e.data.country].filter(Boolean).join(', ') || plainText(e.data.excerpt ?? e.body, 90) || ''}</em>
+				</span>
+				<span class={`badge ${e.data.date >= today ? 'up' : ''}`}>{e.data.date >= today ? 'Upcoming' : 'Past'}</span>
+			</a>
+		</li>
+	))}
+</ul>

@@ -16,9 +16,9 @@ const items = (await newsSorted()).filter((n) => n.data.categories.includes(term
 <Redesign title={name} description={`News in the category ${name}`}>
 	<main>
 		<RPageHead title={name} kicker="Category" intro={`${items.length} ${items.length === 1 ? 'post' : 'posts'}`} image={items[0]?.data.image} />
-		<section class="block"><div class="wrap">
+		<section class="v2-sec">
 			<RNewsGrid items={items} />
-			<p class="more" data-reveal><a class="btn ghost" href="/dicular-rec-news/">All News</a></p>
-		</div></section>
+			<p class="v2-more" data-reveal><a class="btn ghost" href="/dicular-rec-news/">All News</a></p>
+		</section>
 	</main>
 </Redesign>

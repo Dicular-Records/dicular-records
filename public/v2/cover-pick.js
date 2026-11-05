@@ -10,7 +10,7 @@
     del: function (k) { try { localStorage.removeItem(k); } catch (e) {} } };
   var shown = original;
 
-  function titleInto(h, r) { h.className = r.long ? 'v2-title long' : 'v2-title'; h.style.setProperty('--w', r.w); h.textContent = r.title; }
+  function titleInto(h, r) { h.className = r.size; h.style.setProperty('--w', r.w); h.textContent = r.title; }
   function text(tag, value, parent) { var el = document.createElement(tag); el.textContent = value; parent.appendChild(el); return el; }
 
   function fillHero(r) {

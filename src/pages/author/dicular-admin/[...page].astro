@@ -13,6 +13,6 @@ const items = await newsSorted();
 <Redesign title="Dicular Records" description="All posts by Dicular Records">
 	<main>
 		<RPageHead title="Dicular Records" kicker="Author" intro={`${items.length} posts`} image={items[0]?.data.image} />
-		<section class="block"><div class="wrap"><RNewsGrid items={items} /></div></section>
+		<section class="v2-sec"><RNewsGrid items={items} /></section>
 	</main>
 </Redesign>

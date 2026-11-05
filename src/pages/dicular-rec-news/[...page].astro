@@ -1,11 +1,13 @@
 ---
-// Redesign: News-Übersicht — neuester Beitrag groß, übrige als Kartenraster (Bild schräg, Datum, Titel, Anriss).
+// V2: News-Übersicht. Neuester Beitrag groß mit übergreifendem Titel, die übrigen frei versetzt.
 // Alte Seitenadressen /dicular-rec-news/page/N/ leiten auf diese Seite um.
 import Redesign from '../../layouts/Redesign.astro';
 import RPageHead from '../../components/RPageHead.astro';
+import RNewsGrid from '../../components/RNewsGrid.astro';
 import { newsSorted, plainText } from '../../lib/content';
-import { thumb } from '../../lib/media';
 import { fmtDate } from '../../lib/redesign';
+import { coverColor } from '../../lib/cover-color';
+import { cleanTitle, titleClass, titleFit } from '../../lib/v2';
 import site from '../../data/site.json';
 
 export function getStaticPaths() {
@@ -13,37 +15,23 @@ export function getStaticPaths() {
 }
 const news = await newsSorted();
 const [first, ...rest] = news;
-const teaser = (n: typeof first, max: number) => plainText((n.data.excerpt ?? n.body ?? '').replace(/\*\*|##/g, ''), max);
+const teaser = plainText((first.data.excerpt ?? first.body ?? '').replace(/\*\*|##/g, ''), 260);
 ---
 <Redesign title="News" description="News from Dicular Records">
 	<main>
-		<RPageHead title="News" kicker="Dicular Rec News" intro={`${news.length} posts — releases, artists and label news.`} image={first.data.image} />
+		<RPageHead title="News" kicker="Dicular Rec News" intro={`${news.length} posts — releases, artists and label news.`} />
 
-		<section class="block">
-			<div class="wrap">
-				<a href={`/${first.id}/`} class="news-feature" data-reveal>
-					<span class="card tilt-l"><img src={first.data.image ?? site.shareImage} alt="" width="900" height="900" /></span>
-					<span class="news-feature-text">
-						<time>{fmtDate(first.data.date)}</time>
-						<strong>{first.data.title}</strong>
-						<em>{teaser(first, 260)}</em>
-						<span class="btn">Read more</span>
-					</span>
-				</a>
-
-				<div class="news-grid">
-					{rest.map((n, i) => (
-						<a href={`/${n.id}/`} class="news-card" data-reveal style={`--d:${(i % 3) * 80}ms`}>
-							<span class={`card ${i % 2 ? 'tilt-r' : 'tilt-l'}`}>
-								{n.data.image ? <img src={thumb(n.data.image, 'gridthumb')} alt="" width="500" height="500" loading="lazy" /> : <span class="card-empty" aria-hidden="true"></span>}
-							</span>
-							<time>{fmtDate(n.data.date)}</time>
-							<strong>{n.data.title}</strong>
-							<em>{teaser(n, 130)}</em>
-						</a>
-					))}
-				</div>
-			</div>
+		<section class="v2-sec">
+			<a href={`/${first.id}/`} class="v2-hero plain" data-c-hover={await coverColor(first.data.image)}>
+				<span class="card tilt-l v2-hero-cover" data-reveal><img src={first.data.image ?? site.shareImage} alt="" width="900" height="900" /></span>
+				<span class="v2-hero-info" data-reveal>
+					<time class="kicker">{fmtDate(first.data.date)}</time>
+					<span class={titleClass(first.data.title)} style={titleFit(first.data.title)}>{cleanTitle(first.data.title)}</span>
+					<em class="v2-lead">{teaser}</em>
+					<span class="btn">Read more</span>
+				</span>
+			</a>
+			<RNewsGrid items={rest} />
 		</section>
 	</main>
 </Redesign>

@@ -1,12 +1,16 @@
 ---
-// Redesign: Friend-Seite — Profilbild schräg mit Namensbalken über dem Kopfbild, Tätigkeiten, Social Links; Text; weitere Friends.
+// V2: Friend-Seite. Profilbild schräg mit Namensbalken, der Name greift darüber, die Seite trägt die Farbe des Bildes;
+// Tätigkeiten, Social Links; Text; weitere Friends.
 import { getCollection } from 'astro:content';
 import Redesign from '../../layouts/Redesign.astro';
 import RCard from '../../components/RCard.astro';
 import RBody from '../../components/RBody.astro';
+import V2Scatter from '../../components/V2Scatter.astro';
 import { friendsSorted, plainText } from '../../lib/content';
 import { thumb } from '../../lib/media';
 import { memberTypeName } from '../../lib/redesign';
+import { coverColor } from '../../lib/cover-color';
+import { titleClass, titleFit } from '../../lib/v2';
 
 export async function getStaticPaths() {
   return (await getCollection('friends')).map((friend) => ({ params: { slug: friend.id }, props: { friend } }));
@@ -15,37 +19,32 @@ const { friend } = Astro.props;
 const f = friend.data;
 const others = (await friendsSorted()).filter((x) => x.id !== friend.id).slice(0, 4);
 const pic = f.profilePic ?? f.listImage ?? f.headerImage;
+const tiles = await Promise.all(others.map(async (x) => {
+  const img = x.data.listImage ?? x.data.headerImage ?? x.data.profilePic;
+  return { href: `/members/${x.id}/`, src: thumb(img, 'gridthumb'), label: x.data.name, c: await coverColor(img) };
+}));
 ---
-<Redesign title={f.name} description={plainText(f.excerpt ?? friend.body)} image={f.headerImage ?? pic}>
+<Redesign title={f.name} description={plainText(f.excerpt ?? friend.body)} image={f.headerImage ?? pic} accent={await coverColor(pic)}>
 	<main>
-		<section class="latest artist-head" style={`--cover:url("${f.headerImage ?? pic}")`}>
-			<div class="latest-bg" aria-hidden="true"></div>
-			<div class="wrap latest-grid">
-				<RCard href={pic ?? '#about'} src={pic} label={f.name} eager class="latest-cover" />
-				<div class="latest-info" data-reveal>
-					<p class="crumb"><a href="/friends/">Friends</a></p>
-					<h1 class="artist-name chrome-text">{f.name}</h1>
-					{f.memberTypes.length > 0 && <p class="chips">{f.memberTypes.map((t) => <a class="chip ghost" href={`/membertype/${t}/`}>{memberTypeName(t)}</a>)}</p>}
-					{f.socials.length > 0 && <p class="chips">{f.socials.map((s) => <a class="chip" href={s.url} target="_blank" rel="noopener">{s.icon.replace(/^qticon-/, '')}</a>)}</p>}
-				</div>
+		<section class="v2-hero sub">
+			<RCard href={pic ?? '#about'} src={pic} label={f.name} eager width={900} height={900} class="v2-hero-cover" />
+			<div class="v2-hero-info" data-reveal>
+				<p class="crumb"><a href="/friends/">Friends</a></p>
+				<h1 class={titleClass(f.name)} style={titleFit(f.name)}>{f.name}</h1>
+				{f.memberTypes.length > 0 && <p class="chips">{f.memberTypes.map((t) => <a class="chip ghost" href={`/membertype/${t}/`}>{memberTypeName(t)}</a>)}</p>}
+				{f.socials.length > 0 && <p class="chips">{f.socials.map((s) => <a class="chip" href={s.url} target="_blank" rel="noopener">{s.icon.replace(/^qticon-/, '')}</a>)}</p>}
 			</div>
 		</section>
 
 		<section class="block" id="about">
-			<div class="wrap narrow">
-				<div class="prose" data-reveal><RBody entry={friend} /></div>
-			</div>
+			<div class="v2-text"><div class="prose" data-reveal><RBody entry={friend} /></div></div>
 		</section>
 
-		{others.length > 0 && (
-			<section class="block">
-				<div class="wrap">
-					<h2 class="section-title" data-reveal>More Friends</h2>
-					<div class="cards">
-						{others.map((x, i) => <RCard href={`/members/${x.id}/`} src={thumb(x.data.listImage ?? x.data.headerImage ?? x.data.profilePic, 'gridthumb')} label={x.data.name} tilt={i % 2 ? 'r' : 'l'} delay={i * 80} />)}
-					</div>
-					<p class="more" data-reveal><a class="btn ghost" href="/friends/">All Friends</a></p>
-				</div>
+		{tiles.length > 0 && (
+			<section class="v2-sec">
+				<div class="v2-head right"><h2 class="section-title chrome-text" data-reveal>More Friends</h2></div>
+				<V2Scatter items={tiles} phase={2} />
+				<p class="v2-more" data-reveal><a class="btn ghost" href="/friends/">All Friends</a></p>
 			</section>
 		)}
 	</main>

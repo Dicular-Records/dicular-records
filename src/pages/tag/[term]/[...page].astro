@@ -17,6 +17,6 @@ const items = (await newsSorted()).filter((n) => n.data.tags.includes(term));
 <Redesign title={name} description={`News tagged ${name}`}>
 	<main>
 		<RPageHead title={name} kicker="Tag" intro={`${items.length} ${items.length === 1 ? 'post' : 'posts'}`} image={items[0]?.data.image} />
-		<section class="block"><div class="wrap"><RNewsGrid items={items} /></div></section>
+		<section class="v2-sec"><RNewsGrid items={items} /></section>
 	</main>
 </Redesign>

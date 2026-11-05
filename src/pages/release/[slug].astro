@@ -1,15 +1,17 @@
 ---
-// Redesign: Release-Seite. Kopf wie „Neuestes Release“ der Startseite (Cover schräg, Genre-Wörter, Punktraster),
-// darunter Text, Videos (Zwei-Klick), Artists des Releases und weitere Releases.
+// V2: Release-Seite. Kopf wie auf der Startseite (Cover schräg, Titel greift darüber), die Seite trägt die Farbe des Covers.
+// Darunter Text und Videos (Zwei-Klick) versetzt im Raum, weitere Releases wie hingeworfen.
 import { coverColor } from '../../lib/cover-color';
 import { getCollection, getEntries } from 'astro:content';
 import Redesign from '../../layouts/Redesign.astro';
 import RCard from '../../components/RCard.astro';
 import RTracks from '../../components/RTracks.astro';
 import Body from '../../components/RBody.astro';
+import V2Scatter from '../../components/V2Scatter.astro';
 import { relatedReleases, releasesSorted, plainText } from '../../lib/content';
 import { thumb } from '../../lib/media';
 import { artistName, fmtDate, youtubeId } from '../../lib/redesign';
+import { cleanTitle, titleClass, titleFit } from '../../lib/v2';
 import taxonomies from '../../data/taxonomies.json';
 
 export async function getStaticPaths() {
@@ -24,7 +26,6 @@ const artists = r.artists.length ? await getEntries(r.artists) : [];
 const genreName = (g: string) => (taxonomies.genre as Record<string, string>)[g] ?? g;
 // nur Genres mit eigenem Archiv werden verlinkt
 const genreHref = (g: string) => ((taxonomies.genre as Record<string, string>)[g] ? `/genre/${g}/` : undefined);
-const words = r.genres.length ? r.genres.flatMap((g) => genreName(g).split('-')) : ['Progressive', 'Trance', 'House', 'Techno'];
 // Sublabel Dicular Digital → Label verlinkt auf die Sublabel-Seite
 const labelHref = /digital/i.test(r.label) ? '/dicular-digital/' : undefined;
 // zweisprachiger Text (Blöcke <div class="lang" lang="en|de">) → Umschalter
@@ -32,41 +33,38 @@ const bilingual = /class="lang" lang="de"/.test(release.body ?? '');
 const videos = r.tracks.filter((t) => youtubeId(t.video)).map((t) => ({ id: youtubeId(t.video)!, title: t.videoLabel || t.title || r.title }));
 const hasBody = (release.body ?? '').replace(/<[^>]+>|&nbsp;|\s/g, '').length > 0;
 const description = plainText(`${r.catalog ? `${r.catalog} · ` : ''}${r.title} – ${r.label}. ${release.body ?? ''}`);
+const tiles = await Promise.all(related.map(async (x) => ({ href: `/release/${x.id}/`, src: thumb(x.data.cover, 'gridthumb'), label: x.data.title, c: await coverColor(x.data.cover) })));
 ---
 <Redesign title={r.title} description={description} image={r.cover} accent={await coverColor(r.cover)}>
 	<main>
-		<section class="latest release-head" style={`--cover:url("${r.cover}")`}>
-			<div class="latest-bg" aria-hidden="true"></div>
-			<div class="words" aria-hidden="true">{words.slice(0, 4).map((w, i) => <span style={`--r:${[-6, 3, -2, 5][i]}deg`}>{w}</span>)}</div>
-			<div class="wrap latest-grid">
-				<RCard href={r.cover} src={r.cover} width={900} height={900} eager class="latest-cover"
-					label={[r.catalog, r.label].filter(Boolean).join(' · ')} />
-				<div class="latest-info" data-reveal>
-					<p class="crumb"><a href="/releases/">Releases</a></p>
-					<p class="kicker">
-						{labelHref ? <a href={labelHref}>{r.label}</a> : r.label}{r.date && !r.upcoming && ` · ${fmtDate(r.date)}`}
-						{r.upcoming && <span class="badge up soon-badge">Coming soon</span>}
+		<section class="v2-hero sub">
+			<RCard href={r.cover} src={r.cover} width={900} height={900} eager class="v2-hero-cover"
+				label={[r.catalog, r.label].filter(Boolean).join(' · ')} />
+			<div class="v2-hero-info" data-reveal>
+				<p class="crumb"><a href="/releases/">Releases</a></p>
+				<p class="kicker">
+					{labelHref ? <a href={labelHref}>{r.label}</a> : r.label}{r.date && !r.upcoming && ` · ${fmtDate(r.date)}`}
+					{r.upcoming && <span class="badge up soon-badge">Coming soon</span>}
+				</p>
+				<h1 class={titleClass(r.title)} style={titleFit(r.title)}>{cleanTitle(r.title)}</h1>
+				{(artists.length > 0 || r.genres.length > 0) && (
+					<p class="chips">
+						{artists.map((a) => <a class="chip" href={`/artist/${a.id}/`}>{artistName(a.data.name).name}</a>)}
+						{r.genres.map((g) => genreHref(g) ? <a class="chip ghost" href={genreHref(g)}>{genreName(g)}</a> : <span class="chip ghost">{genreName(g)}</span>)}
 					</p>
-					<h1 class="headline">{r.title}</h1>
-					{(artists.length > 0 || r.genres.length > 0) && (
-						<p class="chips">
-							{artists.map((a) => <a class="chip" href={`/artist/${a.id}/`}>{artistName(a.data.name).name}</a>)}
-							{r.genres.map((g) => genreHref(g) ? <a class="chip ghost" href={genreHref(g)}>{genreName(g)}</a> : <span class="chip ghost">{genreName(g)}</span>)}
-						</p>
-					)}
-					<RTracks release={release} buy />
-					{r.buyLinks.length > 0 && (
-						<div class="actions">{r.buyLinks.map((b, i) => b.url
-							? <a class={`btn${i ? ' ghost' : ''}`} href={b.url} target="_blank" rel="noopener">{b.label || 'Buy'}</a>
-							: <span class="btn ghost pending" title="Link folgt zum Release">{b.label} <small>soon</small></span>)}</div>
-					)}
-				</div>
+				)}
+				<RTracks release={release} buy />
+				{r.buyLinks.length > 0 && (
+					<div class="actions">{r.buyLinks.map((b, i) => b.url
+						? <a class={`btn${i ? ' ghost' : ''}`} href={b.url} target="_blank" rel="noopener">{b.label || 'Buy'}</a>
+						: <span class="btn ghost pending" title="Link folgt zum Release">{b.label} <small>soon</small></span>)}</div>
+				)}
 			</div>
 		</section>
 
 		{(hasBody || videos.length > 0) && (
 			<section class="block">
-				<div class="wrap narrow">
+				<div class="v2-text">
 					{hasBody && bilingual && (
 						<div class="lang-switch" role="group" aria-label="Language" data-reveal>
 							<button type="button" data-lang="en" aria-pressed="true">English</button><button type="button" data-lang="de" aria-pressed="false">Deutsch</button>
@@ -87,15 +85,11 @@ const description = plainText(`${r.catalog ? `${r.catalog} · ` : ''}${r.title} 
 			</section>
 		)}
 
-		{related.length > 0 && (
-			<section class="block">
-				<div class="wrap">
-					<h2 class="section-title" data-reveal>More Releases</h2>
-					<div class="cards">
-						{related.map((x, i) => <RCard href={`/release/${x.id}/`} src={thumb(x.data.cover, 'gridthumb')} label={x.data.title} tilt={i % 2 ? 'r' : 'l'} delay={(i % 4) * 80} />)}
-					</div>
-					<p class="more" data-reveal><a class="btn ghost" href="/releases/">All Releases</a></p>
-				</div>
+		{tiles.length > 0 && (
+			<section class="v2-sec">
+				<div class="v2-head right"><h2 class="section-title chrome-text" data-reveal>More Releases</h2></div>
+				<V2Scatter items={tiles} phase={2} />
+				<p class="v2-more" data-reveal><a class="btn ghost" href="/releases/">All Releases</a></p>
 			</section>
 		)}
 	</main>

@@ -1,23 +1,26 @@
 ---
-// Redesign: Raster aus News-Karten (Bild schräg, Datum, Titel, Anriss) — für Archive (Kategorie, Tag, Autor)
+// V2: News frei versetzt und verschieden groß; das Bild färbt beim Darüberfahren die Seite.
+// Für die News-Übersicht, Archive (Kategorie, Tag, Autor) und „More News“.
 import type { CollectionEntry } from 'astro:content';
 import { plainText } from '../lib/content';
 import { thumb } from '../lib/media';
 import { fmtDate } from '../lib/redesign';
-interface Props { items: CollectionEntry<'news'>[]; empty?: string }
-const { items, empty = 'No posts yet.' } = Astro.props;
-const title = (t: string) => t.replace(/#{2,}/g, '').replace(/\s{2,}/g, ' ').trim();
+import { coverColor } from '../lib/cover-color';
+import { cleanTitle } from '../lib/v2';
+interface Props { items: CollectionEntry<'news'>[]; empty?: string; teaser?: boolean }
+const { items, empty = 'No posts yet.', teaser = true } = Astro.props;
+const colors = await Promise.all(items.map((n) => coverColor(n.data.image)));
 ---
-{items.length === 0 ? <p class="page-intro" data-reveal>{empty}</p> : (
-	<div class="news-grid">
+{items.length === 0 ? <p class="page-intro v2-text" data-reveal>{empty}</p> : (
+	<div class="v2-news">
 		{items.map((n, i) => (
-			<a href={`/${n.id}/`} class="news-card" data-reveal style={`--d:${(i % 3) * 80}ms`}>
+			<a href={`/${n.id}/`} class="news-card" data-c-hover={colors[i]} data-reveal style={`--d:${(i % 3) * 80}ms`}>
 				<span class={`card ${i % 2 ? 'tilt-r' : 'tilt-l'}`}>
 					{n.data.image ? <img src={thumb(n.data.image, 'gridthumb')} alt="" width="500" height="500" loading="lazy" /> : <span class="card-empty" aria-hidden="true"></span>}
 				</span>
 				<time>{fmtDate(n.data.date)}</time>
-				<strong>{title(n.data.title)}</strong>
-				<em>{plainText((n.data.excerpt ?? n.body ?? '').replace(/\*\*|##/g, ''), 130)}</em>
+				<strong>{cleanTitle(n.data.title)}</strong>
+				{teaser && <em>{plainText((n.data.excerpt ?? n.body ?? '').replace(/\*\*|##/g, ''), 130)}</em>}
 			</a>
 		))}
 	</div>

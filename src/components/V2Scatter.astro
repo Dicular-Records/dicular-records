@@ -1,0 +1,28 @@
+---
+// V2: Cover und Fotos wie hingeworfen, verschieden groß und überlappend, ohne sichtbares Raster.
+// Die Größen wiederholen sich alle acht Karten; `phase` verschiebt den Anfang, damit nicht jede Gruppe gleich aussieht.
+// Jede Karte färbt beim Darüberfahren die Seite (data-c-hover, public/v2/site.js).
+import RCard from './RCard.astro';
+
+export interface ScatterItem {
+  href: string;
+  src?: string;
+  label: string;
+  /** Farbe beim Darüberfahren */
+  c?: string;
+  /** für „Cover wählen“ auf der Startseite */
+  id?: string;
+  /** kleine Zeile unter dem Bild */
+  meta?: string;
+}
+interface Props { items: ScatterItem[]; portrait?: boolean; phase?: number }
+const { items, portrait = false, phase = 0 } = Astro.props;
+---
+<div class={`v2-grid${portrait ? ' people' : ''}`}>
+	{items.map((x, i) => (
+		<div class={`v2-tile v2-t${((i + phase) % 8) + 1}`} data-c-hover={x.c} data-id={x.id}>
+			<RCard href={x.href} src={x.src} label={x.label} portrait={portrait} tilt={(['l', 'r', 's'] as const)[(i + phase) % 3]} delay={(i % 4) * 80} />
+			{x.meta && <p class="tile-meta" data-reveal style={`--d:${(i % 4) * 80 + 60}ms`}>{x.meta}</p>}
+		</div>
+	))}
+</div>

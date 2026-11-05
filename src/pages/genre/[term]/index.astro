@@ -1,10 +1,11 @@
 ---
-// Redesign: Genre-Archiv — Releases des Genres als schräge Karten
+// V2: Genre-Archiv. Releases des Genres wie hingeworfen, die Seite trägt die Farbe des neuesten.
 import Redesign from '../../../layouts/Redesign.astro';
 import RPageHead from '../../../components/RPageHead.astro';
-import RCard from '../../../components/RCard.astro';
+import V2Scatter from '../../../components/V2Scatter.astro';
 import { releasesSorted } from '../../../lib/content';
 import { thumb } from '../../../lib/media';
+import { coverColor } from '../../../lib/cover-color';
 import taxonomies from '../../../data/taxonomies.json';
 
 export function getStaticPaths() {
@@ -13,15 +14,14 @@ export function getStaticPaths() {
 const { term } = Astro.params as { term: string };
 const name = (taxonomies.genre as Record<string, string>)[term].replace(/-/g, ' ');
 const releases = (await releasesSorted()).filter((r) => r.data.genres.includes(term));
+const tiles = await Promise.all(releases.map(async (r) => ({ href: `/release/${r.id}/`, src: thumb(r.data.cover, 'gridthumb'), label: r.data.title, c: await coverColor(r.data.cover) })));
 ---
-<Redesign title={name} description={`${name} releases on Dicular Records`} image={releases[0]?.data.cover}>
+<Redesign title={name} description={`${name} releases on Dicular Records`} image={releases[0]?.data.cover} accent={releases[0] ? await coverColor(releases[0].data.cover) : undefined}>
 	<main>
 		<RPageHead title={name} kicker="Genre" intro={`${releases.length} ${releases.length === 1 ? 'release' : 'releases'}`} image={releases[0]?.data.cover} />
-		<section class="block"><div class="wrap">
-			{releases.length === 0 ? <p class="page-intro" data-reveal>No releases yet.</p> : (
-				<div class="cards">{releases.map((r, i) => <RCard href={`/release/${r.id}/`} src={thumb(r.data.cover, 'gridthumb')} label={r.data.title} tilt={i % 2 ? 'r' : 'l'} delay={(i % 4) * 80} />)}</div>
-			)}
-			<p class="more" data-reveal><a class="btn ghost" href="/releases/">All Releases</a></p>
-		</div></section>
+		<section class="v2-sec">
+			{releases.length === 0 ? <p class="page-intro v2-text" data-reveal>No releases yet.</p> : <V2Scatter items={tiles} />}
+			<p class="v2-more" data-reveal><a class="btn ghost" href="/releases/">All Releases</a></p>
+		</section>
 	</main>
 </Redesign>

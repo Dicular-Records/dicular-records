@@ -4,10 +4,12 @@
 import Redesign from '../../layouts/Redesign.astro';
 import RCard from '../../components/RCard.astro';
 import RTracks from '../../components/RTracks.astro';
+import V2Scatter from '../../components/V2Scatter.astro';
 import { releasesSorted, artistsSorted, eventsSorted, newsSorted, fmtShort, plainText } from '../../lib/content';
 import { thumb, audio } from '../../lib/media';
 import { artistName } from '../../lib/redesign';
 import { coverColor } from '../../lib/cover-color';
+import { cleanTitle, titleClass as size, titleFit as fit } from '../../lib/v2';
 
 const releases = await releasesSorted();
 // oben das neueste erschienene Release (nicht die angekündigten)
@@ -16,7 +18,7 @@ const rest = releases.filter((r) => r !== latest);
 const withColor = async (r: (typeof releases)[number]) => ({ r, c: await coverColor(r.data.cover) });
 const latestColor = await coverColor(latest.data.cover);
 const bands = await Promise.all(rest.slice(0, 3).map(withColor));
-const tiles = await Promise.all(rest.slice(3, 11).map(withColor));
+const tiles = await Promise.all(rest.slice(3, 11).map(async (r) => ({ href: `/release/${r.id}/`, src: thumb(r.data.cover, 'gridthumb'), label: r.data.title, c: await coverColor(r.data.cover), id: r.id })));
 const artists = await artistsSorted();
 const events = (await eventsSorted()).reverse().slice(0, 4);
 const news = (await newsSorted()).slice(0, 3);
@@ -25,19 +27,15 @@ const radio = releases.flatMap((r) => r.data.tracks.filter((t) => t.mp3).map((t)
 const logo = '/wp-content/uploads/2022/01/Logo_Dicular-Rec-Metal-600x600-2.png';
 const day = (d: Date) => d.toLocaleDateString('en-GB', { day: '2-digit', timeZone: 'UTC' });
 const mon = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' });
-// Katalognummer steht schon in der Zeile darüber
-const cleanTitle = (t: string) => t.replace(/^DIC[\s_-]?\d+[\s_:-]*/i, '').replace(/\s+DIC\d+$/i, '').replace(/_/g, ' ');
 // Nur Entwurf: alle Releases für das Menü „Cover wählen“, das echte aktuelle zuerst (public/v2/cover-pick.js)
 const coverData = await Promise.all([latest, ...rest].map(async (r) => ({
-  id: r.id, fullTitle: r.data.title, title: cleanTitle(r.data.title), long: cleanTitle(r.data.title).length > 34,
+  id: r.id, fullTitle: r.data.title, title: cleanTitle(r.data.title), size: size(r.data.title),
   w: Math.max(...cleanTitle(r.data.title).split(/\s+/).map((x) => x.length)),
   catalog: r.data.catalog, label: r.data.label, upcoming: r.data.upcoming, cover: r.data.cover,
   thumb: thumb(r.data.cover, 'gridthumb'), small: thumb(r.data.cover, 'thumbnail'), c: await coverColor(r.data.cover),
   tracks: r.data.tracks.map((t) => ({ title: t.title || r.data.title, artist: t.artist, src: audio(t.mp3) })),
   buy: r.data.buyLinks[0]?.url ? { label: r.data.buyLinks[0].label || 'Buy', url: r.data.buyLinks[0].url } : undefined,
 })));
-const size = (t: string) => (cleanTitle(t).length > 34 ? 'v2-title long' : 'v2-title');
-const fit = (t: string) => `--w:${Math.max(...cleanTitle(t).split(/\s+/).map((w) => w.length))}`;
 ---
 <Redesign title="Startseite" intro accent={latestColor}>
 	<!-- Intro: Logo wie im Filmvorspann -->
@@ -81,13 +79,7 @@ const fit = (t: string) => `--w:${Math.max(...cleanTitle(t).split(/\s+/).map((w)
 		<!-- Katalog: Cover wie hingeworfen -->
 		<section>
 			<div class="v2-head indent"><h2 class="section-title chrome-text" data-reveal>Releases</h2></div>
-			<div class="v2-grid">
-				{tiles.map(({ r, c }, i) => (
-					<div class="v2-tile" data-c-hover={c} data-id={r.id}>
-						<RCard href={`/release/${r.id}/`} src={thumb(r.data.cover, 'gridthumb')} label={r.data.title} tilt={(['l', 'r', 's'] as const)[i % 3]} delay={(i % 4) * 80} />
-					</div>
-				))}
-			</div>
+			<V2Scatter items={tiles} />
 			<p class="v2-more" data-reveal><a class="btn ghost" href="/releases/">All Releases</a></p>
 		</section>
 

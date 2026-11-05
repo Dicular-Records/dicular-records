@@ -1,11 +1,12 @@
 ---
-// Redesign: Member-Typ-Archiv — Friends mit dieser Tätigkeit als schräge Karten
+// V2: Member-Typ-Archiv. Friends mit dieser Tätigkeit wie hingeworfen.
 import Redesign from '../../../layouts/Redesign.astro';
 import RPageHead from '../../../components/RPageHead.astro';
-import RCard from '../../../components/RCard.astro';
+import V2Scatter from '../../../components/V2Scatter.astro';
 import { friendsSorted } from '../../../lib/content';
 import { thumb } from '../../../lib/media';
 import { memberTypeName } from '../../../lib/redesign';
+import { coverColor } from '../../../lib/cover-color';
 import taxonomies from '../../../data/taxonomies.json';
 
 export function getStaticPaths() {
@@ -14,15 +15,17 @@ export function getStaticPaths() {
 const { term } = Astro.params as { term: string };
 const name = memberTypeName(term);
 const friends = (await friendsSorted()).filter((f) => f.data.memberTypes.includes(term));
+const tiles = await Promise.all(friends.map(async (f) => {
+  const img = f.data.listImage ?? f.data.headerImage ?? f.data.profilePic;
+  return { href: `/members/${f.id}/`, src: thumb(img, 'gridthumb'), label: f.data.name, c: await coverColor(img) };
+}));
 ---
 <Redesign title={name} description={`Friends of Dicular Records: ${name}`}>
 	<main>
 		<RPageHead title={name} kicker="Friends" intro={`${friends.length} ${friends.length === 1 ? 'friend' : 'friends'}`} />
-		<section class="block"><div class="wrap">
-			<div class="cards friends">
-				{friends.map((f, i) => <RCard href={`/members/${f.id}/`} src={thumb(f.data.listImage ?? f.data.headerImage ?? f.data.profilePic, 'gridthumb')} label={f.data.name} tilt={(['l', 'r', 's'] as const)[i % 3]} delay={(i % 4) * 80} />)}
-			</div>
-			<p class="more" data-reveal><a class="btn ghost" href="/friends/">All Friends</a></p>
-		</div></section>
+		<section class="v2-sec">
+			<V2Scatter items={tiles} />
+			<p class="v2-more" data-reveal><a class="btn ghost" href="/friends/">All Friends</a></p>
+		</section>
 	</main>
 </Redesign>

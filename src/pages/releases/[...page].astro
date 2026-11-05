@@ -1,11 +1,12 @@
 ---
-// Redesign: Release-Übersicht — alle Releases auf einer Seite, nach Jahr gruppiert (Reihenfolge wie live).
+// V2: Release-Übersicht. Alle Releases nach Jahr, Cover wie hingeworfen; jedes Jahr färbt die Seite mit seinem ersten Cover.
 // Alte Seitenadressen /releases/page/N/ leiten auf diese Seite um (netlify.toml; später .htaccess auf dem Server).
 import Redesign from '../../layouts/Redesign.astro';
 import RPageHead from '../../components/RPageHead.astro';
-import RCard from '../../components/RCard.astro';
+import V2Scatter from '../../components/V2Scatter.astro';
 import { releasesSorted } from '../../lib/content';
 import { thumb } from '../../lib/media';
+import { coverColor } from '../../lib/cover-color';
 
 export function getStaticPaths() {
   return [{ params: { page: undefined } }];
@@ -17,18 +18,22 @@ for (const r of releases) {
   const g = groups.find((x) => x.year === year);
   if (g) g.items.push(r); else groups.push({ year, items: [r] });
 }
+const shown = await Promise.all(groups.map(async (g) => ({
+  year: g.year,
+  count: g.items.length,
+  c: await coverColor(g.items[0].data.cover),
+  tiles: await Promise.all(g.items.map(async (r) => ({ href: `/release/${r.id}/`, src: thumb(r.data.cover, 'gridthumb'), label: r.data.title, c: await coverColor(r.data.cover) }))),
+})));
 ---
 <Redesign title="Releases" description={`All ${releases.length} releases by Dicular Records`} image={releases[0].data.cover}>
 	<main>
 		<RPageHead title="Releases" kicker="Dicular Records Catalogue" intro={`${releases.length} releases — progressive house, trance and techno.`} image={releases[0].data.cover} />
-		{groups.map((g) => (
-			<section class="block year-block">
-				<div class="wrap">
-					<h2 class="year" data-reveal>{g.year}<span>{g.items.length} {g.items.length === 1 ? 'Release' : 'Releases'}</span></h2>
-					<div class="cards">
-						{g.items.map((r, i) => <RCard href={`/release/${r.id}/`} src={thumb(r.data.cover, 'gridthumb')} label={r.data.title} tilt={i % 2 ? 'r' : 'l'} delay={(i % 4) * 80} />)}
-					</div>
+		{shown.map((g, i) => (
+			<section class="v2-sec" data-c={g.c}>
+				<div class={`v2-head ${['', 'right', 'indent'][i % 3]}`}>
+					<h2 class="year" data-reveal>{g.year}<span>{g.count} {g.count === 1 ? 'Release' : 'Releases'}</span></h2>
 				</div>
+				<V2Scatter items={g.tiles} phase={i * 3} />
 			</section>
 		))}
 	</main>

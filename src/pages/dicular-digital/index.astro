@@ -1,23 +1,26 @@
 ---
-// Redesign: Sublabel Dicular Digital — großes Chrome-Logo mit Glanz, Einleitung (bisher Seite „my-charts-2“),
-// Releases des Sublabels (Label enthält „Digital“), das nächste/aktuelle Release groß.
+// V2: Sublabel Dicular Digital. Großes Chrome-Logo mit Glanz, Einleitung (bisher Seite „my-charts-2“),
+// das nächste/aktuelle Release groß, Katalog wie hingeworfen. Die Seite trägt die Farbe dieses Releases.
 import { getEntry } from 'astro:content';
 import Redesign from '../../layouts/Redesign.astro';
 import RCard from '../../components/RCard.astro';
 import RTracks from '../../components/RTracks.astro';
 import RBody from '../../components/RBody.astro';
+import V2Scatter from '../../components/V2Scatter.astro';
 import { releasesSorted } from '../../lib/content';
 import { thumb } from '../../lib/media';
+import { coverColor } from '../../lib/cover-color';
+import { cleanTitle, titleClass, titleFit } from '../../lib/v2';
 
 const page = (await getEntry('pages', 'my-charts-2'))!;
 const releases = (await releasesSorted()).filter((r) => /digital/i.test(r.data.label));
 const [lead, ...rest] = releases;
 const logo = '/images/uploads/dicular-digital-logo.png';
+const tiles = await Promise.all(rest.map(async (r) => ({ href: `/release/${r.id}/`, src: thumb(r.data.cover, 'gridthumb'), label: r.data.title, c: await coverColor(r.data.cover) })));
 ---
-<Redesign title="Dicular Digital" description="Dicular Digital — the sub-label of Dicular Records." image={lead?.data.cover ?? logo}>
+<Redesign title="Dicular Digital" description="Dicular Digital — the sub-label of Dicular Records." image={lead?.data.cover ?? logo} accent={lead ? await coverColor(lead.data.cover) : undefined}>
 	<main>
-		<section class="latest digital-head" style={lead ? `--cover:url("${lead.data.cover}")` : undefined}>
-			{lead && <div class="latest-bg" aria-hidden="true"></div>}
+		<section class="digital-head">
 			<div class="wrap digital-hero">
 				<p class="kicker" data-reveal>Sub-label of Dicular Records</p>
 				<div class="digital-logo" data-reveal style={`--logo:url("${logo}")`}>
@@ -29,26 +32,22 @@ const logo = '/images/uploads/dicular-digital-logo.png';
 		</section>
 
 		{lead && (
-			<section class="block">
-				<div class="wrap latest-grid">
-					<RCard href={`/release/${lead.id}/`} src={lead.data.cover} width={900} height={900} class="latest-cover"
-						label={[lead.data.catalog, lead.data.upcoming ? 'Coming soon' : 'Out now'].filter(Boolean).join(' · ')} />
-					<div class="latest-info" data-reveal>
-						<p class="kicker">{lead.data.upcoming ? 'Coming soon on Dicular Digital' : 'Out now on Dicular Digital'}</p>
-						<h2 class="headline">{lead.data.title}</h2>
-						<RTracks release={lead} />
-						<div class="actions"><a class="btn" href={`/release/${lead.id}/`}>View Release</a></div>
-					</div>
+			<section class="v2-hero sub">
+				<RCard href={`/release/${lead.id}/`} src={lead.data.cover} width={900} height={900} class="v2-hero-cover"
+					label={[lead.data.catalog, lead.data.upcoming ? 'Coming soon' : 'Out now'].filter(Boolean).join(' · ')} />
+				<div class="v2-hero-info" data-reveal>
+					<p class="kicker">{lead.data.upcoming ? 'Coming soon on Dicular Digital' : 'Out now on Dicular Digital'}</p>
+					<h2 class={titleClass(lead.data.title)} style={titleFit(lead.data.title)}>{cleanTitle(lead.data.title)}</h2>
+					<RTracks release={lead} />
+					<div class="actions"><a class="btn" href={`/release/${lead.id}/`}>View Release</a></div>
 				</div>
 			</section>
 		)}
 
-		{rest.length > 0 && (
-			<section class="block">
-				<div class="wrap">
-					<h2 class="section-title" data-reveal>Catalogue</h2>
-					<div class="cards">{rest.map((r, i) => <RCard href={`/release/${r.id}/`} src={thumb(r.data.cover, 'gridthumb')} label={r.data.title} tilt={i % 2 ? 'r' : 'l'} delay={(i % 4) * 80} />)}</div>
-				</div>
+		{tiles.length > 0 && (
+			<section class="v2-sec">
+				<div class="v2-head right"><h2 class="section-title chrome-text" data-reveal>Catalogue</h2></div>
+				<V2Scatter items={tiles} />
 			</section>
 		)}
 	</main>

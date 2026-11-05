@@ -1,34 +1,26 @@
 ---
-// Redesign: Artist-Übersicht — alle Artists auf einer Seite (Reihenfolge wie live), schräge Porträtkarten.
-// Alte Seitenadressen /artists/page/N/ leiten auf diese Seite um.
+// V2: Artist-Übersicht. Alle Artists auf einer Seite (Reihenfolge wie live), Fotos wie hingeworfen.
+// Beim Darüberfahren färbt das neueste Release des Artists die Seite. Alte Seitenadressen /artists/page/N/ leiten hierher um.
 import Redesign from '../../layouts/Redesign.astro';
 import RPageHead from '../../components/RPageHead.astro';
-import RCard from '../../components/RCard.astro';
-import { artistsSorted } from '../../lib/content';
+import V2Scatter from '../../components/V2Scatter.astro';
+import { artistsSorted, releasesSorted } from '../../lib/content';
 import { artistName, cleanSubtitle } from '../../lib/redesign';
+import { artistColor } from '../../lib/v2';
 
 export function getStaticPaths() {
   return [{ params: { page: undefined } }];
 }
 const artists = await artistsSorted();
+const releases = await releasesSorted();
+const tiles = await Promise.all(artists.map(async (a) => {
+  const n = artistName(a.data.name);
+  return { href: `/artist/${a.id}/`, src: a.data.photo, label: n.name, c: await artistColor(a, releases), meta: [n.roles, cleanSubtitle(a.data.subtitle)].filter(Boolean).join(' · ') };
+}));
 ---
 <Redesign title="Artists" description={`The ${artists.length} artists of Dicular Records`}>
 	<main>
 		<RPageHead title="Artists" kicker="The Dicular Family" intro={`${artists.length} DJs and producers.`} />
-		<section class="block">
-			<div class="wrap">
-				<div class="cards artists">
-					{artists.map((a, i) => {
-						const n = artistName(a.data.name);
-						return (
-							<div class="artist-tile">
-								<RCard href={`/artist/${a.id}/`} src={a.data.photo} label={n.name} portrait tilt={(['l', 'r', 's'] as const)[i % 3]} delay={(i % 4) * 80} />
-								<p class="tile-meta" data-reveal style={`--d:${(i % 4) * 80 + 60}ms`}>{[n.roles, cleanSubtitle(a.data.subtitle)].filter(Boolean).join(' · ')}</p>
-							</div>
-						);
-					})}
-				</div>
-			</div>
-		</section>
+		<section class="v2-sec"><V2Scatter items={tiles} portrait /></section>
 	</main>
 </Redesign>
