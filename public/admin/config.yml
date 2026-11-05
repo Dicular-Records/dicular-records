@@ -186,6 +186,7 @@ collections:
               - { name: label, label: Beschriftung, widget: string }
               - { name: page, label: "Seite (aus „Seiten“)", widget: relation, collection: pages, value_field: '{{slug}}', search_fields: [title], display_fields: [title], required: false, hint: "Entweder eine Seite wählen …" }
               - { name: link, label: "… oder Adresse", widget: string, required: false, hint: "z. B. /releases/ oder https://… (wird nur genutzt, wenn keine Seite gewählt ist)" }
+              - { name: hint, label: "Hinweis im Display", widget: string, required: false, hint: "Erscheint beim Darüberfahren im Synth-Display. {releases}, {artists} und {news} werden durch die aktuelle Anzahl ersetzt." }
 
   - name: news
     label: News

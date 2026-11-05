@@ -123,6 +123,50 @@
     a.addEventListener('mouseleave', leave); a.addEventListener('blur', leave);
   });
 
+  // Display: zeigt, was unter der Maus liegt; sonst den Namen des Geräts und was gerade läuft
+  var line1 = document.getElementById('synLine1'), line2 = document.getElementById('synLine2'), typing = 0, shown = '';
+  var IDLE = 'Dicular DR-1', pageName = currentLink ? currentLink.querySelector('.syn-label').textContent : 'Signal Path';
+  function say(a, b) {
+    if (a + '|' + b === shown) return;
+    shown = a + '|' + b; line1.textContent = a; clearInterval(typing);
+    if (reduce) { line2.textContent = b; return; }
+    var n = 0; line2.textContent = '';
+    typing = setInterval(function () { n += 2; line2.textContent = b.slice(0, n); if (n >= b.length) clearInterval(typing); }, 16);
+  }
+  function idle() {
+    var title = document.getElementById('pbTitle');
+    if (player && !player.paused && title && title.textContent) say('Now playing', title.textContent);
+    else say(IDLE, pageName);
+  }
+  function txt(root, sel) { var el = root.querySelector(sel); return el ? el.textContent.trim() : ''; }
+  function describe(t) {
+    var el = t.closest('[data-hint], .jump a, .play[data-title], .radio-disc, .btn, .mix-row, .gig-row, .news-card, .v2-tile, .v2-band, .v2-names a');
+    if (!el) return null;
+    if (el.dataset.hint) return [el.dataset.title || txt(el, '.syn-label') || el.textContent.trim(), el.dataset.hint];
+    if (el.matches('.jump a')) return [el.textContent.trim(), 'Jump to this section'];
+    if (el.matches('.play')) return [el.dataset.title, 'Play' + (el.dataset.artist ? ' · ' + el.dataset.artist : '')];
+    if (el.matches('.radio-disc')) return ['Dicular Radio', 'All releases, shuffled'];
+    if (el.matches('.btn')) return [el.textContent.trim(), el.target === '_blank' ? 'Opens in a new tab' : 'Opens this page'];
+    if (el.matches('.mix-row')) return [txt(el, 'strong'), 'Mix. Play loads the SoundCloud player'];
+    if (el.matches('.gig-row')) return [txt(el, 'strong'), txt(el, '.date').replace(/^(\d\d)/, '$1 ') + ' · ' + txt(el, '.gig-day')];
+    if (el.matches('.news-card')) return [txt(el, 'strong'), txt(el, 'time')];
+    if (el.matches('.v2-tile')) {
+      var a = el.querySelector('a'), href = a ? a.getAttribute('href') : '';
+      return [txt(el, '.namebar'), txt(el, '.tile-meta') || (/^\/release\//.test(href) ? 'View release' : 'Open profile')];
+    }
+    if (el.matches('.v2-band')) return [txt(el, 'h2'), 'View release'];
+    return [el.textContent.trim(), 'Open artist'];
+  }
+  function point(e) {
+    if (!active() || !e.target.closest) return;
+    var d = describe(e.target);
+    if (d) say(d[0], d[1]); else idle();
+  }
+  document.addEventListener('mouseover', point);
+  document.addEventListener('focusin', point);
+  if (player) { player.addEventListener('play', idle); player.addEventListener('pause', idle); player.addEventListener('playing', idle); }
+  idle();
+
   // Die Front startet bei „Out“ und läuft beim Laden zur aktuellen Seite
   front = 0;
   function start() { if (front === 0) { measure(); front = x0; } run(); }

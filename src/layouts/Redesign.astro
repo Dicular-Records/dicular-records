@@ -23,8 +23,9 @@ const fullTitle = intro ? site.name : `${title} | ${site.name}`;
 const shareImage = new URL(image, Astro.site).href;
 const logo = '/wp-content/uploads/2022/01/Logo_Dicular-Rec-Metal-600x600-2.png';
 // Menü aus src/data/hauptmenue.json (in Decap unter „Menü“ pflegbar): Eintrag zeigt auf eine Seite (page) oder eine Adresse (link)
-const menu = (menuData.items as { label: string; page?: string; link?: string }[])
-  .map((m) => [m.label, m.page ? `/${m.page}/` : (m.link ?? '/')]);
+const counts: Record<string, number> = { releases: (await getCollection('releases')).length, artists: (await getCollection('artists')).length, news: (await getCollection('news')).length };
+const menu = (menuData.items as { label: string; page?: string; link?: string; hint?: string }[])
+  .map((m) => [m.label, m.page ? `/${m.page}/` : (m.link ?? '/'), (m.hint ?? '').replace(/\{(\w+)\}/g, (x, k) => String(counts[k] ?? x))]);
 const path = Astro.url.pathname;
 ---
 <!doctype html>
@@ -48,17 +49,17 @@ const path = Astro.url.pathname;
 <body class={`logo-coin sep-a ${intro ? 'home' : 'sub scrolled intro-done'}`}>
 	<div id="atmos" aria-hidden="true"><div id="rille"><div class="r-chrome"><i></i></div></div></div>
 	<header class="top" id="top">
-		<a href={intro ? '#intro' : '/entwurf/'} class="top-logo" aria-label="Dicular Records – Home"><img src={logo} alt="" width="40" height="40" /></a>
+		<a href={intro ? '#intro' : '/entwurf/'} class="top-logo" aria-label="Dicular Records – Home" data-title="Home" data-hint="Back to the start page"><img src={logo} alt="" width="40" height="40" /></a>
 		<button class="menu-toggle" aria-expanded="false" aria-controls="nav">Menu</button>
 		<!-- Menü-Idee F: Beschriftung und Buchsen links auf dem Panel, Schalter für den Ton -->
 		<div class="syn-left" aria-hidden="true">
-			<span class="syn-name">Dicular<b>DR-1</b><small>Signal Path</small></span>
+			<span class="syn-screen" id="synScreen"><b id="synLine1">Dicular DR-1</b><span id="synLine2">Signal Path</span></span>
 			<span class="syn-socket"><span class="syn-jack" id="synOut"></span>Out</span>
 			<span class="syn-socket"><span class="syn-jack" id="synHome"></span>Home</span>
 		</div>
-		<button type="button" class="syn-sound" id="synSound" aria-pressed="false" aria-label="Klick-Ton an oder aus"><i></i>Sound</button>
+		<button type="button" class="syn-sound" id="synSound" aria-pressed="false" aria-label="Klick-Ton an oder aus" data-title="Sound" data-hint="Turns the click of the knobs on or off"><i></i>Sound</button>
 		<nav class="nav chrome-nav" id="nav" aria-label="Main menu" style={`--n:${menu.length}`}>
-			{menu.map(([label, href], i) => <a href={href} style={`--i:${i}`} aria-current={path.startsWith(href) ? 'page' : undefined}><span class="syn-dial" aria-hidden="true"><span class="syn-knob"><i></i></span></span><span class="syn-label">{label}</span><span class="syn-jack" aria-hidden="true"></span></a>)}
+			{menu.map(([label, href, hint], i) => <a href={href} style={`--i:${i}`} data-hint={hint || undefined} aria-current={path.startsWith(href) ? 'page' : undefined}><span class="syn-dial" aria-hidden="true"><span class="syn-knob"><i></i></span></span><span class="syn-label">{label}</span><span class="syn-jack" aria-hidden="true"></span></a>)}
 		</nav>
 	</header>
 

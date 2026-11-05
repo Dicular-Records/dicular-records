@@ -2,39 +2,48 @@
   "items": [
     {
       "label": "Releases",
-      "link": "/releases/"
+      "link": "/releases/",
+      "hint": "{releases} releases, the whole catalogue"
     },
     {
       "label": "Digital",
-      "link": "/dicular-digital/"
+      "link": "/dicular-digital/",
+      "hint": "Our sub-label: old-school psytrance"
     },
     {
       "label": "News",
-      "link": "/dicular-rec-news/"
+      "link": "/dicular-rec-news/",
+      "hint": "{news} posts from the label"
     },
     {
       "label": "Artists",
-      "link": "/artists/"
+      "link": "/artists/",
+      "hint": "{artists} DJs and producers"
     },
     {
       "label": "Events",
-      "link": "/gigs/"
+      "link": "/gigs/",
+      "hint": "Label nights, club shows and open airs"
     },
     {
       "label": "Friends",
-      "link": "/friends/"
+      "link": "/friends/",
+      "hint": "The people and projects we work with"
     },
     {
       "label": "Team",
-      "page": "team"
+      "page": "team",
+      "hint": "The people behind the label"
     },
     {
       "label": "About Us",
-      "page": "about"
+      "page": "about",
+      "hint": "The story of Dicular Records"
     },
     {
       "label": "Contact",
-      "page": "sample-page"
+      "page": "sample-page",
+      "hint": "Questions, bookings and your demo"
     }
   ]
 }
