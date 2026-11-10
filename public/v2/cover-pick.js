@@ -98,7 +98,7 @@
     document.dispatchEvent(new Event('v2-menu'));
   }
   menus.forEach(function (b) { b.addEventListener('click', function (e) { e.preventDefault(); setMenu(b.dataset.menu); }); });
-  setMenu(['e', 'f', 'b', 'c', 'd', 'a'].filter(function (x) { return root.classList.contains('menu-' + x); })[0] || 'a');
+  setMenu(['e', 'f', 'b', 'c', 'd', 'a'].filter(function (x) { return root.classList.contains('menu-' + x); })[0] || 'f');
 
   var wanted = new URLSearchParams(location.search).get('aktuell') || store.get('v2-aktuell');
   show(wanted && byId[wanted] ? wanted : original);
