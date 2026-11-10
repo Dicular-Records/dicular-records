@@ -138,3 +138,9 @@ Ladegewicht vorher → nachher (lokal, unkomprimiert; `scripts/page-weight.mjs`)
 | # | Entscheidung | Begründung |
 |---|---|---|
 | 53 | **Hosting wieder offen** (Yoka, 2026-11-06): Der Verbleib auf dem GoDaddy-Server mit Plesk (Nr. 29) ist nicht festgelegt. Zur Wahl stehen der bisherige Server und ein einfaches Webhosting mit PHP und Postfächern. Nr. 30 bis 32 (PHP-Login, Formulare, MP3s auf dem Server) gelten für beide Wege. | Für die statische Seite ist ein eigener Server technisch unnötig und deutlich teurer. Wichtigster Punkt bei einem Wechsel sind die Postfächer, die heute auf demselben Server laufen. Kostenanalyse und Anbietervergleich außerhalb des öffentlichen Repos (Dicular-Intern). |
+
+| # | Entscheidung | Begründung |
+|---|---|---|
+| 54 | **V2 geht so live, wie sie ist** (Yoka, Besprechung mit Tomtron und Webdesigner, 2026-11-10). Offen bleibt nur die Menü-Wahl (A bis F). Demo-Einsendung per Mail-Link, keine Kommentare, Logo-Intro wie auf der Vorschau gelten, solange niemand widerspricht. | Ergebnis der Vorstellung von V2. |
+| 55 | **Umzug zu IONOS geplant** (Yoka, 2026-11-10): Domain, und nach Plan auch Website und E-Mail, ziehen von GoDaddy zu IONOS. Reihenfolge: Bestandsaufnahme, V2 auf Probe-Adresse bei IONOS, Mail umziehen, Website umschalten, zuletzt Domain-Transfer, dann GoDaddy kündigen. Ersetzt die offene Hosting-Frage aus Nr. 53. Plan: Claude-Doc „Dicular Livegang und Umzug zu IONOS“ (https://claude.ai/artifact/UEcYJT8PckqP4rGhLRAnuM). | Domain, Website und Mail nacheinander, damit der alte Server bis zum Schluss als Rückfall bleibt und keine Mail verloren geht. Ob auch Mail und Website zu IONOS gehen, bestätigt Tomtron noch. |
+| 56 | **Logo Dicular Digital: Originaldatei nötig** (Yoka, 2026-11-10). Das freigestellte Logo zeigt sichtbare Schnittkanten; Tomtron schickt eine Vektor- oder transparente PNG-Datei. | Qualität des Sublabel-Auftritts. |
