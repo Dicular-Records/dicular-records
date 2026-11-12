@@ -125,7 +125,7 @@
 
   // Display: zeigt, was unter der Maus liegt; sonst den Namen des Geräts und was gerade läuft
   var line1 = document.getElementById('synLine1'), line2 = document.getElementById('synLine2'), typing = 0, shown = '';
-  var IDLE = 'Dicular DR-1', pageName = currentLink ? currentLink.querySelector('.syn-label').textContent : 'Signal Path';
+  var IDLE = line1.textContent, IDLE2 = line2.textContent, pageName = currentLink ? currentLink.querySelector('.syn-label').textContent : IDLE2; // Gerätename steht im Display (Label: Dicular DR-1, Artist-Seite: Name des Artists)
   function say(a, b) {
     if (a + '|' + b === shown) return;
     shown = a + '|' + b; line1.textContent = a; clearInterval(typing);

@@ -38,7 +38,7 @@
   if (replay) replay.addEventListener('click', function () { scrollTo({ top: 0 }); replayIntro(); });
   apply();
   // auf schmalen Bildschirmen eingeklappt starten
-  if (innerWidth < 900) $('switcher').removeAttribute('open');
+  if (innerWidth < 900 && $('switcher')) $('switcher').removeAttribute('open'); // Artist-Seiten haben keinen Umschalter
 
   // ------------------------------------------------ Intro (nur Startseite) fertig → Glanz, Lichtlauf übers Menü
   if (introLogo) {

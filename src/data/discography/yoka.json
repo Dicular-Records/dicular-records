@@ -1,0 +1,63 @@
+{
+  "source": [
+    { "name": "Yoka", "url": "https://www.discogs.com/artist/2145256-Yoka-4" },
+    { "name": "YuminanceS", "url": "https://www.discogs.com/artist/6062600-YuminanceS" }
+  ],
+  "works": [
+    {
+      "year": 2012, "kind": "Remix", "as": "YuminanceS",
+      "title": "Nicht Normal (YuminanceS Remix)", "artist": "Lava 303",
+      "appearsOn": [
+        { "title": "Goddess Rules Remix Compilation", "label": "Playground Productions", "year": 2012, "url": "https://www.discogs.com/master/3447863" },
+        { "title": "Progressive House (101 Top Hits 2014)", "label": "101 Dance Hits", "year": 2014, "url": "https://www.discogs.com/release/37877094" }
+      ]
+    },
+    {
+      "year": 2011, "kind": "Artwork", "as": "Yoka",
+      "title": "Macula", "artist": "Native Radio", "format": "CD, Album",
+      "appearsOn": [
+        { "title": "Macula", "label": "Synphonie Records", "catno": "SYN002", "year": 2011, "url": "https://www.discogs.com/release/4078360" }
+      ]
+    },
+    {
+      "year": 2010, "kind": "Remix", "as": "Yokain",
+      "title": "Pressure (Yokain Remix)", "artist": "Zyce & Flegma",
+      "appearsOn": [
+        { "title": "Legend Of The Lotus", "label": "Synergetic Records", "catno": "SYNCD052", "year": 2010, "url": "https://www.discogs.com/master/493354" },
+        { "title": "Goa Beach Volume 14", "label": "Yellow Sunshine Explosion", "catno": "MillYSE 241-DCD", "year": 2010, "url": "https://www.discogs.com/release/3657932" },
+        { "title": "Progressive Killers Vol. 7", "label": "Plusquam Digital", "catno": "PQ 269", "year": 2011, "url": "https://www.discogs.com/release/6277093" },
+        { "title": "Psytrance Of: Serbia Vol. 2", "label": "GoaCrops Records", "year": 2013, "url": "https://www.discogs.com/release/31732019" },
+        { "title": "Goa Heroes", "label": "Dropzone Records", "year": 2019, "url": "https://www.discogs.com/release/33495647" },
+        { "title": "Goa Vortex", "label": "Planet B.E.N. Records", "catno": "PBRCOM 070", "year": 2019, "url": "https://www.discogs.com/release/34896632" }
+      ]
+    },
+    {
+      "year": 2009, "kind": "Remix", "as": "Yokain",
+      "title": "Crawler (Yokain Remix)", "artist": "Synphonetic",
+      "appearsOn": [
+        { "title": "Progstorm", "label": "Prog On Syndicate", "catno": "10008934", "year": 2009, "url": "https://www.discogs.com/master/1017564" }
+      ]
+    },
+    {
+      "year": 2008, "kind": "Track", "as": "Synphonetic", "credit": "Written and produced",
+      "title": "News From Universe", "artist": "Synphonetic",
+      "appearsOn": [
+        { "title": "Map Of Goa Volume 4", "label": "Yellow Sunshine Explosion", "catno": "YSE 182-DCD", "year": 2008, "url": "https://www.discogs.com/release/2413313" }
+      ]
+    },
+    {
+      "year": 2006, "kind": "Album", "as": "Synphonetic", "credit": "Written and produced",
+      "title": "Butterfly Effect", "artist": "Synphonetic", "format": "CD, Album",
+      "appearsOn": [
+        { "title": "Butterfly Effect", "label": "Synphonie Records", "catno": "SYN001", "year": 2006, "url": "https://www.discogs.com/release/688315" }
+      ]
+    },
+    {
+      "year": 2006, "kind": "Track", "as": "Synphonetic", "credit": "Written and produced",
+      "title": "Elbish", "artist": "Synphonetic",
+      "appearsOn": [
+        { "title": "Rollin' Compilation No.1", "label": "Liquid Crystal Music", "catno": "LCM 0001", "year": 2006, "url": "https://www.discogs.com/master/565824" }
+      ]
+    }
+  ]
+}

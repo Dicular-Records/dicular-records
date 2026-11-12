@@ -1,0 +1,168 @@
+---
+// Artist-Website (Demo): alle Seiten eines Artists unter /site/<artist>/, Standard-Menü
+// Home, Biography, Releases, Mixes, Events, Booking. Teilnehmende Artists in src/data/artist-sites.json.
+import { getCollection, getEntry } from 'astro:content';
+import ArtistSite, { type SiteMenuItem } from '../../../layouts/ArtistSite.astro';
+import RCard from '../../../components/RCard.astro';
+import RBody from '../../../components/RBody.astro';
+import RMixes from '../../../components/RMixes.astro';
+import RTracks from '../../../components/RTracks.astro';
+import RPageHead from '../../../components/RPageHead.astro';
+import V2Scatter from '../../../components/V2Scatter.astro';
+import { releasesSorted, plainText } from '../../../lib/content';
+import { thumb } from '../../../lib/media';
+import { artistName, cleanSubtitle } from '../../../lib/redesign';
+import { sanitizeArtistHtml as clean } from '../../../lib/sanitize';
+import { coverColor } from '../../../lib/cover-color';
+import { artistColor, cleanTitle, titleClass, titleFit } from '../../../lib/v2';
+import sites from '../../../data/artist-sites.json';
+import taxonomies from '../../../data/taxonomies.json';
+
+// Diskographie außerhalb von Dicular (aus Discogs übernommen), je Artist eine Datei src/data/discography/<artist>.json
+interface Work { year: number; kind: string; as: string; title: string; artist: string; credit?: string; format?: string; appearsOn: { title: string; label: string; catno?: string; year: number; url: string }[] }
+const discos = import.meta.glob<{ default: { source: { name: string; url: string }[]; works: Work[] } }>('../../../data/discography/*.json', { eager: true });
+
+type Section = 'home' | 'biography' | 'discography' | 'releases' | 'mixes' | 'events' | 'contact';
+
+export async function getStaticPaths() {
+  // getStaticPaths läuft für sich, Konstanten von außen sind hier nicht sichtbar
+  const list = ['home', 'biography', 'discography', 'releases', 'mixes', 'events', 'contact'];
+  return sites.sites.flatMap((s) => list.map((sec) => ({ params: { artist: s.artist, section: sec === 'home' ? undefined : sec }, props: { section: sec } })));
+}
+const { section } = Astro.props as { section: Section };
+const artist = (await getEntry('artists', Astro.params.artist!))!;
+const a = artist.data;
+const { name, roles } = artistName(a.name);
+const origin = cleanSubtitle(a.subtitle);
+const base = `/site/${artist.id}/`;
+const releases = await releasesSorted();
+const music = releases.filter((r) => r.data.artists.some((ref) => ref.id === artist.id));
+const mixes = (await getCollection('mixes')).filter((m) => m.data.artists.some((ref) => ref.id === artist.id)).sort((x, y) => +y.data.date - +x.data.date);
+const accent = await artistColor(artist, releases);
+const genreName = (g: string) => (taxonomies.genre as Record<string, string>)[g] ?? g.replace(/-/g, ' ');
+const disco = discos[`../../../data/discography/${artist.id}.json`]?.default;
+const mail = a.booking.find((b) => /mail/i.test(b.label))?.value;
+
+const menu: SiteMenuItem[] = [
+  { key: 'home', label: 'Home', href: base, hint: `${name}, DJ and producer` },
+  { key: 'biography', label: 'Biography', href: `${base}biography/`, hint: 'The story so far' },
+  ...(disco ? [{ key: 'discography', label: 'Discography', href: `${base}discography/`, hint: `${disco.works.length} works since ${Math.min(...disco.works.map((w) => w.year))}, as ${[...new Set(disco.works.map((w) => w.as))].join(', ')}` }] : []),
+  { key: 'releases', label: 'Releases', href: `${base}releases/`, hint: music.length ? `${music.length} ${music.length === 1 ? 'release' : 'releases'} on Dicular` : 'Releases on Dicular' },
+  { key: 'mixes', label: 'Mixes', href: `${base}mixes/`, hint: `${mixes.length} DJ mixes to listen to` },
+  { key: 'events', label: 'Events', href: `${base}events/`, hint: 'Upcoming dates' },
+  { key: 'contact', label: 'Booking', href: `${base}contact/`, hint: 'Booking and contact' },
+];
+const title = menu.find((m) => m.key === section)!.label;
+const tiles = await Promise.all(music.map(async (r) => ({ href: `/release/${r.id}/`, src: thumb(r.data.cover, 'gridthumb'), label: r.data.title, c: await coverColor(r.data.cover) })));
+const latest = music[0];
+---
+<ArtistSite artist={artist} menu={menu} current={section} title={title} accent={accent} description={plainText(a.excerpt ?? artist.body)}>
+	<main>
+		{section === 'home' && (
+			<Fragment>
+				<section class="v2-hero sub">
+					<RCard href={`${base}biography/`} src={a.photo} label={name} portrait width={800} height={1000} eager class="v2-hero-cover" />
+					<div class="v2-hero-info" data-reveal>
+						{(roles || origin) && <p class="kicker">{[roles, origin].filter(Boolean).join(' · ')}</p>}
+						<h1 class={titleClass(name)} style={titleFit(name)}>{name}</h1>
+						{a.genres.length > 0 && <p class="chips">{a.genres.map((g) => <span class="chip ghost">{genreName(g)}</span>)}</p>}
+						<p class="v2-lead">{plainText(a.excerpt ?? artist.body, 220)}</p>
+						<div class="site-hero-actions">
+							<a class="btn" href={`${base}mixes/`}>Listen to the mixes</a>
+							<a class="btn ghost" href={`${base}contact/`}>Booking</a>
+						</div>
+					</div>
+				</section>
+				<section class="site-latest">
+					{latest && (
+						<div data-reveal>
+							<p class="kicker">{latest.data.upcoming ? 'Coming soon' : 'Latest release'}</p>
+							<RCard href={`/release/${latest.id}/`} src={thumb(latest.data.cover, 'gridthumb')} label={latest.data.catalog ?? latest.data.label} />
+							<h3>{cleanTitle(latest.data.title)}</h3>
+							<RTracks release={latest} />
+						</div>
+					)}
+					{mixes.length > 0 && (
+						<div data-reveal style="--d:120ms">
+							<p class="kicker">Latest mixes</p>
+							<RMixes mixes={mixes.slice(0, 3)} exceptArtist={artist.id} />
+						</div>
+					)}
+				</section>
+			</Fragment>
+		)}
+
+		{section === 'biography' && (
+			<Fragment>
+				<RPageHead title="Biography" kicker={name} image={a.background ?? a.photo} />
+				<section class="block"><div class="v2-text"><div class="prose" data-reveal><RBody entry={artist} /></div></div></section>
+			</Fragment>
+		)}
+
+		{section === 'discography' && disco && (
+			<Fragment>
+				<RPageHead title="Discography" kicker={name} intro={`Albums, tracks and remixes since ${Math.min(...disco.works.map((w) => w.year))}, as ${[...new Set(disco.works.map((w) => w.as))].join(', ')}.`} />
+				<section class="v2-sec">
+					<div class="v2-rows">
+						<ul class="disco">
+							{disco.works.map((w, i) => (
+								<li class="disco-row" data-reveal style={`--d:${(i % 4) * 60}ms`}>
+									<span class="date"><b>{w.year}</b>{w.kind}</span>
+									<div class="gig">
+										<em class="gig-day">{w.as === name || w.as.toUpperCase() === name ? w.kind : `as ${w.as}`}{w.credit ? ` · ${w.credit}` : ''}</em>
+										<strong>{w.title}</strong>
+										<em>{w.artist}{w.format ? ` · ${w.format}` : ''}</em>
+										<p class="disco-on">{w.appearsOn.length > 1 || w.appearsOn[0].title !== w.title ? 'Appears on ' : 'Released on '}{w.appearsOn.map((o, j) => <Fragment>{j > 0 && ', '}<a href={o.url} target="_blank" rel="noopener">{o.title}</a> <span>({[o.label, o.catno, o.year].filter(Boolean).join(', ')})</span></Fragment>)}</p>
+									</div>
+								</li>
+							))}
+						</ul>
+						<p class="mix-note" data-reveal>Source: Discogs, {disco.source.map((x, j) => <Fragment>{j > 0 && ' and '}<a href={x.url} target="_blank" rel="noopener">{x.name}</a></Fragment>)}. Releases on Dicular Records are listed under <a href={`${base}releases/`}>Releases</a>.</p>
+					</div>
+				</section>
+			</Fragment>
+		)}
+
+		{section === 'releases' && (
+			<Fragment>
+				<RPageHead title="Releases" kicker={name} intro={music.length ? `${music.length} ${music.length === 1 ? 'release' : 'releases'} on Dicular Records.` : undefined} image={latest?.data.cover} />
+				<section class="v2-sec">
+					{tiles.length ? <V2Scatter items={tiles} /> : <p class="page-intro v2-text site-empty" data-reveal>New music coming soon.</p>}
+				</section>
+			</Fragment>
+		)}
+
+		{section === 'mixes' && (
+			<Fragment>
+				<RPageHead title="Mixes" kicker={name} intro={`${mixes.length} DJ ${mixes.length === 1 ? 'mix' : 'mixes'}.`} />
+				<section class="v2-sec"><div class="v2-rows">{mixes.length ? <RMixes mixes={mixes} exceptArtist={artist.id} /> : <p class="page-intro site-empty">Mixes coming soon.</p>}</div></section>
+			</Fragment>
+		)}
+
+		{section === 'events' && (
+			<Fragment>
+				<RPageHead title="Events" kicker={name} />
+				<section class="v2-sec">
+					<div class="v2-text" data-reveal>
+						<p class="page-intro site-empty">New dates coming soon.</p>
+						<p class="site-empty">For bookings, see <a href={`${base}contact/`}>Booking</a>. All label nights: <a href="/gigs/">Dicular Records events</a>.</p>
+					</div>
+				</section>
+			</Fragment>
+		)}
+
+		{section === 'contact' && (
+			<Fragment>
+				<RPageHead title="Booking" kicker={name} intro="Club nights, festivals and private events." />
+				<section class="block">
+					<div class="v2-text" data-reveal>
+						{mail && <p class="contact-mail"><a href={`mailto:${mail}`}>{mail}</a></p>}
+						{a.booking.length > 0 && (
+							<dl class="booking">{a.booking.map((b) => <Fragment><dt>{b.label}</dt><dd set:html={clean(b.value)} /></Fragment>)}</dl>
+						)}
+					</div>
+				</section>
+			</Fragment>
+		)}
+	</main>
+</ArtistSite>
