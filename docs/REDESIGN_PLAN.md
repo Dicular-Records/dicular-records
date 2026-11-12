@@ -138,6 +138,7 @@ Yoka und Tomtron möchten mehr Abstand zum Ursprungsdesign, bei erhaltener Seele
 
 ## Ideen (Sammlung, noch nicht entschieden)
 
+- Artist-Websites als Service (Idee Yoka, 2026-11-13): Artists ohne eigene Website bekommen eine eigenständige Seite auf Basis des Dicular-Designs, gehostet von Dicular (Subdomain oder eigene Domain, Pflege in Decap mit Rechten nur auf den eigenen Ordner). Erst nach dem Livegang. Konzept für Tomtron: https://claude.ai/artifact/Htp2U8q1Q3Noweq6LLxMij
 - Logo-Intro wie ein Filmvorspann + gelegentlicher Glanz, Menü in Chrome mit einmaligem Lichtlauf nach dem Intro und Glanz beim Darüberfahren → Prototyp `public/prototypes/logo-intro.html` (Varianten: Münze / Schallplatte)
 - Artist- und Release-Karten schräg mit Namensbalken in Dicular-Blau
 - Kopfbereich mit gestapelten Genre-Wörtern (PROGRESSIVE / TRANCE / HOUSE / TECHNO) über dem aktuellen Release
