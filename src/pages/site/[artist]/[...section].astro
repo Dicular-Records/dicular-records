@@ -19,7 +19,8 @@ import sites from '../../../data/artist-sites.json';
 import taxonomies from '../../../data/taxonomies.json';
 
 // Diskographie außerhalb von Dicular (aus Discogs übernommen), je Artist eine Datei src/data/discography/<artist>.json
-interface Work { year: number; kind: string; as: string; title: string; artist: string; credit?: string; format?: string; appearsOn: { title: string; label: string; catno?: string; year: number; url: string }[] }
+// Cover liegen lokal unter public/discography/<artist>/ (von Discogs geholt, Wunsch Yoka 2026-11-13), nichts lädt von Discogs
+interface Work { year: number; kind: string; as: string; title: string; cover?: string; artist: string; credit?: string; format?: string; appearsOn: { title: string; label: string; catno?: string; year: number; url: string }[] }
 const discos = import.meta.glob<{ default: { source: { name: string; url: string }[]; works: Work[] } }>('../../../data/discography/*.json', { eager: true });
 
 type Section = 'home' | 'biography' | 'discography' | 'releases' | 'mixes' | 'events' | 'contact';
@@ -108,6 +109,7 @@ const latest = music[0];
 							{disco.works.map((w, i) => (
 								<li class="disco-row" data-reveal style={`--d:${(i % 4) * 60}ms`}>
 									<span class="date"><b>{w.year}</b>{w.kind}</span>
+									{w.cover ? <a class="disco-cover" href={w.appearsOn[0].url} target="_blank" rel="noopener" aria-label={`${w.appearsOn[0].title} on Discogs`}><img src={w.cover} alt="" width="180" height="180" loading="lazy" decoding="async" /></a> : <span class="disco-cover" aria-hidden="true"></span>}
 									<div class="gig">
 										<em class="gig-day">{w.as === name || w.as.toUpperCase() === name ? w.kind : `as ${w.as}`}{w.credit ? ` · ${w.credit}` : ''}</em>
 										<strong>{w.title}</strong>
