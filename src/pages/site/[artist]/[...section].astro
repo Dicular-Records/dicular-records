@@ -41,6 +41,7 @@ const music = releases.filter((r) => r.data.artists.some((ref) => ref.id === art
 const mixes = (await getCollection('mixes')).filter((m) => m.data.artists.some((ref) => ref.id === artist.id)).sort((x, y) => +y.data.date - +x.data.date);
 const accent = await artistColor(artist, releases);
 const genreName = (g: string) => (taxonomies.genre as Record<string, string>)[g] ?? g.replace(/-/g, ' ');
+const siteMenu = (sites.sites.find((s) => s.artist === artist.id) as { menu?: string } | undefined)?.menu;
 const disco = discos[`../../../data/discography/${artist.id}.json`]?.default;
 const mail = a.booking.find((b) => /mail/i.test(b.label))?.value;
 
@@ -57,7 +58,7 @@ const title = menu.find((m) => m.key === section)!.label;
 const tiles = await Promise.all(music.map(async (r) => ({ href: `/release/${r.id}/`, src: thumb(r.data.cover, 'gridthumb'), label: r.data.title, c: await coverColor(r.data.cover) })));
 const latest = music[0];
 ---
-<ArtistSite artist={artist} menu={menu} current={section} title={title} accent={accent} description={plainText(a.excerpt ?? artist.body)}>
+<ArtistSite artist={artist} menu={menu} menuStyle={siteMenu} current={section} title={title} accent={accent} description={plainText(a.excerpt ?? artist.body)}>
 	<main>
 		{section === 'home' && (
 			<Fragment>

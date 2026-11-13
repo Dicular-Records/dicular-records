@@ -1,7 +1,9 @@
-/* Artist-Website (Demo): Ergänzungen zu /v2/site.css. Menü ist immer das Synth-Panel (html.menu-f). */
+/* Artist-Website (Demo): Ergänzungen zu /v2/site.css. Menü je Artist: Synth-Panel (html.menu-f) oder Ring mit Namensbalken (html.menu-a.menu-e). */
 
 /* Foto des Artists rund im Display statt des Label-Logos */
 .artist-site .top-logo img { border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px #050607, 0 0 0 3px color-mix(in srgb, var(--c) 70%, transparent); }
+/* Menü E: das Foto liegt groß im Ring, dreht sich aber nicht wie das Label-Logo */
+.artist-site.menu-a .top-logo { animation: none; }
 .site-initial { display: grid; place-items: center; width: 100%; height: 100%; border-radius: 50%; background: var(--c); color: var(--ink); font: 800 22px Archivo, sans-serif; }
 @media (max-width: 900px) { .artist-site .top-logo { width: 40px; height: 40px; } .artist-site .top-logo img { width: 100%; height: 100%; } }
 

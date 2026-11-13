@@ -1,6 +1,6 @@
 ---
 // Artist-Website (Demo, Idee 2026-11-13): eigene Seite eines Artists auf Basis des Dicular-Designs.
-// Rahmen wie Redesign.astro, aber mit dem Synth-Menü (Idee F) fest, eigenen Menüpunkten, Foto im Display und eigener Fußzeile.
+// Rahmen wie Redesign.astro, Menü je Artist wählbar (menu in src/data/artist-sites.json: Standard F = Synth-Panel, e = Ring mit Namensbalken), eigenen Menüpunkten, Foto im Display und eigener Fußzeile.
 // Später unter einer Subdomain (yoka.dicular-records.com), bis dahin unter /site/<artist>/.
 import type { CollectionEntry } from 'astro:content';
 import site from '../data/site.json';
@@ -15,15 +15,18 @@ interface Props {
   title: string;
   description?: string;
   accent: string;
+  /** Menü-Idee aus src/data/artist-sites.json, Standard f (Synth-Panel); e = Ring mit Namensbalken (braucht menu-a) */
+  menuStyle?: string;
 }
-const { artist, menu, current, title, description, accent } = Astro.props;
+const { artist, menu, current, title, description, accent, menuStyle = 'f' } = Astro.props;
+const menuClass = menuStyle === 'e' ? 'menu-a menu-e' : `menu-${menuStyle}`;
 const name = artistName(artist.data.name).name;
 const fullTitle = current === 'home' ? `${name} | DJ and Producer` : `${title} | ${name}`;
 const photo = artist.data.photo;
 const home = menu[0].href;
 ---
 <!doctype html>
-<html lang="en" class="menu-f artist-site" style={`--c:${accent}`} data-own-accent="">
+<html lang="en" class={`${menuClass} artist-site`} style={`--c:${accent}`} data-own-accent="">
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
